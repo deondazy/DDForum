@@ -1,0 +1,251 @@
+* {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+html, body {
+	margin: 0;
+}
+
+body {
+	background: #f1f1f1;
+	color: #333;
+	margin: 0 auto;
+	font-size: 14px;
+	font-family: "Open Sans", sans-serif;
+}
+
+ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+h1, h2, h3 {
+	margin: 0;
+}
+
+p {
+	margin-top: 0;
+}
+
+/** Form controls
+-------------------------------------------------*/
+input[type="checkbox"],
+input[type="radio"] {
+	border: 1px solid #b4b9be;
+  background: #fff;
+  color: #555;
+  clear: none;
+  cursor: pointer;
+  display: inline-block;
+  line-height: 0;
+  height: 16px;
+  margin: -4px 4px 0 0;
+  outline: 0;
+  padding: 0 !important;
+  text-align: center;
+  vertical-align: middle;
+  width: 16px;
+  min-width: 16px;
+  -webkit-appearance: none;
+  -webkit-box-shadow: inset 0 1px 2px rgba( 0, 0, 0, 0.1 );
+  box-shadow: inset 0 1px 2px rgba( 0, 0, 0, 0.1 );
+  -webkit-transition: .05s border-color ease-in-out;
+  transition: .05s border-color ease-in-out;
+}
+
+input[type="checkbox"]:checked:before {
+  content: '\f418';
+	margin: -3px 0 0 -4px;
+	width: 16px;
+	font: 400 21px/1 "Genericons";
+	display: inline-block;
+	float: left;
+	vertical-align: middle;
+	speak: none;
+	-webkit-font-smoothing: antialiased;
+	color: #e53e54;
+}
+
+.text-box {
+	display: block;
+  margin-bottom: 1.7em;
+  height: 33px;
+  width: 100%;
+  border: 1px solid #bbb;
+  padding: 1px 15px;
+}
+
+.select-box {
+	vertical-align: middle;
+  height: 30px;
+  border: 1px solid #bbb;
+  margin-left: 10px;
+  padding: 4px;
+}
+
+.screen-reader-text {
+	position: absolute;
+	margin: -1px;
+	padding: 0px;
+	height: 1px;
+	width: 1px;
+	overflow: hidden;
+	clip: rect(0px, 0px, 0px, 0px);
+	border: 0px none;
+}
+
+a  {
+	color: #e53e54;
+	text-decoration: none;
+}
+
+a:hover, a:focus {
+	color: #e53e54;
+	text-decoration: underline;
+}
+
+.add-btn,
+.action-btn {
+	border: none;
+	padding: 8px 10px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.add-btn {
+	background: #333;
+}
+
+.add-btn:hover {
+	background: #e53e54;
+	color: #fff;
+	text-decoration: none;
+}
+
+.action-btn {
+	background: #e53e54;
+	margin: 1.5em 0;
+	padding: 8px 20px;
+} 
+
+.action-btn:hover {
+	opacity: .9;
+}
+
+.row {
+  float: left;
+  width: 100%;
+  margin-right: 0px;
+  margin-left: 0px;
+}
+
+.masthead {
+	background: #000d19;
+ 	color: #fff;
+  padding: 15px;
+}
+
+.masthead h1 {
+	margin: 0;
+}
+
+.user-navigation {
+	float: right;
+}
+
+/** Homepage categories display
+-------------------------------------------------*/
+.category-content {
+	background: #fff;
+	padding-top: 15px;
+}
+
+.category-name {
+	background: linear-gradient( #ddd, #f0f0f0 );
+	color: #e53e54;
+	padding: 10px 15px;
+	font-size: 14px;
+	font-weight: 600;
+}
+
+.category-content .forum {
+	position: relative;
+	border: 1px solid rgb(221, 221, 221);
+	padding: 16px 21px;
+	margin-bottom: 15px;
+}
+
+.category-forums .forum:nth-child(3n) {
+	margin-right: 0;
+}
+
+.category-title {
+	font-size: 14px;
+}
+
+.forum-stats {
+	color: #555;
+	font-size: 12px;
+	margin-top: 5px;
+}
+
+.form-wrap {
+  background: #fff;
+  padding: 15px;
+}
+
+.form-title {
+	border-bottom: 1px solid #ddd;
+	font-size: 1.3em;
+	margin-bottom: 1.5em;
+	padding-bottom: 15px;
+	font-weight: 600;
+}
+
+.single-forum .forum-info,
+.single-forum .topic-listing,
+.add-form {
+	background: #fff;
+	border: 1px solid #ddd;
+	padding: 15px;
+	margin-bottom: 15px;
+}
+
+.single-forum .topic-listing {
+	margin-top: 15px;
+	clear: both;
+}
+
+.single-forum .topic-listing .topic-wrap {
+	border-bottom: 1px solid #ddd;
+	padding-bottom: 15px;
+	margin-bottom: 15px;
+}
+
+.single-forum .topic-listing .topic-wrap:last-child {
+	border: none;
+	margin-bottom: 0;
+	padding-bottom: 0;
+}
+
+.single-forum .topic-listing .topic-wrap .topic-author {
+	color: #666;
+	font-size: 13px;
+}
+
+.add-form form {
+	max-width: 70%;
+}
+
+/** Pagination
+-------------------------------------------------*/
+.paginate {
+	float: right;
+	margin: 15px 0;
+}
