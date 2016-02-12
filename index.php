@@ -9,7 +9,7 @@
 /** Load DDForum Startup **/
 require_once( dirname( __FILE__ ) . '/startup.php' );
 
-$title = 'DDForum';
+$title = get_option( 'site_name' );
 
 require_once( ABSPATH . 'header.php' );
 

@@ -8,6 +8,8 @@ if ( !defined( 'ABSPATH' ) ) {
 	die( 'Direct access denied' );
 }
 
+$title = 'Login - ' . get_option( 'site_name' );
+
 $logout = ( isset( $_GET['logout'] ) && $_GET['logout'] == true ) ? true : false;
 
 // Check if form is submitted
@@ -37,24 +39,31 @@ require_once( ABSPATH . 'header.php' );
 		}
 		?>
 
-		<h1 class="page-title">Login</h1>
-		<form action="" method="post" class="action-form">
-			<p class="form-control">
-				<label for="login-uname">Username</label>
-				<input id="login-uname" class="box-input" type="text" name="uname">
-			</p>
-			<p class="form-control">
-				<label for="login-pass">Password</label>
-				<input id="login-pass" class="box-input" type="password" name="pass">
-			</p>
-			<p class="form-control">
-				<label for="login-remember">
-					<input id="login-remember" class="checkbox-input" type="checkbox"> Remember me
-				</label>
-			</p>
-			<p class="form-control">
+		<h2 class="page-title">Login To <?php echo get_option( 'site_name' ); ?></h2>
+
+		<form role="form" action="" method="post" class="action-form form-inline">
+
+			<h4 class="area-head">Enter your Username and Password below to login</h4>
+			
+			<div class="form-groups">
+				<div class="form-group">
+					<label for="login-uname">Username</label>
+					<input id="login-uname" class="form-control" type="text" name="uname">
+				</div>
+				
+				<div class="form-group">
+					<label for="login-pass">Password</label>
+					<input id="login-pass" class="form-control" type="password" name="pass">
+				</div>
+
+				<div class="form-group">
+					<label for="login-remember">
+						<input id="login-remember" class="checkbox-input" type="checkbox"> Remember me
+					</label>
+				</div>
+
 				<input id="login-submit" class="action-button" type="submit" value="login">
-			</p>
+			</div>
 		</form>
 	</div>
 </div>

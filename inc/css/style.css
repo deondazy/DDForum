@@ -15,6 +15,7 @@ body {
 	margin: 0 auto;
 	font-size: 14px;
 	font-family: "Open Sans", sans-serif;
+  text-align: center;
 }
 
 ul {
@@ -108,6 +109,12 @@ a:hover, a:focus {
 	text-decoration: underline;
 }
 
+.action-form {
+  border: 2px solid #19232d;
+  border-radius: 15px;
+  color: #19232d;
+}
+
 .add-btn,
 .action-btn {
 	border: none;
@@ -146,17 +153,31 @@ a:hover, a:focus {
 }
 
 .masthead {
-	background: #000d19;
- 	color: #fff;
-  padding: 15px;
+ 	color: #19232d;
+  padding: 10px;
+  border: 2px solid #bbb;
+  border-radius: 15px;
+  margin-top: 10px;
 }
 
 .masthead h1 {
 	margin: 0;
 }
 
-.user-navigation {
-	float: right;
+/** Navigation
+-------------------------------------------------*/
+.navigation {
+  margin: 5px 0;
+}
+
+.main-navigation {}
+
+.main-navigation a {
+  color: #19232d;
+}
+
+.nav-link {
+  display: inline-block;
 }
 
 /** Homepage categories display
@@ -195,10 +216,7 @@ a:hover, a:focus {
 	margin-top: 5px;
 }
 
-.form-wrap {
-  background: #fff;
-  padding: 15px;
-}
+.form-wrap {}
 
 .form-title {
 	border-bottom: 1px solid #ddd;
@@ -248,4 +266,30 @@ a:hover, a:focus {
 .paginate {
 	float: right;
 	margin: 15px 0;
+}
+
+.show-message {
+  border-radius: 10px;
+  margin-top: 10px;
+  padding: 5px;
+  background: #19232d;
+  color: #f1f1f1;
+}
+
+.page-title {
+  margin: 10px 0;
+}
+
+.area-head {
+  background: #8c3636;
+  color: #f1f1f1;
+  padding: 6px 0;
+  margin: 0;
+  border-radius: 13px 13px 0 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.form-groups {
+  padding: 15px;
 }

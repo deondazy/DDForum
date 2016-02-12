@@ -24,24 +24,29 @@
 		<header id="site-header">
 			<div class="container">
 				<div class="masthead">
-					<h1>DDForum</h1>
+					<h1><a rel="home" href="<?php echo home_url(); ?>"><?php echo get_option( 'site_name' ); ?></a></h1>
 
 					<nav class="navigation clearfix">
 						<ul class="main-navigation">
-							<li><a href="<?php echo home_url(); ?>">Home</a></li>
 
-							<li><a href="cats">Other categories</a></li>
-						</ul>
-
-						<ul class="user-navigation">
 							<?php if ( is_logged() ) : ?>
-								<li class="user-link"><a href="auth.php?action=logout">Logout</a></li>
+								Hello <strong><?php $ddf_user->get_user( 'display_name', 'current_user' ); ?>:</strong> &bull; 
+								<li class="nav-link"><a href="#">Edit Profile(user)</a></li> &bull; 
+								<li class="nav-link"><a href="auth.php?action=logout">Logout</a></li> &bull; 
 							<?php else : ?>
-								<li class="user-link"><a href="auth.php?action=register">Register</a></li>
-								<li class="user-link"><a href="auth.php">Login</a></li>
+								Hello <strong>Guest:</strong>
+								<li class="nav-link"><a href="auth.php?action=register"><b>Register</b></a></li> &bull; 
+								<li class="nav-link"><a href="auth.php">Login</a></li> &bull; 
 							<?php endif; ?>
 						</ul>
 					</nav>
+
+					<div class="site-search">
+						<form method="get" action="search.php">
+							<input type="text" name="s">
+							<input type="submit" value="search">
+						</form>
+					</div>
 				</div>
 			</div>
 		</header>
