@@ -106,7 +106,7 @@ class User
 
   public static $error = [];
 
-  public static $loginKey;
+  private static $loginKey = 'TYgt%gfdrt=1&778h#$&jk';
 
   /*
    * Class should not be instantiated
@@ -161,7 +161,22 @@ class User
    */
   public static function isLogged()
   {
-    return isset($_COOKIE['ddforum_logged']);
+    if (isset($_COOKIE['ddforum'])) {
+      // Is cookie valid?
+      list($username, $hash) = preg_split('/_/', $_COOKIE['ddforum']);
+
+      Database::query("SELECT COUNT(*) FROM ". self::table() ." WHERE username = :username");
+      Database::bind(':username', $username);
+      Database::execute();
+
+      if (Database::$statement->fetchColumn() > 0) {
+        return true;
+      }
+
+      return false;
+    }
+
+    return false;
   }
 
   /**
@@ -172,9 +187,10 @@ class User
    */
   public static function currentUserId()
   {
-    // Get username from the session|cookie set
-    if (isset($_COOKIE[self::$loginKey])) {
-      self::$username = $_COOKIE[self::$login_key];
+    // Get username from the set cookie
+    if (isset($_COOKIE['ddforum'])) {
+      list($username, $hash) = preg_split('/_/', $_COOKIE['ddforum']);
+      self::$username = $username;
 
       $userId = Database::query("SELECT userID FROM ". self::table() ." WHERE username = :username");
       Database::bind(':username', self::$username);
@@ -296,21 +312,20 @@ class User
 
         if ($user) {
           if (md5($password) == $user->password) {
-            $login_key = uniqid('ddforum_logged_');
-            self::$loginKey = $login_key;
+
+            $login_key = md5(self::$loginKey);
 
             if (!$remember) {
-              setcookie($login_key, $username, 0);
+              setcookie('ddforum', $username . '_' . $login_key, 0);
             } else {
-              setcookie($login_key, $username, time()+60*60*24*30);
+              setcookie('ddforum', $username . '_' . $login_key, time()+60*60*24*30);
             }
 
-            /*if (self::isAdmin()) {*/
+            if (1 == $user->level) {
+              Util::redirect(Site::adminUrl());
+            } else {
               Util::redirect(Site::url());
-            /*} /*else {
-              Util::redirect(Site::url());
-            }*/
-
+            }
           } else {
             self::$error[] = 'Password is incorrect';
             return false;
@@ -463,5 +478,14 @@ class User
     }
 
     return false;
+  }
+
+  public static function defaultAvatar()
+  {
+    if (file_exists(DDFPATH . 'inc/avatar/ddf-avatar.png')) {
+      return Site::url() . '/inc/avatar/ddf-avatar.png';
+    }
+
+    return null;
   }
 }
