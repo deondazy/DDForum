@@ -51,15 +51,15 @@ use DDForum\Core\Topic;
             </div>
 
             <ul class="pull-left">
-              <li class="site-navigation-link"><a href="#">Edit Profile</a></li>
-              <li class="site-navigation-link"><a href="auth.php?action=logout">Logout</a></li>
+              <li class="site-navigation-link"><a href="edit-profile">Edit Profile</a></li>
+              <li class="site-navigation-link"><a href="logout">Logout</a></li>
             </ul>
           <?php else : ?>
             <div class="site-navigation-welcome-text pull-left">Welcome <strong>Guest:</strong></div>
 
             <ul class="pull-left">
-              <li class="site-navigation-link"><a href="auth.php?action=register"><b>Register</b></a></li>
-              <li class="site-navigation-link"><a href="auth.php">Login</a></li>
+              <li class="site-navigation-link"><a href="register"><b>Register</b></a></li>
+              <li class="site-navigation-link"><a href="login">Login</a></li>
             </ul>
           <?php endif; ?>
         </nav>
