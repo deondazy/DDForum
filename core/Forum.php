@@ -6,8 +6,6 @@ use DDForum\Core\Database;
 
 class Forum
 {
-  const TABLE = TABLE_PREFIX . 'forums';
-
   /**
    * New created forumID
    * @var int
@@ -38,6 +36,11 @@ class Forum
 
   public static $count;
 
+  private static function table()
+  {
+    return TABLE_PREFIX . 'forums';
+  }
+
   /**
    * Create new forum in forums table
    *
@@ -50,7 +53,7 @@ class Forum
       throw new \InvalidArgumentException("Argument must be a non empty array");
     }
 
-    $query = "INSERT INTO ". self::TABLE;
+    $query = "INSERT INTO ". self::table();
     $col = '';
     $val = '';
 
@@ -90,7 +93,7 @@ class Forum
       throw new \InvalidArgumentException("Argument must be a non empty array");
     }
 
-    $query = "UPDATE ". self::TABLE ." SET ";
+    $query = "UPDATE ". self::table() ." SET ";
     $col = '';
 
     foreach ($forum as $column => $value) {
@@ -118,7 +121,7 @@ class Forum
    */
   public static function delete($id)
   {
-    Database::query("DELETE FROM ". self::TABLE ." WHERE forumID = :id");
+    Database::query("DELETE FROM ". self::table() ." WHERE forumID = :id");
     Database::bind(':id', $id);
 
     return Database::execute();
@@ -126,7 +129,7 @@ class Forum
   }
 
   public static function getAll() {
-    Database::query("SELECT * FROM ". self::TABLE);
+    Database::query("SELECT * FROM ". self::table());
 
     self::$count = Database::$statement->rowCount();
 
@@ -135,7 +138,7 @@ class Forum
 
   public static function get($field, $id)
   {
-    Database::query("SELECT $field FROM " . self::TABLE . " WHERE forumID = :id");
+    Database::query("SELECT $field FROM " . self::table() . " WHERE forumID = :id");
     Database::bind(':id', $id);
 
     if (!Database::fetchOne()) {
@@ -167,7 +170,7 @@ class Forum
    */
   public static function dropdown($class = 'editor-select', $selected = null)
   {
-    Database::query("SELECT * FROM ". self::TABLE ." WHERE forum_type = 'forum'");
+    Database::query("SELECT * FROM ". self::table() ." WHERE forum_type = 'forum'");
     $forums = Database::fetchAll();
 
     $output = '<select id="topic-forum" name="topic-forum" class="'.$class.'">';

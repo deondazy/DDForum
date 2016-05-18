@@ -6,7 +6,10 @@ use DDForum\Core\Database;
 
 class Option
 {
-  const TABLE = TABLE_PREFIX . 'options';
+  private static function table()
+  {
+    return TABLE_PREFIX . 'options';
+  }
 
   public static function config_file()
   {
@@ -26,7 +29,7 @@ class Option
       $option = 'site_name';
     }
 
-    Database::query("SELECT option_value FROM " .self::TABLE ." WHERE option_name = :option");
+    Database::query("SELECT option_value FROM " .self::table() ." WHERE option_name = :option");
     Database::bind(':option', $option);
 
     return Database::fetchOne()->option_value;
@@ -35,11 +38,11 @@ class Option
   public static function set($option, $value)
   {
     if (!empty($option)) {
-      Database::query('SELECT optionID FROM ' .self::TABLE .' WHERE option_name = :option');
+      Database::query('SELECT optionID FROM ' .self::table() .' WHERE option_name = :option');
       Database::bind(':option', $option);
       $option_id = Database::fetchOne()->optionID;
 
-      Database::query("UPDATE " .self::TABLE ." SET option_value = :value WHERE optionID = '$option_id'");
+      Database::query("UPDATE " .self::table() ." SET option_value = :value WHERE optionID = '$option_id'");
       Database::bind(':value', $value);
 
       return Database::execute();
@@ -51,7 +54,7 @@ class Option
   public static function add($option, $value)
   {
     if (!empty($option)) {
-      Database::query("INSERT INTO " .self::TABLE ." (option_name, option_value) VALUES (:option, :value)");
+      Database::query("INSERT INTO " .self::table() ." (option_name, option_value) VALUES (:option, :value)");
       Database::bind(':option', $option);
       Database::bind(':value', $value);
       Database::execute();

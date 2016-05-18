@@ -6,8 +6,6 @@ use DDForum\Core\Database;
 
 class Reply
 {
-  const TABLE = TABLE_PREFIX . 'replies';
-
   /**
    * New created forumID
    * @var int
@@ -38,6 +36,11 @@ class Reply
 
   public static $count;
 
+  private static function table()
+  {
+    return TABLE_PREFIX . 'replies';
+  }
+
   /**
    * Create new forum in forums table
    *
@@ -50,7 +53,7 @@ class Reply
       throw new \InvalidArgumentException("Argument must be a non empty array");
     }
 
-    $query = "INSERT INTO ". self::TABLE;
+    $query = "INSERT INTO ". self::table();
     $col = '';
     $val = '';
 
@@ -90,7 +93,7 @@ class Reply
       throw new \InvalidArgumentException("Argument must be a non empty array");
     }
 
-    $query = "UPDATE ". self::TABLE ." SET ";
+    $query = "UPDATE ". self::table() ." SET ";
     $col = '';
 
     foreach ($reply as $column => $value) {
@@ -118,7 +121,7 @@ class Reply
    */
   public static function delete($id)
   {
-    Database::query("DELETE FROM ". self::TABLE ." WHERE replyID = :id");
+    Database::query("DELETE FROM ". self::table() ." WHERE replyID = :id");
     Database::bind(':id', $id);
 
     return Database::execute();
@@ -126,7 +129,7 @@ class Reply
   }
 
   public static function getAll($where = null) {
-    $query = "SELECT * FROM ". self::TABLE;
+    $query = "SELECT * FROM ". self::table();
 
     if ($where) {
       $query .= " WHERE " . $where;
@@ -141,7 +144,7 @@ class Reply
 
   public static function get($field, $id)
   {
-    Database::query("SELECT $field FROM " . self::TABLE . " WHERE replyID = :id");
+    Database::query("SELECT $field FROM " . self::table() . " WHERE replyID = :id");
     Database::bind(':id', $id);
 
     if (!Database::fetchOne()) {
