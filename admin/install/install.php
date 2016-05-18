@@ -234,12 +234,6 @@ switch ( $step ) {
 
   case 3:
 
-    if (file_exists(DDFPATH . 'config.php')) {
-      include(DDFPATH . 'config.php');
-    }
-
-    Database::connect();
-
     create_config_header( 'Create Tables' );
 
     install_step( 'tables' );
@@ -327,6 +321,7 @@ switch ( $step ) {
                   'last_seen'     => date('Y-m-d h:i:s'),
                   'level'         => 1,
                   'credit'        => 100,
+                  'avatar'        => User::defaultAvatar()
                 ];
 
                 $insert = User::create($data_admin);

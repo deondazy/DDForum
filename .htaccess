@@ -18,6 +18,7 @@ RewriteRule ^users/(\d+)*$ ./user.php?id=$1
 RewriteRule ^users/(\d+)/edit*$ ./user-edit.php?id=$1
 
 RewriteRule ^login*$ ./login.php
+RewriteRule ^logout*$ ./logout.php
 RewriteRule ^register*$ ./register.php
 RewriteRule ^forgot-password*$ ./forgot-password.php
 
