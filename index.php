@@ -58,7 +58,7 @@ require_once(DDFPATH . 'header.php');
         </td>
 
         <td class="the-reply int-value">
-          <?php echo $topic->topic_replies; ?>
+          <?php echo Topic::countReplies($topic->topicID); ?>
         </td>
 
         <td class="the-view int-value">

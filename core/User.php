@@ -12,7 +12,7 @@ class User
    * Database users table
    * @var string
    */
-  private static $usersTable = TABLE_PREFIX . 'users';
+  const TABLE = TABLE_PREFIX . 'users';
 
   /**
    * Current user's UserID.
@@ -133,7 +133,7 @@ class User
       throw new \InvalidArgumentException("Argument must be a non empty array");
     }
 
-    $query = "INSERT INTO ". self::$usersTable;
+    $query = "INSERT INTO ". self::TABLE;
     $col = '';
     $val = '';
 
@@ -177,7 +177,7 @@ class User
     if (isset($_COOKIE[self::$loginKey])) {
       self::$username = $_COOKIE[self::$login_key];
 
-      $userId = Database::query("SELECT userID FROM ". self::$usersTable ." WHERE username = :username");
+      $userId = Database::query("SELECT userID FROM ". self::TABLE ." WHERE username = :username");
       Database::bind(':username', self::$username);
 
       return Database::fetchOne()->userID;
@@ -187,7 +187,7 @@ class User
   }
 
   public static function getAll() {
-    Database::query("SELECT * FROM ". self::$usersTable);
+    Database::query("SELECT * FROM ". self::TABLE);
 
     return Database::fetchAll();
   }
@@ -209,7 +209,7 @@ class User
       $id = self::currentUserId();
     }
 
-    Database::query("SELECT $field FROM " . self::$usersTable . " WHERE userID = $id");
+    Database::query("SELECT $field FROM " . self::TABLE . " WHERE userID = $id");
 
     $info = Database::fetchOne();
 
@@ -236,7 +236,7 @@ class User
       throw new \InvalidArgumentException("Argument must be a non empty array");
     }
 
-    $query = "UPDATE ". self::$usersTable ." SET ";
+    $query = "UPDATE ". self::TABLE ." SET ";
     $col = '';
 
     foreach ($data as $column => $value) {
@@ -289,7 +289,7 @@ class User
   {
     if (!empty($username)) {
       if (!empty($password)) {
-        Database::query("SELECT userID, username, password, level FROM " . self::$usersTable . " WHERE username = :username");
+        Database::query("SELECT userID, username, password, level FROM " . self::TABLE . " WHERE username = :username");
 
         Database::bind(':username', $username);
 
@@ -426,7 +426,7 @@ class User
 
   public static function exist($user_id)
   {
-    Database::query('SELECT userID FROM ' .self::$usersTable .' WHERE userID = :id');
+    Database::query('SELECT userID FROM ' .self::TABLE .' WHERE userID = :id');
     Database::bind(':id', $user_id);
 
     Database::execute();
@@ -440,7 +440,7 @@ class User
 
   public static function findByName($username)
   {
-    Database::query('SELECT username FROM ' .self::$usersTable .' WHERE username = :name');
+    Database::query('SELECT username FROM ' .self::TABLE .' WHERE username = :name');
     Database::bind(':name', $username);
 
     Database::execute();
@@ -454,7 +454,7 @@ class User
 
   public static function findByEmail($email)
   {
-    Database::query('SELECT email FROM ' .self::$usersTable .' WHERE email = :email');
+    Database::query('SELECT email FROM ' .self::TABLE .' WHERE email = :email');
     Database::bind(':email', $email);
 
     Database::execute();

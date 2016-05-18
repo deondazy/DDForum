@@ -6,7 +6,7 @@ use DDForum\Core\Database;
 
 class Topic
 {
-  private static $table = TABLE_PREFIX . 'topics';
+  const TABLE = TABLE_PREFIX . 'topics';
 
   /**
    * New created topicID
@@ -50,7 +50,7 @@ class Topic
       throw new \InvalidArgumentException("Argument must be a non empty array");
     }
 
-    $query = "INSERT INTO ". self::$table;
+    $query = "INSERT INTO ". self::TABLE;
     $col = '';
     $val = '';
 
@@ -90,7 +90,7 @@ class Topic
       throw new \InvalidArgumentException("Argument must be a non empty array");
     }
 
-    $query = "UPDATE ". self::$table ." SET ";
+    $query = "UPDATE ". self::TABLE ." SET ";
     $col = '';
 
     foreach ($topic as $column => $value) {
@@ -120,7 +120,7 @@ class Topic
    */
   public static function delete($id)
   {
-    Database::query("DELETE FROM ". self::$table ." WHERE topicID = :id");
+    Database::query("DELETE FROM ". self::TABLE ." WHERE topicID = :id");
     Database::bind(':id', $id);
 
     return Database::execute();
@@ -128,7 +128,7 @@ class Topic
   }
 
   public static function getAll() {
-    Database::query("SELECT * FROM ". self::$table);
+    Database::query("SELECT * FROM ". self::TABLE);
 
     self::$count = Database::$statement->rowCount();
 
@@ -137,7 +137,7 @@ class Topic
 
   public static function get($field, $id)
   {
-    Database::query("SELECT $field FROM " . self::$table . " WHERE topicID = :id");
+    Database::query("SELECT $field FROM " . self::TABLE . " WHERE topicID = :id");
     Database::bind(':id', $id);
 
     if (!Database::fetchOne()) {
@@ -166,13 +166,13 @@ class Topic
 
   public static function getPinned()
   {
-    Database::query("SELECT * FROM ". self::$table ." WHERE pin = 1");
+    Database::query("SELECT * FROM ". self::TABLE ." WHERE pin = 1");
     return Database::fetchAll();
   }
 
   public static function getTrending()
   {
-    Database::query("SELECT * FROM ". self::$table ." WHERE pin = 1");
+    Database::query("SELECT * FROM ". self::TABLE ." WHERE pin = 1");
     return Database::fetchAll();
   }
 

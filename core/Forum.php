@@ -6,7 +6,7 @@ use DDForum\Core\Database;
 
 class Forum
 {
-  private static $table = TABLE_PREFIX . 'forums';
+  const TABLE = TABLE_PREFIX . 'forums';
 
   /**
    * New created forumID
@@ -50,7 +50,7 @@ class Forum
       throw new \InvalidArgumentException("Argument must be a non empty array");
     }
 
-    $query = "INSERT INTO ". self::$table;
+    $query = "INSERT INTO ". self::TABLE;
     $col = '';
     $val = '';
 
@@ -90,7 +90,7 @@ class Forum
       throw new \InvalidArgumentException("Argument must be a non empty array");
     }
 
-    $query = "UPDATE ". self::$table ." SET ";
+    $query = "UPDATE ". self::TABLE ." SET ";
     $col = '';
 
     foreach ($forum as $column => $value) {
@@ -118,7 +118,7 @@ class Forum
    */
   public static function delete($id)
   {
-    Database::query("DELETE FROM ". self::$table ." WHERE forumID = :id");
+    Database::query("DELETE FROM ". self::TABLE ." WHERE forumID = :id");
     Database::bind(':id', $id);
 
     return Database::execute();
@@ -126,7 +126,7 @@ class Forum
   }
 
   public static function getAll() {
-    Database::query("SELECT * FROM ". self::$table);
+    Database::query("SELECT * FROM ". self::TABLE);
 
     self::$count = Database::$statement->rowCount();
 
@@ -135,7 +135,7 @@ class Forum
 
   public static function get($field, $id)
   {
-    Database::query("SELECT $field FROM " . self::$table . " WHERE forumID = :id");
+    Database::query("SELECT $field FROM " . self::TABLE . " WHERE forumID = :id");
     Database::bind(':id', $id);
 
     if (!Database::fetchOne()) {
@@ -167,7 +167,7 @@ class Forum
    */
   public static function dropdown($class = 'editor-select', $selected = null)
   {
-    Database::query("SELECT * FROM ". self::$table ." WHERE forum_type = 'forum'");
+    Database::query("SELECT * FROM ". self::TABLE ." WHERE forum_type = 'forum'");
     $forums = Database::fetchAll();
 
     $output = '<select id="topic-forum" name="topic-forum" class="'.$class.'">';
