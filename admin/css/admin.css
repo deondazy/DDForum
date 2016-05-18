@@ -5,10 +5,6 @@
 	box-sizing: border-box;
 }
 
-html.admin-bar {
-	padding-top: 45px;
-}
-
 html, body {
 	background: #f0f0f0;
 	margin: 0;
@@ -16,11 +12,15 @@ html, body {
 	height: 100%;
 }
 
+html {
+  padding-top: 54px;
+}
+
 body {
 	color: #333;
 	font-family: "Open Sans", sans-serif;
-	font-size: 14px;
-	line-height: 1.4em;
+	font-size: 100%;
+	line-height: 1;
 	min-width: 600px;
 }
 
@@ -115,10 +115,11 @@ input[type="checkbox"]:checked:before {
 /* Admin Bar
 -------------------------------------------------*/
 #admin-bar {
-	background: #000d19;
-	color: #fff;
+	background: #fff;
+  border-top: 4px solid #e53e54;
+	color: #000d19;
 	font: 400 14px/45px "Open Sans", sans-serif;
-	height: 45px;
+	max-height: 54px;
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -126,9 +127,36 @@ input[type="checkbox"]:checked:before {
 	z-index: 99999;
 }
 
+#admin-bar a {
+  color: #fff;
+}
+
+.admin-bar-tools ul {
+  padding: 5px 0;
+}
+
 .admin-bar-tools li {
 	float: left;
-	margin-right: 20px;
+  margin-right: 2px;
+  position: relative;
+  background: #eee;
+  height: 40px;
+  width: 40px;
+  text-align: center;
+}
+
+.admin-bar-tools li ul {
+  background: #000d19;
+  display: none;
+  position: absolute;
+}
+
+.admin-bar-tools li li {
+  float: left;
+}
+
+.admin-bar-tools li:hover ul {
+  display: block;
 }
 
 .admin-bar-user li ul {
@@ -145,131 +173,95 @@ li.admin-bar-ddf-logo {
 }
 
 #ddf-logo {
-	height: 35px;
-	width: 120px;
+  margin: 5px 0;
 }
 
-#admin-menu,
-#admin-menu-bg,
-#admin-menu-container {
-	background: #000d19;
-	width: 180px;
+/* Admin Bar
+-------------------------------------------------*/
+
+.admin-menu-wrap { float: left }
+
+.admin-menu-bg {
+  background-color: #000d19;
+  border-right: 3px solid #777;
+  bottom: -1px;
+  position: fixed;
+  top: 54px;
+  width: 200px;
+  z-index: 1;
 }
 
-#admin-menu-bg {
-	border-right: 3px solid #777;
-	position: fixed;
-	top: 45px;
-	bottom: -200px;
-	z-index: 1;
+.admin-menu-container {
+  border-top: 10px solid #777;
+  position: relative;
+  z-index: 2;
 }
 
-#admin-menu-container {
-	border-right: 3px solid #777;
-	position: relative;
-	float: left;
-	z-index: 99999;
-}
-
-#admin-menu * {
-	-moz-user-select: none;
-}
-
-#admin-menu {
-	border-right: 3px solid #777;
-	clear: left;
-	margin: 10px 0;
-	padding: 0;
-	list-style: none;
-}
+.admin-menu-bg,
+.admin-menu-container,
+.admin-menu,
+.admin-sub-menu { width: 200px }
 
 .admin-menu-item {
-	position: relative;
-	min-height: 35px;
+  position: relative;
 }
 
 .admin-menu-item a {
-	color: #fff;
-	text-decoration: none;
-	display: block;
-	font: 400 14px/35px "Open Sans", sans-serif;
-}
-
-.admin-menu-item:hover a,
-.active-menu,
-.active-menu-parent {
-	background: #e54e53;
+  color: #fff;
+  text-decoration: none;
+  display: block;
+  font: 400 14px/35px "Open Sans", sans-serif;
+  min-height: 35px;
 }
 
 .admin-menu-icon {
-	float: left;
-	text-align: center;
-	width: 40px;
-	height: 35px;
+  float: left;
+  text-align: center;
+  width: 40px;
+  height: 35px;
 }
 
-.admin-menu-icon .genericon {
-	font-size: 18px;
-	line-height: 35px;
+.admin-menu-item:hover .admin-sub-menu { display: block }
+
+.admin-menu-item:hover,
+.active-menu {
+  background: #e54e53;
 }
 
-.admin-sub-menu {
-	border-left: 3px solid #e53e54;
-	position: absolute;
-	left: 177px;
-	top: 0;
-	background: #000d19;
-	width: 180px;
-	display: none;
-}
-
-.admin-menu-item:hover .admin-sub-menu {
-	display: block;
-}
-
-.admin-menu-item.active-menu .admin-sub-menu,
-.admin-menu-item.active-menu-parent .admin-sub-menu {
-	border-left: 0;
-	border-right: 3px solid #e53e54;
+.active-menu .admin-sub-menu {
+  border-left: 0;
+  border-right: 3px solid #e53e54;
   position: relative;
   left: 0;
   background: #000;
-  width: 180px;
   display: block;
 }
 
-.admin-menu-item.active-menu .admin-sub-menu a,
-.admin-menu-item.active-menu-parent .admin-sub-menu a {
-	color: #ccc;
-}
-.admin-menu-item.active-menu .admin-sub-menu a:hover,
-.admin-menu-item.active-menu-parent .admin-sub-menu a:hover {
-	color: #e53e54;
-}
+ /* Admin menu sub-menu */
+ .admin-sub-menu {
+    border-left: 3px solid #e53e54;
+    position: absolute;
+    left: 197px;
+    top: 0;
+    background: #000d19;
+    display: none;
+  }
 
-.admin-menu-item .admin-sub-menu .active-submenu a {
-	font-weight: bold;
-	color: #fff;
-}
+  .admin-sub-menu-item a {
+    color: #ccc;
+    font-size: 13px;
+    padding-left: 15px;
+  }
 
-.admin-menu-item:hover .admin-sub-menu a {
-	background: transparent;
-}
-
-.admin-sub-menu-item a {
-	padding-left: 15px;
-	padding-right: 16px;
-}
-
-.admin-sub-menu-item a:hover {
-	background: transparent;
-	color: #e53e54;
-}
+  .admin-sub-menu-item a:hover,
+  .active-sub-menu a {
+    color: #e53e54;
+  }
 
 .admin-profile-preview {
 	background: #000;
-	color: #fff;
-	padding: 15px;
+  color: #fff;
+  padding: 11.5px 10px;
 }
 
 .admin-profile-preview .avatar {
@@ -283,7 +275,7 @@ li.admin-bar-ddf-logo {
 
 #admin-content,
 #admin-footer {
-	margin-left: 180px;
+	margin-left: 200px;
 }
 
 #admin-content {
@@ -315,9 +307,9 @@ li.admin-bar-ddf-logo {
 	font-size: 14px;
 	font-weight: bold;
 	display: inline-block;
-	width: 75px;
 	white-space: pre;
 	text-align: left;
+  margin-right: 2px;
 	padding: 0;
 }
 
@@ -328,10 +320,9 @@ li.admin-bar-ddf-logo {
 .title-box {
 	display: block;
 	font-size: 20px;
-	height: 40px;
+	height: 30px;
 	width: 100%;
 	margin-top: 15px;
-	margin-bottom: 50px;
 	border: 1px solid #ddd;
 	padding: 5px 15px;
 }
@@ -384,7 +375,7 @@ li.admin-bar-ddf-logo {
 .form-wrap-side {
 	width: 30%;
 	float: left;
-	margin-left: 30px;
+	padding-left: 30px;
 }
 
 .form-wrap-side .content {
@@ -417,107 +408,6 @@ li.admin-bar-ddf-logo {
 
 .header {
 
-}
-
-/* Installation
-------------------------------------------------- */
-
-.ddf-ui {
-	background: #fff;
-	max-width: 700px;
-	margin: 100px auto;
-  border: 1px solid #ddd;
-  padding: 25px;
-  text-align: left;
-  position: relative;
-  min-height: 450px;
-}
-
-#logo {
-	margin-bottom: 25px;
-}
-
-#logo a {
-	background-image: url(../images/ddforum-logo.svg);
-	background-size: 84px auto;
-	background-position: center top;
-	background-repeat: no-repeat;
-	color: #999;
-	height: 84px;
-	font-size: 20px;
-	font-weight: 400;
-	line-height: 1.3em;
-	padding: 0px;
-	text-decoration: none;
-	width: 84px;
-	text-indent: -9999px;
-	outline: 0px none;
-	overflow: hidden;
-	display: block;
-	margin: 0 auto;
-}
-
-.step {
-	margin-top: 25px;
-}
-
-.button-secondary {
-	background: #f5f5f5;
-  border: 1px solid #ddd;
-  padding: 6px 25px;
-  color: #333;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.button-secondary:hover {
-	background: #ff6868;
-	color: #fff;
-}
-
-.text-input {
-	height: 30px;
-  padding: 1px 5px;
-  border: 1px solid #ddd;
-  color: #777;
-}
-
-.install-head {
-	border-bottom: 1px solid #ddd;
-	padding-bottom: 25px;
-	margin-bottom: 25px;
-}
-
-.show-message {
-  background-color: #ddd;
-  color: #333;
-  padding: 10px;
-  margin-bottom: 25px;
-  border-left: 3px solid #333;
-}
-
-#install-steps {
-	position: absolute;
-	left: -135px;
-	width: 135px;
-}
-
-.step-item {
-	background: #eee;
-	border: 1px solid #ddd;
-  border-radius: 10px 0 0 10px;
-	padding-bottom: 5px;
-  padding-left: 20px;
-  padding-top: 5px;
-  color: #777;
-}
-
-.step-item.active {
-	background: #fff;
-	border-right-color: #fff;
-	border-bottom-color: #bbb;
-	border-top-color: #bbb;
-	color: #333;
 }
 
 /* Overview
@@ -565,7 +455,8 @@ li.admin-bar-ddf-logo {
 	color: #222;
 	font-size: 26px;
 	font-weight: bold;
-	padding-top: 4px;
+	padding: 10px 0;
+  text-align: center;
 }
 
 .overview-name {
@@ -735,13 +626,6 @@ li.admin-bar-ddf-logo {
 	vertical-align: middle;
 }
 
-.description {
-	margin-top: .5em;
-	font-size: 13px;
-	color: #555;
-	font-style: italic;
-}
-
 #show-avatar img {
 	height: 100px;
 	width: 100px;
@@ -823,4 +707,36 @@ li.admin-bar-ddf-logo {
 
 .feature-notice {
   margin-bottom: 25px;
+}
+
+.slug-field {
+  font-size: 12px;
+  font-style: italic;
+  background: rgba(229, 78, 83, 0.11);
+}
+
+.slug {
+  background: transparent;
+  border: none;
+}
+.field { margin-bottom: 10px }
+
+.info { padding: 15px 0; }
+
+.info-notice {
+  background: #fff2d9;
+  border: 1px solid #ffd597;
+  display: block;
+  padding: 10px 15px;
+}
+
+.info-error {
+  background: #ffd9de;
+  border: 1px solid #ff91a0;
+  display: block;
+  padding: 10px 15px;
+}
+
+.mce-fullscreen {
+  top: 54px !important;
 }

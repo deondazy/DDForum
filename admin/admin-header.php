@@ -1,39 +1,43 @@
 <?php
 /**
- * ddforum index
+ * Administration Header
  *
+ * @package DDForum
+ * @subpackage Administration
  */
-?>
 
-<!DOCTYPE html>
-<html class="admin-bar">
-	<head>
-		<title><?php echo $title ?> &lsaquo; DDForum</title>
-		<meta charset="utf8">
-		<meta content="width=device-width, initial-scale=1" name="viewport">
-		<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-		<link rel="stylesheet" href="<?php echo home_url() . '/inc/css/bootstrap.css'; ?>">
-		<?php load_admin_css(); ?>
-		<link rel="stylesheet" href="<?php echo home_url() . '/inc/font/genericons.css'; ?>">
+use DDForum\Core\Site;
+use DDForum\Core\User;
 
-		<script src="<?php echo home_url() . '/inc/js/jquery.js'; ?>"></script>
-		<script src="<?php echo home_url() . '/inc/js/tinymce/js/tinymce/tinymce.js' ?>"></script>
-		<script src="<?php echo home_url() . '/inc/js/editor.js' ?>"></script>
-		<script src="<?php echo admin_url('js/functions.js') ?>"></script>
-		<script src="<?php echo admin_url('js/uploader.js') ?>"></script>
-	</head>
+?><!DOCTYPE html>
+<html>
+  <head>
+    <title><?php echo $title ?> &lsaquo; DDForum</title>
+    <meta charset="utf8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="<?php echo Site::url() . '/inc/css/bootstrap.css'; ?>">
+    <link rel="stylesheet" href="<?php echo Site::adminUrl('css/admin.css'); ?>">
+    <link rel="stylesheet" href="<?php echo Site::url() . '/inc/css/font-awesome.css'; ?>">
 
-	<body>
-		<div class="wrap">
+    <script src="<?php echo Site::url() . '/inc/js/jquery.js'; ?>"></script>
+    <script src="<?php echo Site::url() . '/inc/js/tinymce/js/tinymce/tinymce.js' ?>"></script>
+    <script src="<?php echo Site::url() . '/inc/js/editor.js' ?>"></script>
+    <script src="<?php echo Site::adminUrl('js/functions.js') ?>"></script>
+    <script src="<?php echo Site::adminUrl('js/uploader.js') ?>"></script>
+  </head>
 
-			<?php include ABSPATH . 'admin/inc/admin-menu.php'; ?>
+  <body>
+    <div class="wrap">
 
-			<div id="admin-content">
+      <?php include DDFPATH . 'admin/inc/admin-menu.php'; ?>
 
-				<?php include ABSPATH . 'inc/admin-bar.php'; ?>
+      <div id="admin-content">
 
-				<div id="admin-body">
-			
-					<header class="admin-header"><h2><?php echo $title; ?></h2></header>
+        <?php include DDFPATH . 'inc/admin-bar.php'; ?>
 
-					<div id="main" class="container clearfix">
+        <div id="admin-body">
+
+          <header class="admin-header"><h2><?php echo $title; ?></h2></header>
+
+          <div id="main" class="container clearfix">

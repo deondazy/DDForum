@@ -1,18 +1,50 @@
 tinymce.init({
-    selector: '#form-box',
-    plugins: [
-    "advlist autosave autolink fullscreen table hr link textcolor emoticons searchreplace charmap paste wordcount pagebreak code hello"
-    ],
+  selector: '#form-box',
+  plugins: [
+  "advlist autosave autolink fullscreen table link emoticons charmap paste wordcount"
+  ],
 
-    pagebreak_separator: "<!--u page break-->",
+  toolbar1: 'bold italic underline strikethrough bullist numlist link advlist charmap emoticons fullscreen',
 
-    toolbar1: 'bold italic underline strikethrough | formatselect fontselect fontsizeselect | bullist numlist | alignleft aligncenter alignright alignjustify | link | advlist fullscreen',
-    toolbar2: 'forecolor backcolor | charmap emoticons | outdent indent | pastetext | searchreplace hello image',
-
-    skin: 'nmfskin',
-    paste_as_text: true,
-    menubar: false,
-    gecko_spellcheck : true,
-    resize: false,
-    path: false,
+  skin: 'nmfskin',
+  paste_as_text: true,
+  menubar: false,
+  gecko_spellcheck : true,
+  resize: false,
+  path: false,
 });
+
+$(document).ready(function() {
+  $('.open-editor').on('click', function(e) {
+    e.preventDefault();
+    $('.editor').slideDown('slow');
+    $('.editor-title').focus();
+  });
+
+  $('.close-editor').click(function(event) {
+    event.preventDefault();
+    $('.editor').slideUp('slow');
+  });
+
+  $('#topic-form').on('submit', function(ev) {
+    ev.preventDefault();
+
+    var topicSubject = $('#topic-subject').val(),
+        topicForum   = $('#topic-forum').val(),
+        topicMessage = tinyMCE.get('front-editor').getContent();
+
+    $.post('post-topic.php',
+      {
+        topic_subject:topicSubject,
+        topic_forum:topicForum,
+        topic_message:topicMessage
+      },
+      function(data) {
+        $('.editor').prepend('<div class="fixed">' + data + '</div>');
+        setTimeout(function() {
+          $('.fixed').fadeOut(2000)
+        }, 1000);
+      }
+    )
+  });
+})

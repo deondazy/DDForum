@@ -5,15 +5,8 @@
 * Database INSERT, SELECT, UPDATE, DELETE
 */
 
-/**
-* We turned off error reporting
-* You can set error_reporting( E_ALL )
-* or error_reporting( E_ALL | E_STRICT ) for debugging
-*/
-//error_reporting(0);
-
 // Can't be accessed directly
-if ( !defined( 'ABSPATH' ) ) {
+if ( !defined( 'DDFPATH' ) ) {
 	die( 'Direct access denied' );
 }
 
@@ -203,7 +196,7 @@ class ddf_db {
 	* Connect to the MySQL Database server
 	*
 	* Sets up the class properties with credentials from config.php
-	* and connects to the database server 
+	* and connects to the database server
 	*/
 	public function __construct( $db_user, $db_pass, $db_name, $db_host ) {
 		$this->db_user = $db_user;
@@ -212,8 +205,8 @@ class ddf_db {
 		$this->db_host = $db_host;
 
 		// Create the mysqli connection object
-		$this->db_connect = @new mysqli($this->db_host, $this->db_user, $this->db_pass, $this->db_name);
-		
+		$this->db_connect = /*@*/new mysqli($this->db_host, $this->db_user, $this->db_pass, $this->db_name);
+
 		// Show error and exit if unable to connect to database
 		if ( $this->db_connect->connect_errno ) {
 			$this->error = true;
@@ -239,11 +232,11 @@ class ddf_db {
 	public function __destruct() {
 		// Check if there is an active connection, then close it
 		if ( $this->db_connect ) {
-			$close = @$this->db_connect->close();
+			$close = /*@*/$this->db_connect->close();
 
 			if ( ! $close ) {
 				return false;
-			} 
+			}
 			else {
 				return true;
 			}
@@ -290,7 +283,7 @@ class ddf_db {
 			$query .= ' ORDER BY ' . $order;
 		if ( ! empty($limit) )
 			$query .= ' LIMIT ' . $offset  . ', ' . $limit;
-		
+
 		if ( $result = $this->db_connect->query($query) ) {
 			$this->db_query = $result;
 
@@ -313,7 +306,7 @@ class ddf_db {
 	/**
 	 * Insert record to specified table in Database
 	 *
-	 * Takes an array of data ( $data ) and inserts a new 
+	 * Takes an array of data ( $data ) and inserts a new
 	 * record using the array keys as column names and array
 	 * value as column values
 	 *
@@ -324,7 +317,7 @@ class ddf_db {
 	 */
 	public function insert_data( $table, $data ) {
 		$this->db_query = 'INSERT INTO `' . $table . '` ';
-		
+
 		$columns = '';
 		$values = '';
 
@@ -355,7 +348,7 @@ class ddf_db {
 	/**
 	 * Update record to specified table in Database
 	 *
-	 * Takes an array of data ( $data ) and updates 
+	 * Takes an array of data ( $data ) and updates
 	 * record(s) using the array keys as column names and array
 	 * value as column values
 	 *
@@ -365,16 +358,16 @@ class ddf_db {
 	 *
 	 * @return bool true on success or false on failure
 	 */
-	public function update_data( $table, $data, $where = '' ) {
+	public function update_data( $table, array $data, $where = '' ) {
 		$this->db_query = 'UPDATE `' . $table . '` SET ';
 
 		foreach ($data as $c => $v) {
-			if ( strtolower($v) == 'now()' ) 
+			if ( strtolower($v) == 'now()' )
 				$this->db_query .= "`$c` = NOW(), ";
 
 			elseif( preg_match("/^increment\((\-?\d+)\)$/i", $v, $m) )
 				$this->db_query .= "`$c` = `$c` + $m[1], ";
-			
+
 			else
 				$this->db_query .= "`$c`='" . $this->db_connect->real_escape_string($v) . "', ";
 		}
@@ -390,7 +383,7 @@ class ddf_db {
 			if ( $this->affected_rows > 0 ) {
 				return $this->db_connect->affected_rows;
 			}
-			
+
 			return false;
 		}
 
@@ -400,7 +393,7 @@ class ddf_db {
 	/**
 	 * Delete record from specified table in Database
 	 *
-	 * Takes an array of data ( $data ) and updates 
+	 * Takes an array of data ( $data ) and updates
 	 * record(s) using the array keys as column names and array
 	 * value as column values
 	 *
@@ -424,7 +417,7 @@ class ddf_db {
 			if ( $this->affected_rows > 0 ) {
 				return $this->db_connect->affected_rows;
 			}
-			
+
 			return false;
 		}
 
@@ -499,7 +492,7 @@ class ddf_db {
 		if (!empty($this->db_query)) {
 			$topic_obj = $this->fetch_object($this->db_query);
 
-			return @$topic_obj->$field;
+			return $topic_obj->$field;
 
 			if ( $today ) {
 				$topics_today = $this->db_query = $this->query("SELECT `topic_date` FROM $ddf_db->topics WHERE topicID = '$topic_id'");
@@ -522,12 +515,12 @@ class ddf_db {
 	 * @return mixed
 	 */
 	public function get_reply( $field, $reply_id ) {
-		$this->db_query = $this->query("SELECT * FROM `replies` WHERE replyID = '$reply_id'");
+		$this->db_query = $this->query("SELECT * FROM {$this->replies} WHERE replyID = '{$reply_id}'");
 
 		if (!empty($this->db_query)) {
 			$reply_obj = $this->fetch_object($this->db_query);
 
-			return @$reply_obj->$field;
+			return /*@*/$reply_obj->$field;
 		}
 		return '';
 	}

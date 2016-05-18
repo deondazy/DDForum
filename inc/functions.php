@@ -8,7 +8,7 @@
  */
 
 // Can't be accessed directly
-if ( !defined( 'ABSPATH' ) ) {
+if ( !defined( 'DDFPATH' ) ) {
 	die( 'Direct access denied' );
 }
 
@@ -26,26 +26,26 @@ function guess_url() {
 	if ( defined('SITEURL') && '' != SITEURL ) {
 		$url = SITEURL;
 	} else {
-		$abspath_fix = str_replace( '\\', '/', ABSPATH );
+		$abspath_fix = str_replace( '\\', '/', DDFPATH );
 		$script_filename_dir = dirname( $_SERVER['SCRIPT_FILENAME'] );
 
 		// The request is for the admin
 		if ( strpos( $_SERVER['REQUEST_URI'], 'admin' ) !== false || strpos( $_SERVER['REQUEST_URI'], 'auth.php' ) !== false ) {
 			$path = preg_replace( '#/(admin/.*|auth.php)#i', '', $_SERVER['REQUEST_URI'] );
 
-		// The request is for a file in ABSPATH
+		// The request is for a file in DDFPATH
 		} elseif ( $script_filename_dir . '/' == $abspath_fix ) {
 			// Strip off any file/query params in the path
 			$path = preg_replace( '#/[^/]*$#i', '', $_SERVER['PHP_SELF'] );
 
 		} else {
 			if ( false !== strpos( $_SERVER['SCRIPT_FILENAME'], $abspath_fix ) ) {
-				// Request is hitting a file inside ABSPATH
-				$directory = str_replace( ABSPATH, '', $script_filename_dir );
+				// Request is hitting a file inside DDFPATH
+				$directory = str_replace( DDFPATH, '', $script_filename_dir );
 				// Strip off the sub directory, and any file/query paramss
 				$path = preg_replace( '#/' . preg_quote( $directory, '#' ) . '/[^/]*$#i', '' , $_SERVER['REQUEST_URI'] );
 			} elseif ( false !== strpos( $abspath_fix, $script_filename_dir ) ) {
-				// Request is hitting a file above ABSPATH
+				// Request is hitting a file above DDFPATH
 				$subdirectory = substr( $abspath_fix, strpos( $abspath_fix, $script_filename_dir ) + strlen( $script_filename_dir ) );
 				// Strip off any file/query params from the path, appending the sub directory to the install
 				$path = preg_replace( '#/[^/]*$#i', '' , $_SERVER['REQUEST_URI'] ) . $subdirectory;
@@ -153,7 +153,7 @@ function load_admin_css() {
 
 function load_db() {
 	global $ddf_db;
-	include_once ABSPATH . 'inc/class-ddf-db.php';
+	include_once DDFPATH . 'inc/class-ddf-db.php';
 	$ddf_db = new ddf_db( DB_USER, DB_PASSWORD, DB_NAME, DB_HOST );
 
 	return $ddf_db;
@@ -170,10 +170,10 @@ function is_installed() {
 	global $ddf_db;
 
 	if ( ! defined( 'INSTALLING' ) ) {
-		
+
 		$site_url = $ddf_db->get_option( "site_url" );
 
-	
+
 		if ( !empty($site_url) )
 			return true;
 
@@ -245,7 +245,7 @@ function is_email( $string ) {
 
 	if ( preg_match("/^([a-zA-Z0-9_\.-]+)@([\da-zA-Z0-9_\.-]+)\.([a-zA-Z\.]{2,6})$/", $string) )
 		return true;
-	else 
+	else
 		return false;
 }
 
@@ -310,11 +310,11 @@ function current_user_can( $capability ) {
  */
 function show_message( $text = '', $kill = false ) {
 
-	if ( !empty( $text ) ) { 
+	if ( !empty( $text ) ) {
 
 		if ( is_array( $text ) ) { ?>
 			<div class="show-message">
-				<?php foreach ( $text as $msg ) { 
+				<?php foreach ( $text as $msg ) {
 					echo $msg . '<br/>';
 				} ?>
 			</div>
@@ -327,7 +327,7 @@ function show_message( $text = '', $kill = false ) {
 			<?php
 		}
 	}
-	
+
 	if ( $kill )
 		die;
 }
@@ -340,20 +340,21 @@ function clean_input( $input ) {
 	return $input;
 }
 
-function get_forum( $forum_id ) {
+function get_forum( $field, $forum_id ) {
 	global $ddf_db;
 
-	$forum = $ddf_db->query("SELECT `forumID` FROM `forums` WHERE `forumID` = '$forum_id'");
+	$forum = $ddf_db->query("SELECT {$field} FROM {$ddf_db->forums} WHERE `forumID` = '$forum_id'");
+	$forum = $ddf_db->fetch_object($forum);
 
 	if ( !empty($forum) ) {
 
 		if ( $ddf_db->row_count > 0 ) {
-			return true;
+			return $forum->$field;
 		}
 
 		return false;
 	}
-	
+
 	return false;
 }
 
@@ -386,10 +387,10 @@ function __checked_selected_result( $helper, $current, $show, $type ) {
 	if ( (string) $helper === (string) $current )
 		$result = " $type='$type'";
 
-	else 
+	else
 		$result = '';
 
-	if ( $show ) 
+	if ( $show )
 		echo $result;
 
 	return $result;
@@ -409,14 +410,14 @@ function time2str($ts) {
 	}
 
 	$diff = time() - $ts;
-	
+
 	if ( $diff == 0 ) {
 		return 'now';
 	}
 	elseif ( $diff > 0 ) {
 		$day_diff = floor( $diff / 86400 );
 
-		if ( $day_diff == 0 ) { 
+		if ( $day_diff == 0 ) {
       if ( $diff < 60 ) return 'just now';
       if ( $diff < 120 ) return '1 minute ago';
       if ( $diff < 3600 ) return floor( $diff / 60 ) . ' minutes ago';
@@ -428,7 +429,7 @@ function time2str($ts) {
     if ( $day_diff < 7 ) return $day_diff . ' days ago';
     if ( $day_diff < 31 ) return ceil( $day_diff / 7 ) . ' weeks ago';
     if ( $day_diff < 60 ) return 'last month';
-    
+
     return date('F Y', $ts);
 	}
 	else {
@@ -506,6 +507,15 @@ function user_exist( $user_id ) {
 	return false;
 }
 
+function get_user( $field, $user_id ) {
+	global $ddf_user;
+
+	$user = $ddf_user->get_user( $field, $user_id );
+
+	if ( $user )
+		return $user;
+}
+
 function date_select( $selected_day = '', $selected_month = '', $selected_year = '' ) { ?>
 
 	<select class="select-box" id="day" name="day">
@@ -524,7 +534,7 @@ function date_select( $selected_day = '', $selected_month = '', $selected_year =
 		<?php
 		$months = array('', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
 
-		foreach ( $months as $id => $item ) : 
+		foreach ( $months as $id => $item ) :
 			if ( $id == 0 ) continue; ?>
 			<option value="<?php echo $id; ?>" <?php selected( $selected_month, $id ); ?>><?php echo $item; ?></option>
 		<?php endforeach; ?>
@@ -534,7 +544,7 @@ function date_select( $selected_day = '', $selected_month = '', $selected_year =
 		<?php
 		$current_year = (int) date('Y');
 		$start_year = $current_year - 100;
-		
+
 		for ( $i = $start_year; $i <= $current_year; $i++ ) {
 			$year[] = $i;
 		}
@@ -552,7 +562,7 @@ function json_item_select( $json, $selected = '', $id = '', $name = '' ) {
 
 		foreach ($get_json as $arr) {
 			foreach ( $arr as $key => $value ) {
-				$array[$key] = $value; 
+				$array[$key] = $value;
 			}
 		} ?>
 
@@ -755,7 +765,7 @@ INSTALL;
 	$run_install = $ddf_db->db_connect->multi_query($sql);
 
 	if ( $run_install ) {
-		return true;	
+		return true;
 	}
 
 	return false;
@@ -815,4 +825,10 @@ function populate_options( $site_name, $email ) {
 		return true;
 
 	return false;
+}
+
+function count_topic_view( $topic_id ) {
+	global $ddf_db;
+
+	$ddf_db->update_data( $ddf_db->topics, array("topic_views" => "increment(1)"), "topicID = '{$topic_id}'" );
 }

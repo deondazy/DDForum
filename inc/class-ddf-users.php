@@ -7,8 +7,9 @@
  * @subpackage Users
  */
 
+
 // Can't be accessed directly
-if ( !defined( 'ABSPATH' ) ) {
+if ( !defined( 'DDFPATH' ) ) {
 	die( 'Direct access denied' );
 }
 
@@ -121,7 +122,7 @@ class DDForum_Users {
 	public function __construct() {
 		$this->db_obj = new ddf_db( DB_USER, DB_PASSWORD, DB_NAME, DB_HOST );
 		return $this->db_obj;
-	} 
+	}
 
 	/**
 	 * Get current user ID.
@@ -131,7 +132,7 @@ class DDForum_Users {
 	 * @return int|bool user ID for current user, or false on failure.
 	 */
 	public function current_userID() {
-		/** Check if cookie is set **/ 
+		/** Check if cookie is set **/
 		if ( isset($_COOKIE['ddforum_logged']) ) {
 			$this->username = $_COOKIE['ddforum_logged'];
 
@@ -139,21 +140,21 @@ class DDForum_Users {
 			$query = $this->db_obj->query("SELECT `userID` FROM " . $this->db_obj->users . " WHERE `username` = '$this->username'");
 
 			if ( !empty($query) ) {
-				
+
 				if ( $query->num_rows > 0 ) {
 					$result = $this->db_obj->fetch_object($query);
 					$this->user_ID = $result->userID;
 
 					return $this->user_ID;
 				}
-				
+
 				return false;
 
 			}
 
 			return false;
 		}
-		
+
 		return false;
 	}
 
@@ -179,10 +180,10 @@ class DDForum_Users {
 
 		if ( $query->num_rows > 0 ) {
 			$user_obj = $this->db_obj->fetch_object($query);
-			
+
 			return $user_obj->$field;
 		}
-		
+
 		return false;
 	}
 
@@ -247,7 +248,7 @@ class DDForum_Users {
 
 					// Check if username is registered
 					$this->db_obj->query("SELECT `username` FROM " . $this->db_obj->users . " WHERE username = '$username'");
-		
+
 					if ( $this->db_obj->row_count > 0 ) {
 						$username_taken = true;
 						$error[] = "This username $username is already registered. Try another";
@@ -276,7 +277,7 @@ class DDForum_Users {
 
 				// Check if email is registered
 				$this->db_obj->query("SELECT `email` FROM " . $this->db_obj->users . " WHERE email = '$email'");
-		
+
 				if ( $this->db_obj->row_count > 0 ) {
 					$email_taken = true;
 					$error[] = "Email you entered is already taken. Try another";
@@ -366,18 +367,18 @@ class DDForum_Users {
 	 *
 	 * @param string $username User supplied username.
 	 * @param string $password User supplied password.
-	 * @param bool $remember whether to keep user logged in after session. Default to false. 
+	 * @param bool $remember whether to keep user logged in after session. Default to false.
 	 */
 	public function login( $username, $password, $remember = false ) {
 		if ( !empty($username) ) {
 			if ( !empty($password) ) {
 
 				$query = "SELECT `userID`, `username`, `password`, `level` FROM " . $this->db_obj->users . " WHERE username = '$username'";
-				
+
 				$get_user = $this->db_obj->query( $query );
 
 				if ( $this->db_obj->row_count > 0 ) {
-					
+
 					$user_data = $this->db_obj->fetch_object($get_user);
 
 					$user_id = $user_data->userID;
@@ -393,7 +394,7 @@ class DDForum_Users {
 						}
 
 						$this->db_obj->update_data( $this->db_obj->users, array( 'online_status' => 1 ), "userID = '$user_id'");
-						
+
 						$this->login_redirect($user_id);
 					}
 					else {
@@ -412,7 +413,7 @@ class DDForum_Users {
 			return;
 		}
 	}
-	
+
 	private function login_redirect( $user_id ) {
 		$level = $this->get_user( 'level', $user_id );
 

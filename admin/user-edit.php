@@ -1,49 +1,59 @@
 <?php
 /**
- * Users list
+ * Administration Users List Screen
  *
  * @package DDForum
- * @subpackage Admin
+ * @subpackage Administration
  */
 
-/** Load admin **/
-require_once( dirname( __FILE__ ) . '/admin.php' );
+use DDForum\Core\Site;
+use DDForum\Core\Forum;
+use DDForum\Core\Topic;
+use DDForum\Core\User;
+use DDForum\Core\Util;
+use DDForum\Core\Database;
 
-if ( !is_admin() ) {
-	kill_script( 'You do not have the rights to access this page' );
+
+if (!defined('DDFPATH')) {
+  define('DDFPATH', dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR);
 }
 
-$title = 'All Users';
+$title        =  'All Users';
+$file         =  'user-edit.php';
+$parent_menu  =  'user-edit.php';
+$has_child    =  true;
 
-$redirect_url = urlencode(admin_url('user-edit.php'));
+// Load admin
+require_once(DDFPATH .'admin/admin.php');
 
-require_once( ABSPATH . 'admin/admin-header.php' );
+require_once(DDFPATH .'admin/admin-header.php');
 
-$message = isset( $_GET['message'] ) ? $_GET['message'] : '';
-show_message($message);
+$message = isset($_GET['message']) ? $_GET['message'] : '';
 
-$users = $ddf_db->fetch_all($ddf_db->users);
+Site::info($message);
+
+$users = User::getAll();
 
 // Pagination
-$all_record = $ddf_db->row_count;
+$all_record = Database::rowCount();
 $limit = 5;
-		
+
 $current = isset( $_GET['page'] ) ? $_GET['page'] : 1;
 $first = ( $all_record - $all_record ) + 1;
 $last = ceil( $all_record / $limit );
 $prev = ( $current - 1 < $first ) ? $first : $current - 1;
 $next = ( $current + 1 > $last ) ? $last : $current + 1;
-		
+
 $offset = isset( $_GET['page'] ) ? $limit * ( $current - 1 ) : 0;
 
-$users = $ddf_db->fetch_all($ddf_db->users, "*", '', '', $limit, $offset);
+$users = User::paginate('userID DESC', $limit, $offset);
 ?>
 <a href="user-new.php" class="extra-nav">Add New User</a>
 
-<?php if ( $all_record > 5 ) : ?> 
+<?php if ( $all_record > 5 ) : ?>
 	<form action="" method="get">
 		<div class="paginate">
-	
+
 			<a class="first-page <?php echo ( $current == $first ) ? 'disabled' : ''; ?>" href="?page=<?php echo $first; ?>">First</a>
 			<a class="prev-page <?php echo ( $current == $prev ) ? 'disabled' : ''; ?>" href="?page=<?php echo $prev; ?>">Prev</a>
 
@@ -51,7 +61,7 @@ $users = $ddf_db->fetch_all($ddf_db->users, "*", '', '', $limit, $offset);
 
 			<a class="next-page <?php echo ( $current == $next ) ? 'disabled' : ''; ?>" href="?page=<?php echo $next; ?>">Next</a>
 			<a class="last-page <?php echo ( $current == $last ) ? 'disabled' : ''; ?>" href="?page=<?php echo $last; ?>">Last</a>
-		
+
 		</div>
 	</form>
 <?php endif; ?>
@@ -69,13 +79,13 @@ $users = $ddf_db->fetch_all($ddf_db->users, "*", '', '', $limit, $offset);
 		</tr>
 	</thead>
 
-	<tbody>		
-		
-		<?php if ( ! $users ) : ?>
+	<tbody>
+
+		<?php if (!$users) : ?>
 			<tr>
 				<td colspan="10">Nothing to display</td>
 			</tr>
-		
+
 		<?php else : ?>
 
 			<?php foreach ($users as $user) : ?>
@@ -87,7 +97,7 @@ $users = $ddf_db->fetch_all($ddf_db->users, "*", '', '', $limit, $offset);
 
 					<td>
 						<strong>
-							<?php  if ( (int) $user->userID == (int) $ddf_user->current_userID() ) : ?>
+							<?php  if ((int) $user->userID == (int) User::currentUserId()) : ?>
 								<a href="profile.php">
 							<?php else : ?>
 								<a href="user.php?action=edit&amp;id=<?php echo $user->userID; ?>">
@@ -101,23 +111,23 @@ $users = $ddf_db->fetch_all($ddf_db->users, "*", '', '', $limit, $offset);
 
 					<td><?php echo $user->email; ?></td>
 
-					<td><?php echo get_level($user->userID); ?></td>
+					<td><?php echo User::level($user->level); ?></td>
 
-					<td  class="count-column"><?php echo $ddf_user->user_posts( $user->userID ); ?></td>
+					<td  class="count-column"><?php echo User::postCount($user->userID); ?></td>
 
 					<td class="actions">
-						<a class="action-edit" href="user.php?action=edit&amp;id=<?php echo $user->userID; ?>"><span class="genericon genericon-edit"></span></a>
-						
-						<a class="action-view" href="<?php echo home_url(); ?>/user.php?id=<?php echo $user->userID; ?>"><span class="genericon genericon-show"></span></a>
-						
-						<a class="action-delete" href="user.php?action=delete&amp;id=<?php echo $user->userID; ?>"><span class="genericon genericon-close"></span></a>
+						<a class="action-edit" href="user.php?action=edit&amp;id=<?php echo $user->userID; ?>"><span class="fa fa-pencil"></span></a>
+
+						<a class="action-view" href="<?php echo Site::url(); ?>/users/<?php echo $user->userID; ?>"><span class="fa fa-eye"></span></a>
+
+						<a class="action-delete" href="user.php?action=delete&amp;id=<?php echo $user->userID; ?>"><span class="fa fa-remove"></span></a>
 					</td>
 				</tr>
 
 			<?php endforeach; ?>
-		
+
 		<?php endif; ?>
-		
+
 	</tbody>
 
 	<tfoot>
@@ -130,13 +140,13 @@ $users = $ddf_db->fetch_all($ddf_db->users, "*", '', '', $limit, $offset);
 			<th class="action-col" scope="col">Actions</th>
 		</tr>
 	</tfoot>
-	
+
 </table>
 
-<?php if ( $all_record > 5 ) : ?> 
+<?php if ( $all_record > 5 ) : ?>
 	<form action="" method="get">
 		<div class="paginate">
-	
+
 			<a class="first-page <?php echo ( $current == $first ) ? 'disabled' : ''; ?>" href="?page=<?php echo $first; ?>">First</a>
 			<a class="prev-page <?php echo ( $current == $prev ) ? 'disabled' : ''; ?>" href="?page=<?php echo $prev; ?>">Prev</a>
 
@@ -144,12 +154,12 @@ $users = $ddf_db->fetch_all($ddf_db->users, "*", '', '', $limit, $offset);
 
 			<a class="next-page <?php echo ( $current == $next ) ? 'disabled' : ''; ?>" href="?page=<?php echo $next; ?>">Next</a>
 			<a class="last-page <?php echo ( $current == $last ) ? 'disabled' : ''; ?>" href="?page=<?php echo $last; ?>">Last</a>
-		
+
 		</div>
 	</form>
 <?php endif; ?>
 
 <?php
 
-include( ABSPATH . 'admin/admin-footer.php' );
+include( DDFPATH . 'admin/admin-footer.php' );
 ?>

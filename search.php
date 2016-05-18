@@ -11,6 +11,6 @@ require_once( dirname( __FILE__ ) . '/startup.php' );
 
 $title = $_GET['s'] . ' - ' . get_option( 'site_name' );
 
-require_once( ABSPATH . 'header.php' );
+require_once( DDFPATH . 'header.php' );
 
-include( ABSPATH . 'footer.php' );
+include( DDFPATH . 'footer.php' );

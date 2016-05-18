@@ -1,25 +1,43 @@
 <?php
 
+use DDForum\Core\Site;
+
 // Can't be accessed directly
-if ( !defined( 'ABSPATH' ) ) {
+if ( !defined( 'DDFPATH' ) ) {
 	die( 'Direct access denied' );
 }
 ?>
 
-<div id="admin-bar">
+<nav id="admin-bar">
 	<div class="container">
-		
-		<div id="admin-bar-nav" class="cf">
-			<ul class="admin-bar-tools float-left">
-				<li class="admin-bar-ddf-logo"><img src="images/ddforum.png" height="35" width="120" id="ddf-logo" class="float-left" alt="DDForum Logo"></li>
-				<li>Add</li>
-				<li>Messages</li>
-				<li>Notifications</li>
-			</ul>
 
-			<div class="admin-bar-user float-right">
-				<a href="<?php echo home_url(); ?>/auth.php?action=logout">Logout</a>
+		<div id="admin-bar-nav" class="cf">
+			<div class="admin-bar-ddf-logo float-left">
+				<img src="images/ddforum-logo.png" id="ddf-logo" alt="DDForum Logo">
+			</div>
+
+			<div class="admin-bar-tools float-right">
+				<ul class="cf">
+					<li class="add"><i class="fa fa-plus"></i>
+						<ul>
+							<li>Forum</li>
+							<li>Topic</li>
+							<li>Reply</li>
+							<li>Page</li>
+							<li>User</li>
+						</ul>
+					</li>
+
+					<li class="msg">
+						<a href="message"><i class="fa fa-envelope"></i></li>
+
+					<li class="notif"><i class="fa fa-info"></i></li>
+
+					<li class="logout">
+						<a href="<?php echo Site::url(); ?>/auth.php?action=logout"><i class="fa fa-power-off"></i></a>
+					</li>
+				</ul>
 			</div>
 		</div>
 	</div>
-</div>
+</nav>

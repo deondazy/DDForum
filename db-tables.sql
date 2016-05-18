@@ -2,6 +2,7 @@ DROP TABLE IF EXISTS `ddf_forums`;
 CREATE TABLE `ddf_forums`(
 `forumID` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 `forum_name` VARCHAR(100) NOT NULL DEFAULT '',
+`forum_slug` VARCHAR(100) NOT NULL DEFAULT '',
 `forum_description` TEXT NOT NULL,
 `forum_type` VARCHAR(20) NOT NULL DEFAULT 'forum',
 `forum_status` VARCHAR(20) NOT NULL DEFAULT 'open',
@@ -67,6 +68,7 @@ CREATE TABLE `ddf_topics` (
 `topicID` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 `forumID` bigint(20) UNSIGNED NOT NULL default '0',
 `topic_subject` text NOT NULL,
+`topic_slug` text NOT NULL,
 `topic_message` longtext NOT NULL,
 `topic_status` varchar(20) NOT NULL default 'open',
 `topic_date` datetime NOT NULL default '0000-00-00 00:00:00',

@@ -5,139 +5,132 @@
  * @package DDForum
  */
 
+use DDForum\Core\Forum;
+use DDForum\Core\Site;
+use DDForum\Core\Util;
+
 // Can't be accessed directly
-if ( !defined( 'ABSPATH' ) ) {
-	die( 'Direct access denied' );
+if ( !defined( 'DDFPATH' ) ) {
+  die( 'Direct access denied' );
 }
 
-$forum_id = isset( $forum_id ) ? $forum_id : 0;
+$forumId         =   isset($forum_id) ? $forum_id : 0;
+$forumName       =   Forum::get('forum_name', $forumId);
+$forumSlug       =   Forum::get('forum_slug', $forumId);
+$forumDesc       =   Forum::get('forum_description', $forumId);
+$forumType       =   Forum::get('forum_type', $forumId);
+$forumStatus     =   Forum::get('forum_status', $forumId);
+$forumVisibility =   Forum::get('forum_visibility', $forumId);
+$forumParent     =   Forum::get('forum_parent', $forumId);
 
-$forum_query = $ddf_db->fetch_all( $ddf_db->forums, "*", "forumID='$forum_id'" );
+require_once( DDFPATH . 'admin/admin-header.php' );
 
-if ( $forum_query ) {
-
-	foreach ( $forum_query as $forum ) {
-		$forum_name = $forum->forum_name;
-		$forum_description = $forum->forum_description;
-		$forum_type = $forum->forum_type;
-		$forum_status = $forum->forum_status;
-		$forum_visibility = $forum->forum_visibility;
-		$forum_parent = $forum->forum_parent;
-	}
+if (isset($message)) {
+  Site::info($message);
 }
-
-$forum_name = ( !empty($forum_name) ) ? $forum_name : '';
-$forum_description = ( !empty($forum_description) ) ? $forum_description : '';
-$forum_type = ( !empty($forum_type) ) ? $forum_type : '';
-$forum_status = ( !empty($forum_status) ) ? $forum_status : '';
-$forum_visibility = ( !empty($forum_visibility) ) ? $forum_visibility : '';
-$forum_parent = ( !empty($forum_id) ) ? $forum_parent : '';
-
-require_once( ABSPATH . 'admin/admin-header.php' );
-
-if ( isset( $message ) ) {
-	show_message( $message ) ;
-}
-elseif ( isset( $_GET['message'] ) ) {
-	show_message( $_GET['message'] );
+elseif (isset($_GET['message'])) {
+  Site::info($_GET['message']);
 }
 ?>
 
-<form action="<?php echo ($forum_id == 0) ? 'add-forum.php' : 'forum.php?action=edit&id=' . $forum_id; ?>" method="post">
-	
-	<div class="form-wrap-main">
+<form action="<?php echo ($forumId == 0) ? 'add-forum.php' : 'forum.php?action=edit&id=' . $forumId; ?>" method="post" class="action-form clearfix">
 
-		<p>
-			<span class="label">Forum Name</span>
-			<label class="screen-reader-text" for="forum-title">Forum Name</label>
-			<input type="text" id="forum-title" class="title-box" name="forum-title" value="<?php echo $forum_name; ?>">
-		</p>
+  <div class="form-wrap-main">
+    <div class="field">
+      <span class="label">Forum Name</span>
+      <label class="screen-reader-text" for="forum-title">Forum Name</label>
+      <input type="text" id="forum-title" class="title-box js-title-box" name="forum-title" value="<?php echo $forumName; ?>">
+    </div>
 
-		<p>
-			<label class="screen-reader-text" for="form-box"></label>
-			<textarea class="forum-description" id="form-box" name="forum-description"><?php echo $forum_description; ?></textarea>
-		</p>
+    <div class="field">
+      <label class="screen-reader-text" for="form-box"></label>
+      <textarea class="forum-description" id="form-box" name="forum-description"><?php echo $forumDesc; ?></textarea>
+    </div>
+  </div>
 
-	</div>
+  <div class="form-wrap-side">
 
-	<div class="form-wrap-side">
-		
-		<div class="head">Forum Settings</div>
+    <div class="field">
+      <span class="label">Forum Slug</span>
+      <label class="screen-reader-text" for="forum-slug">Forum Slug</label>
+      <input type="text" id="forum-slug" class="title-box js-slug-box" name="forum-slug" value="<?php echo $forumSlug; ?>">
+    </div>
 
-		<div class="content">
-			<p>
-				<span class="label">Type</span>
-				<label class="screen-reader-text" for="forum-type">Forum Type</label>
-				<select id="forum-type" class="select-box" name="forum-type">
-					<?php
-					$type = array('forum' => 'forum', 'category' => 'category');
-					$type = array_map( "trim", $type );
+    <div class="head">Forum Settings</div>
 
-					foreach ( $type as $id => $item ) : ?>
-						<option value="<?php echo $item ?>" <?php selected( $forum_type, $item ); ?>>
-							<?php echo ucfirst($item); ?>
-						</option>
-					<?php endforeach; ?>
-				</select>
-			</p>
+    <div class="content">
+      <div class="field">
+        <span class="label">Type</span>
+        <label class="screen-reader-text" for="forum-type">Forum Type</label>
+        <select id="forum-type" class="select-box" name="forum-type">
+          <?php
+          $type = ['forum' => 'Forum', 'category' => 'Category'];
+          $type = array_map("trim", $type);
 
-			<p>
-				<span class="label">Status</span>
-				<label class="screen-reader-text" for="forum-status">Forum Status</label>
-				<select id="forum-status" class="select-box" name="forum-status">
-					<?php
-					$status = array('open' => 'open', 'locked' => 'locked');
-					$status = array_map( "trim", $status );
+          foreach ($type as $id => $item) : ?>
+            <option value="<?php echo $id ?>" <?php Util::selected($forumType, $id); ?>>
+              <?php echo $item; ?>
+            </option>
+          <?php endforeach; ?>
+        </select>
+      </div>
 
-					foreach ( $status as $id => $item ) : ?>
-						<option value="<?php echo $item ?>" <?php selected( $forum_status, $item ); ?>>
-							<?php echo ucfirst($item); ?>
-						</option>
-					<?php endforeach; ?>
-				</select>
-			</p>
+      <div class="field">
+        <span class="label">Status</span>
+        <label class="screen-reader-text" for="forum-status">Forum Status</label>
+        <select id="forum-status" class="select-box" name="forum-status">
+          <?php
+          $status = ['open' => 'Open', 'locked' => 'Locked'];
+          $status = array_map("trim", $status);
 
-			<p>
-				<span class="label">Visibility</span>
-				<label class="screen-reader-text" for="forum-status">Forum Visibility</label>
-				<select id="forum-visibility" class="select-box" name="forum-visibility">
-					<?php
-					$visibility = array('public' => 'public', 'private' => 'private', 'hidden' => 'hidden');
-					$visibility = array_map( "trim", $visibility );
+          foreach ($status as $id => $item) : ?>
+            <option value="<?php echo $id ?>" <?php Util::selected( $forumStatus, $id ); ?>>
+              <?php echo $item; ?>
+            </option>
+          <?php endforeach; ?>
+        </select>
+      </div>
 
-					foreach ( $visibility as $id => $item ) : ?>
-						<option value="<?php echo $item ?>" <?php selected( $forum_visibility, $item ); ?>>
-							<?php echo ucfirst($item); ?>
-						</option>
-					<?php endforeach; ?>
-				</select>
-			</p>
+      <div class="field">
+        <span class="label">Visibility</span>
+        <label class="screen-reader-text" for="forum-status">Forum Visibility</label>
+        <select id="forum-visibility" class="select-box" name="forum-visibility">
+          <?php
+          $visibility = ['public' => 'Public', 'private' => 'Private', 'hidden' => 'Hidden'];
+          $visibility = array_map("trim", $visibility);
 
-			<p>
-				<span class="label">Parent</span>
-				<label class="screen-reader-text" for="forum-status">Forum Parent</label>
-				<?php $all_forum = $ddf_db->fetch_all( $ddf_db->forums, "forumID, forum_name, forum_parent"); ?>
+          foreach ($visibility as $id => $item) : ?>
+            <option value="<?php echo $id ?>" <?php Util::selected($forumVisibility, $id); ?>>
+              <?php echo $item; ?>
+            </option>
+          <?php endforeach; ?>
+        </select>
+      </div>
 
-				<select id="forum-parent" class="select-box" name="forum-parent">
+      <div class="field">
+        <span class="label">Parent</span>
+        <label class="screen-reader-text" for="forum-status">Forum Parent</label>
 
-					<?php
-					foreach ( $all_forum as $parents ) {
-						$parent_data[0] = 'None';
-						$parent_data[$parents->forumID] = $parents->forum_name;
-					}
+        <select id="forum-parent" class="select-box" name="forum-parent">
 
-					// Remove current forum from parent list
-					if ( $forum_id != 0 ) {
-						unset( $parent_data[$forum_id] );
-					}
+          <?php
+          foreach (Forum::getAll() as $parents) {
+            $parent_data[0] = 'None';
+            $parent_data[$parents->forumID] = $parents->forum_name;
+          }
 
-					foreach ( $parent_data as $id => $item ) : ?>
+          // Remove current forum from list
+          if ( $forumId != 0 ) {
+            unset($parent_data[$forumId]);
+          }
 
-						<option value="<?php echo $id; ?>" <?php selected( $forum_parent, $id ); ?>><?php echo $item; ?></option>
-					<?php endforeach; ?>
-				</select>
-			</p>
-		</div>
-		<input type="submit" class="primary-button" value="<?php echo isset($action) ? 'Update' : 'Create'; ?>">
-	</div>
+          foreach ($parent_data as $id => $item) : ?>
+
+            <option value="<?php echo $id; ?>" <?php Util::selected($forumParent, $id); ?>><?php echo $item; ?></option>
+          <?php endforeach; ?>
+        </select>
+      </div>
+    </div>
+    <input type="submit" class="primary-button" value="<?php echo isset($action) ? 'Update' : 'Create'; ?>">
+  </div>
 </form>

@@ -1,8 +1,23 @@
-<IfModule mod_rewrite.c>
-RewriteEngine On
-RewriteBase /forum/
-RewriteRule ^index\.php$ - [L]
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^forum/(.*)$ forum.php?id=$1 [NC,QSA]
-</IfModule>
+RewriteEngine on
+
+RewriteCond %{SCRIPT_FILENAME} !-d
+RewriteCond %{SCRIPT_FILENAME} !-f
+
+RewriteRule ^forums*$ ./forum.php
+RewriteRule ^forums/new*$ ./forum-new.php
+RewriteRule ^forums/(\d+)*$ ./forum.php?id=$1
+RewriteRule ^forums/(\d+)/edit*$ ./forum-edit.php?id=$1
+
+RewriteRule ^topics/new*$ ./topic-new.php
+RewriteRule ^topics/(\d+)*$ ./topic.php?id=$1
+RewriteRule ^topics/(\d+)/edit*$ ./topic-edit.php?id=$1
+RewriteRule ^topics/([a-z]+)*$ ./index.php?sort=$1
+
+RewriteRule ^users/new*$ ./user-new.php
+RewriteRule ^users/(\d+)*$ ./user.php?id=$1
+RewriteRule ^users/(\d+)/edit*$ ./user-edit.php?id=$1
+
+RewriteRule ^login*$ ./login.php
+RewriteRule ^register*$ ./register.php
+RewriteRule ^forgot-password*$ ./forgot-password.php
+

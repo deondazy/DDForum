@@ -1,63 +1,81 @@
 <?php
 /**
- * ddforum index
+ * DDForum index
  *
  * @package DDForum
- * @subpackage Administrator
  */
 
-/** Load DDForum Startup **/
-require_once( dirname( __FILE__ ) . '/startup.php' );
+use DDForum\Core\Option;
+use DDForum\Core\Util;
+use DDForum\Core\Forum;
+use DDForum\Core\Topic;
+use DDForum\Core\User;
+use DDForum\Core\Site;
 
-$title = get_option( 'site_name' );
+define('DDFPATH', dirname(__FILE__) . '/');
 
-require_once( ABSPATH . 'header.php' );
+// Load Startup file
+require_once(DDFPATH . 'startup.php');
 
-$categories = $ddf_db->fetch_all( $ddf_db->forums, "*", "forum_type='category'");
+$title = Option::get('site_name');
 
-foreach ( $categories as $category ) : 
 
-	$forums = $ddf_db->fetch_all( $ddf_db->forums, "*", "forum_type = 'forum'"); ?>
+require_once(DDFPATH . 'header.php');
+?>
 
-	<div class="category-wrap">
-		<div class="container">
-			<div class="category-name">
-				<a id="category-<?php echo $category->forumID; ?>" href="forum.php?category=<?php echo $category->forumID; ?>">
-					<?php echo $category->forum_name; ?>
-				</a>
-			</div>
+<div class="table-responsive">
+  <table class="topics table">
+    <thead>
+      <th>Topic</th>
+      <th>Category</th>
+      <th>Poster</th>
+      <th>Replies</th>
+      <th>Views</th>
+      <th>Active</th>
+    </thead>
 
-			<?php foreach ( $forums as $forum ) : ?>
+    <?php foreach ($topics as $topic) : ?>
 
-				<div class="category-content row">
-					
-					<?php if ( $forum->forum_parent == $category->forumID ) : ?>
-	
-						<div class="col-lg-4 col-sm-4">
-							<div class="forum">
-								<strong class="category-title">
-									<a id="forum-<?php echo $forum->forumID; ?>" href="forum.php?forum=<?php echo $forum->forumID; ?>">
-										<?php echo $forum->forum_name; ?>
-									</a>
-								</strong>
-								<div class="forum-stats">
-									<?php echo $forum->forum_topics; ?> Topics, <?php echo $forum->forum_replies; ?> Replies <br />  Last reply: <?php echo time2str(timestamp($forum->forum_last_post)); ?>
-								</div>
-							</div>
-						</div>
+      <tr class="topic">
+        <td class="the-topic">
 
-					<?php else : ?>
-						
-						<div class="forum">Nothing to display</div>
+          <a id="topic-<?php echo $topic->topicID; ?>" href="<?php echo Site::url(); ?>/topics/<?php echo $topic->topicID; ?>">
+            <?php echo $topic->topic_subject; ?>
+          </a>
 
-					<?php endif; ?>
+        </td>
 
-				</div>
-					
-			<?php endforeach; ?>
-		</div>
-	</div>
+        <td class="the-category">
+          <a id="forum-<?php echo $topic->forumID; ?>" href="<?php echo Site::url(); ?>/forums/<?php echo $topic->forumID; ?>">
+            <?php echo Forum::get('forum_name', $topic->forumID); ?>
+          </a>
+        </td>
 
-<?php endforeach;
- 
-include( ABSPATH . 'footer.php' );
+        <td class="the-poster">
+          <a id="user-<?php echo $topic->topic_poster; ?>" href="<?php echo Site::url(); ?>/users/<?php echo $topic->topic_poster; ?>">
+            <?php echo User::get('display_name', $topic->topic_poster); ?>
+          </a>
+        </td>
+
+        <td class="the-reply int-value">
+          <?php echo $topic->topic_replies; ?>
+        </td>
+
+        <td class="the-view int-value">
+          <?php echo $topic->topic_views; ?>
+        </td>
+
+        <td class="the-time">
+          <?php echo Util::time2str(Util::timestamp($topic->topic_date)); ?>
+        </td>
+
+
+      </tr>
+
+    <?php endforeach; ?>
+
+  </table>
+</div>
+
+<?php include(DDFPATH . 'footer.php'); ?>
+<?php include(DDFPATH . 'inc/topic-form.php'); ?>

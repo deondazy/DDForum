@@ -4,7 +4,7 @@
  */
 
 // Can't be accessed directly
-if ( !defined( 'ABSPATH' ) ) {
+if ( !defined( 'DDFPATH' ) ) {
 	die( 'Direct access denied' );
 }
 
@@ -25,7 +25,7 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
 	$user->register( $firstname, $lastname, $username, $password, $cpassword, $email, $gender = '', $birthday, $country );
 }
 
-require_once( ABSPATH . 'header.php' );
+require_once( DDFPATH . 'header.php' );
 ?>
 <div class="container" >
 
@@ -82,7 +82,7 @@ require_once( ABSPATH . 'header.php' );
 	    <option>Austria</option>
 	    <option>Azerbaijan</option>
 	    <optgroup>B</optgroup>
-	
+
 	    <option>Bahrain</option>
 	    <option>Bangladesh</option>
 	    <option>Barbados</option>

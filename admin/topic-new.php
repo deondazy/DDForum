@@ -1,13 +1,17 @@
 <?php
 
-/** Load admin **/
-require_once( dirname( __FILE__ ) . '/admin.php' );
+if (!defined('DDFPATH')) {
+  define('DDFPATH', dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR);
+}
 
 $title = 'New Topic';
 $file = 'topic-new.php';
-$parent = 'forum-edit.php';
+$parent_menu = 'topic-edit.php';
 
-require_once( ABSPATH . 'admin/admin-header.php' );
+// Load admin
+require_once(DDFPATH . 'admin/admin.php');
 
-include( ABSPATH . 'admin/inc/topic-form.php' );
-include( ABSPATH . 'admin/admin-footer.php' );
+require_once(DDFPATH . 'admin/admin-header.php');
+
+include(DDFPATH . 'admin/inc/topic-form.php');
+include(DDFPATH . 'admin/admin-footer.php');

@@ -3,67 +3,73 @@
  * Loging in.
  */
 
+use DDForum\Core\Option;
+use DDForum\Core\User;
+use DDForum\Core\Filter;
+use DDForum\Core\Site;
+
 // Can't be accessed directly
-if ( !defined( 'ABSPATH' ) ) {
-	die( 'Direct access denied' );
+if ( !defined( 'DDFPATH' ) ) {
+  header( 'HTTP/1.1 403 Forbidden', true, 403 );
+  die();
 }
 
-$title = 'Login - ' . get_option( 'site_name' );
+$title = 'Login - ' . Option::get('site_name');
 
-$logout = ( isset( $_GET['logout'] ) && $_GET['logout'] == true ) ? true : false;
+$logout = (isset($_GET['logout']) && $_GET['logout']) ? true : false;
 
 // Check if form is submitted
 if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
 
-	// Clean user's input
-	$username = clean_input( $_POST['uname'] );
-	$password = clean_input( $_POST['pass'] );
+  $remember = (isset($_POST['remember'])) ? true : false;
 
-	$remember = ( isset($_POST['remember']) ) ? true : false;
-	
-	$ddf_user->login( $username, $password, $remember );
+  if (!User::login($_POST['username'], $_POST['password'], $remember) && isset(User::$error)) {
+    foreach (User::$error as $error) {
+      echo $error;
+    }
+  }
 }
 
-require_once( ABSPATH . 'header.php' );
+require_once( DDFPATH . 'header.php' );
 ?>
 
 <div class="container">
-	<div class="form-wrap">
+  <div class="form-wrap">
 
-		<?php 
-		if ( $logout ) {
-			show_message('You have logged out');
-		}
-		elseif ( is_logged() && !$logout ) { 
-			show_message('You are already logged in', true); 
-		}
-		?>
+    <?php
+    if ( $logout ) {
+      Site::info('You have logged out');
+    }
+    elseif ( User::isLogged() && !$logout ) {
+      Site::info('You are already logged in', false, true);
+    }
+    ?>
 
-		<h2 class="page-title">Login To <?php echo get_option( 'site_name' ); ?></h2>
+    <h2 class="page-title">Login To <?php echo Option::get('site_name'); ?></h2>
 
-		<form role="form" action="" method="post" class="action-form form-inline">
+    <form role="form" action="" method="post" class="action-form form-inline">
 
-			<h4 class="area-head">Enter your Username and Password below to login</h4>
-			
-			<div class="form-groups">
-				<div class="form-group">
-					<label for="login-uname">Username</label>
-					<input id="login-uname" class="form-control" type="text" name="uname">
-				</div>
-				
-				<div class="form-group">
-					<label for="login-pass">Password</label>
-					<input id="login-pass" class="form-control" type="password" name="pass">
-				</div>
+      <h4 class="area-head">Enter your Username and Password below to login</h4>
 
-				<div class="form-group">
-					<label for="login-remember">
-						<input id="login-remember" class="checkbox-input" type="checkbox"> Remember me
-					</label>
-				</div>
+      <div class="form-groups">
+        <div class="form-group">
+          <label for="login-uname">Username</label>
+          <input id="login-uname" class="form-control" type="text" name="username">
+        </div>
 
-				<input id="login-submit" class="action-button" type="submit" value="login">
-			</div>
-		</form>
-	</div>
+        <div class="form-group">
+          <label for="login-pass">Password</label>
+          <input id="login-pass" class="form-control" type="password" name="password">
+        </div>
+
+        <div class="form-group">
+          <label for="login-remember">
+            <input id="login-remember" class="checkbox-input" type="checkbox"> Remember me
+          </label>
+        </div>
+
+        <input id="login-submit" class="action-button" type="submit" value="login">
+      </div>
+    </form>
+  </div>
 </div>

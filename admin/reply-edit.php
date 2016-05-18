@@ -1,38 +1,59 @@
 <?php
+/**
+ * Administration Topic Screen
+ *
+ * @package DDForum
+ * @subpackage Administration
+ */
 
-/** Load admin **/
-require_once( dirname( __FILE__ ) . '/admin.php' );
+use DDForum\Core\Site;
+use DDForum\Core\Forum;
+use DDForum\Core\Topic;
+use DDForum\Core\Reply;
+use DDForum\Core\User;
+use DDForum\Core\Util;
+use DDForum\Core\Database;
 
-$title = 'Replies';
-$file = 'reply-edit.php';
-$parent = 'reply-edit.php';
 
-require_once( ABSPATH . 'admin/admin-header.php' );
+if (!defined('DDFPATH')) {
+  define('DDFPATH', dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR);
+}
+
+$title        =  'Replies';
+$file         =  'reply-edit.php';
+$parent_menu  =  'reply-edit.php';
+$has_child    =  true;
+
+// Load admin
+require_once(DDFPATH . 'admin/admin.php');
+
+require_once(DDFPATH . 'admin/admin-header.php');
 
 $message = isset( $_GET['message'] ) ? $_GET['message'] : '';
-show_message($message);
 
-$replies = $ddf_db->fetch_all($ddf_db->replies);
+Site::info($message);
+
+$replies = Reply::getAll();
 
 // Pagination
-$all_record = $ddf_db->row_count;
+$all_record = Database::rowCount();
 $limit = 5;
-		
+
 $current = isset( $_GET['page'] ) ? $_GET['page'] : 1;
 $first = ( $all_record - $all_record ) + 1;
 $last = ceil( $all_record / $limit );
 $prev = ( $current - 1 < $first ) ? $first : $current - 1;
 $next = ( $current + 1 > $last ) ? $last : $current + 1;
-		
+
 $offset = isset( $_GET['page'] ) ? $limit * ( $current - 1 ) : 0;
 
-$replies = $ddf_db->fetch_all($ddf_db->replies, "*", '', 'replyID DESC', $limit, $offset);
+$replies = Reply::paginate('reply_date DESC', $limit, $offset);
 ?>
-<a href="reply-new.php" class="extra-nav">Add Reply</a> 
-<?php if ( $all_record > 5 ) : ?> 
+<a href="reply-new.php" class="extra-nav">Add Reply</a>
+<?php if ( $all_record > 5 ) : ?>
 	<form action="" method="get">
 		<div class="paginate">
-	
+
 			<a class="first-page <?php echo ( $current == $first ) ? 'disabled' : ''; ?>" href="?page=<?php echo $first; ?>">First</a>
 			<a class="prev-page <?php echo ( $current == $prev ) ? 'disabled' : ''; ?>" href="?page=<?php echo $prev; ?>">Prev</a>
 
@@ -40,7 +61,7 @@ $replies = $ddf_db->fetch_all($ddf_db->replies, "*", '', 'replyID DESC', $limit,
 
 			<a class="next-page <?php echo ( $current == $next ) ? 'disabled' : ''; ?>" href="?page=<?php echo $next; ?>">Next</a>
 			<a class="last-page <?php echo ( $current == $last ) ? 'disabled' : ''; ?>" href="?page=<?php echo $last; ?>">Last</a>
-		
+
 		</div>
 	</form>
 <?php endif; ?>
@@ -57,13 +78,13 @@ $replies = $ddf_db->fetch_all($ddf_db->replies, "*", '', 'replyID DESC', $limit,
 		</tr>
 	</thead>
 
-	<tbody>		
-		
+	<tbody>
+
 		<?php if ( ! $replies ) : ?>
 			<tr>
 				<td colspan="10">Nothing to display</td>
 			</tr>
-		
+
 		<?php else : ?>
 
 			<?php foreach ($replies as $reply) : ?>
@@ -76,30 +97,30 @@ $replies = $ddf_db->fetch_all($ddf_db->replies, "*", '', 'replyID DESC', $limit,
 					<td>
 						<strong>
 							<a href="reply.php?action=edit&amp;id=<?php echo $reply->replyID; ?>&amp;forum=<?php echo $reply->forumID; ?>&amp;topic=<?php echo $reply->topicID; ?>">
-								<?php echo $ddf_db->get_topic('topic_subject', $reply->topicID); ?>
+								<?php echo Topic::get('topic_subject', $reply->topicID); ?>
 							</a>
 						</strong>
 					</td>
 
-					<td class="count-column"><?php echo $ddf_db->get_forum('forum_name', $reply->forumID); ?></td>
+					<td class="count-column"><?php echo Forum::get('forum_name', $reply->forumID); ?></td>
 
-					<td class="count-column"><?php echo time2str($reply->reply_date); ?></td>
+					<td class="count-column"><?php echo Util::time2str(Util::timestamp($reply->reply_date)); ?></td>
 
-					<td><?php echo $user->get_user("username", $reply->reply_poster); ?></td>
+					<td><?php echo User::get("username", $reply->reply_poster); ?></td>
 
 					<td class="actions">
-						<a class="action-edit" href="reply.php?action=edit&amp;id=<?php echo $reply->replyID; ?>&amp;forum=<?php echo $reply->forumID; ?>&amp;topic=<?php echo $reply->topicID; ?>"><span class="genericon genericon-edit"></span></a>
-						
-						<a class="action-view" href="<?php echo home_url(); ?>/reply.php?id=<?php echo $reply->replyID; ?>&amp;forum=<?php echo $reply->forumID; ?>&amp;topic=<?php echo $reply->topicID; ?>"><span class="genericon genericon-show"></span></a>
-						
-						<a class="action-delete" href="reply.php?action=delete&amp;id=<?php echo $reply->replyID; ?>&amp;forum=<?php echo $reply->forumID; ?>&amp;topic=<?php echo $reply->topicID; ?>"><span class="genericon genericon-close"></span></a>
+						<a class="action-edit" href="reply.php?action=edit&amp;id=<?php echo $reply->replyID; ?>&amp;forum=<?php echo $reply->forumID; ?>&amp;topic=<?php echo $reply->topicID; ?>"><span class="fa fa-pencil"></span></a>
+
+						<a class="action-view" href="<?php echo Site::url(); ?>/topics/<?php echo $reply->topicID; ?>/#<?php echo $reply->replyID; ?>"><span class="fa fa-eye"></span></a>
+
+						<a class="action-delete" href="reply.php?action=delete&amp;id=<?php echo $reply->replyID; ?>&amp;forum=<?php echo $reply->forumID; ?>&amp;topic=<?php echo $reply->topicID; ?>"><span class="fa fa-remove"></span></a>
 					</td>
 				</tr>
 
 			<?php endforeach; ?>
-		
+
 		<?php endif; ?>
-		
+
 	</tbody>
 
 	<tfoot>
@@ -112,12 +133,12 @@ $replies = $ddf_db->fetch_all($ddf_db->replies, "*", '', 'replyID DESC', $limit,
 			<th class="action-col" scope="col">Actions</th>
 		</tr>
 	</tfoot>
-	
+
 </table>
-<?php if ( $all_record > 5 ) : ?> 
+<?php if ( $all_record > 5 ) : ?>
 	<form action="" method="get">
 		<div class="paginate">
-	
+
 			<a class="first-page <?php echo ( $current == $first ) ? 'disabled' : ''; ?>" href="?page=<?php echo $first; ?>">First</a>
 			<a class="prev-page <?php echo ( $current == $prev ) ? 'disabled' : ''; ?>" href="?page=<?php echo $prev; ?>">Prev</a>
 
@@ -125,12 +146,12 @@ $replies = $ddf_db->fetch_all($ddf_db->replies, "*", '', 'replyID DESC', $limit,
 
 			<a class="next-page <?php echo ( $current == $next ) ? 'disabled' : ''; ?>" href="?page=<?php echo $next; ?>">Next</a>
 			<a class="last-page <?php echo ( $current == $last ) ? 'disabled' : ''; ?>" href="?page=<?php echo $last; ?>">Last</a>
-		
+
 		</div>
 	</form>
 <?php endif; ?>
 
 <?php
 
-include( ABSPATH . 'admin/admin-footer.php' );
+include( DDFPATH . 'admin/admin-footer.php' );
 ?>

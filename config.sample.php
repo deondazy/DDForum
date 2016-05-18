@@ -37,4 +37,7 @@ define('DB_HOST', 'localhost');
  * different installations, you can run multiple
  * installations of DDForum from one database
  */
-$table_prefix = 'ddf_';
+define('TABLE_PREFIX', 'ddf_');
+
+// DEV_MODE allows for displaying and logging errors
+define('DEV_MODE', false);

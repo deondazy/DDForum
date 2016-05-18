@@ -1,0 +1,72 @@
+/*******************************************************************************
+User profile page styles
+*******************************************************************************/
+.user-block {
+  background: #40392c;
+  margin: 10px 0 0;
+}
+
+.user-block-wrap {
+  padding: 15px;
+  overflow: hidden;
+}
+
+.user-name {
+  font-size: 18px;
+  font-weight: bold;
+  float: left;
+  color: #fff;
+  margin-top: 10px;
+}
+
+.user-image {
+  float: left;
+  margin-right: 15px;
+}
+
+.user-summary {
+  background: #d6d6d6;
+}
+
+.user-summary-wrap {
+  padding: 5px 15px;
+}
+
+.user-summary-wrap span {
+  margin-right: 20px;
+}
+
+.user-handle {
+  background: #e5e5e5;
+  border: 1px solid #d6d6d6;
+  padding: 5px 15px;
+  cursor: pointer;
+}
+
+.user-field {
+  padding: 10px 15px;
+}
+
+.user-topic-wrap {
+  border-bottom: 1px solid #d9d9d9;
+  padding: 10px 0;
+  overflow: hidden;
+}
+
+.user-topic {
+  font-weight: bold;
+}
+
+.user-topic-forum a {
+  color: #40392c;
+}
+
+.user-topic-forum i {
+  font-size: 10px;
+}
+
+.user-topic-time {
+  color: #777;
+  float: right;
+  font-size: 11px;
+}

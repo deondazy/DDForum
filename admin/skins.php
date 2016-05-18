@@ -4,14 +4,14 @@
 require_once( dirname( __FILE__ ) . '/admin.php' );
 
 $title = 'Choose Skin';
-$parent = 'skin.php';
-$file = 'skin.php';
+$file = 'skins.php';
+$parent_menu = 'skins.php';
 
 $the_skin = isset( $_GET['skin'] ) ? $_GET['skin'] : '';
 
-require_once( ABSPATH . 'admin/admin-header.php' );
+require_once( DDFPATH . 'admin/admin-header.php' );
 
-define( 'SKINDIR', ABSPATH . 'skins/' );
+define( 'SKINDIR', DDFPATH . 'skins/' );
 
 $skins_dir = scandir( SKINDIR );
 
@@ -27,9 +27,9 @@ switch ( $the_skin ) {
     $skin_folder = SKINDIR . $skin;
     $skin_info_file = SKINDIR . $skin . '/.skin';
     $skin_screenshot = file_exists(SKINDIR . $skin . '/screenshot.png') ? '<img src="' . home_url() . '/skins/' . $skin . '/screenshot.png" height="100" width="100">' : '';
-    
+
     if ( file_exists($skin_info_file) ) {
-     
+
       $skin_info = file($skin_info_file);
 
       foreach ($skin_info as $line_num => $line) {
@@ -47,19 +47,19 @@ switch ( $the_skin ) {
       }
 
       $skin_f[0]['screenshot']  = $skin_screenshot;
-     
+
       foreach ( $skin_f as $v ) { ?>
-        
+
         <div class="skin">
           <div class="skin-active-button">Activate</div>
           <a href="<?php echo admin_url( 'skins.php' ); ?>?skin=<?php echo $v['name']; ?>"><div class="screenshot"><?php echo $v['screenshot']; ?></div>
           <div class="skin-name-author"><?php echo $v['name']; ?>
           <div class="skin-author">By - <?php echo $v['author']; ?></div></div></a>
         </div>
-      
+
         <?php
       }
-      
+
     }
   }
   ?>
@@ -67,4 +67,4 @@ switch ( $the_skin ) {
 <?php
     break;
 }
-include( ABSPATH . 'admin/admin-footer.php' );
+include( DDFPATH . 'admin/admin-footer.php' );

@@ -1,0 +1,22 @@
+{
+  "name": "ddforum/ddforum",
+  "description": "The DDForum PHP Forum Software application",
+  "type": "project",
+  "keywords": ["forum", "ddforum"],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Deon Dazy",
+      "email": "deondazy@gmail.com",
+      "homepage": "http://www.tutsdose.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.5.9"
+  },
+  "autoload": {
+    "psr-4": {
+      "DDForum\\Core\\": "core/"
+    }
+  }
+}

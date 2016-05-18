@@ -1,0 +1,19 @@
+/******************************************************************************
+* Footer Style                                                                *
+*******************************************************************************/
+
+.site-footer {
+  background: #fff;
+  border-top: 5px solid #eee;
+  position: absolute;
+  padding: 15px 0;
+  bottom: 0;
+}
+
+.site-footer-stat {
+  margin-right: 15px;
+}
+
+.site-footer-stat:last-child {
+  margin-right: 0;
+}

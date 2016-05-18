@@ -2,102 +2,103 @@
 /**
  * Form for New and Edit topic Screen
  *
- * @package DDtopic
+ * @package DDForum
  */
 
+use DDForum\Core\Forum;
+use DDForum\Core\Topic;
+use DDForum\Core\Site;
+use DDForum\Core\Util;
+
 // Can't be accessed directly
-if ( !defined( 'ABSPATH' ) ) {
-	die( 'Direct access denied' );
+if ( !defined( 'DDFPATH' ) ) {
+  die( 'Direct access denied' );
 }
 
-$topic_id = isset( $topic_id ) ? $topic_id : 0;
+$topicId         =   isset($topic_id) ? $topic_id : 0;
 
-$topic_query = $ddf_db->fetch_all( $ddf_db->topics, "*", "topicID='$topic_id'" );
+$topicSubject    =   Topic::get('topic_subject', $topicId);
+$topicSlug       =   Topic::get('topic_slug', $topicId);
+$topicMessage    =   Topic::get('topic_message', $topicId);
+$topicForum      =   Topic::get('forumID', $topicId);
+$topicStatus     =   Topic::get('topic_status', $topicId);
+$topicPinned     =   Topic::get('pin', $topicId);
 
-if ( $topic_query ) {
+require_once( DDFPATH . 'admin/admin-header.php' );
 
-	foreach ( $topic_query as $topic ) {
-		$topic_subject = $topic->topic_subject;
-		$topic_message = $topic->topic_message;
-		$topic_forum = $topic->forumID;
-		$topic_status = $topic->topic_status;
-	}
+if (isset($message)) {
+  Site::info($message);
 }
-
-$topic_subject = ( !empty($topic_subject) ) ? $topic_subject : '';
-$topic_message = ( !empty($topic_message) ) ? $topic_message : '';
-$topic_forum = ( !empty($topic_forum) ) ? $topic_forum : '';
-$topic_status = ( !empty($topic_status) ) ? $topic_status : '';
-
-require_once( ABSPATH . 'admin/admin-header.php' );
-
-if ( isset( $message ) ) {
-	show_message( $message ) ;
-}
-elseif ( isset( $_GET['message'] ) ) {
-	show_message( $_GET['message'] );
+elseif (isset($_GET['message'])) {
+  Site::info($_GET['message']);
 }
 ?>
 
-<form action="<?php echo ($topic_id == 0) ? 'add-topic.php' : 'topic.php?action=edit&id=' . $topic_id; ?>" method="post">
-	
-	<div class="form-wrap-main">
+<form action="<?php echo ($topicId == 0) ? 'add-topic.php' : 'topic.php?action=edit&id=' . $topicId; ?>" method="post" class="action-form clearfix">
 
-		<p>
-			<span class="label">Subject</span>
-			<label class="screen-reader-text" for="topic-subject">Topic Subject</label>
-			<input type="text" id="topic-subject" class="title-box" name="topic-subject" value="<?php echo $topic_subject; ?>">
-		</p>
+  <div class="form-wrap-main">
+    <div class="field">
+      <span class="label">Topic Subject</span>
+      <label class="screen-reader-text" for="topic-subject">Topic Subject</label>
+      <input type="text" id="topic-subject" class="title-box js-title-box" name="topic-subject" value="<?php echo $topicSubject; ?>">
+    </div>
 
-		<p>
-			<label class="screen-reader-text" for="form-box"></label>
-			<textarea class="topic-message" id="form-box" name="topic-message"><?php echo $topic_message; ?></textarea>
-		</p>
+    <div class="field">
+      <label class="screen-reader-text" for="form-box"></label>
+      <textarea class="topic-message" id="form-box" name="topic-message"><?php echo $topicMessage; ?></textarea>
+    </div>
+  </div>
 
-	</div>
+  <div class="form-wrap-side">
 
-	<div class="form-wrap-side">
-		
-		<div class="head">Topic Settings</div>
+    <div class="field">
+      <span class="label">Topic Slug</span>
+      <label class="screen-reader-text" for="topic-slug">Topic  Slug</label>
+      <input type="text" id="topic-slug" class="title-box js-slug-box" name="topic-slug" value="<?php echo $topicSlug; ?>">
+    </div>
 
-		<div class="content">
-			<p>
-				<span class="label">Forum</span>
-				<label class="screen-reader-text" for="topic-forum">Topic Forum</label>
-				
-				<?php $all_forum = $ddf_db->fetch_all( $ddf_db->forums, "forumID, forum_name", "forum_type = 'forum'"); ?>
+    <div class="head">Topic Settings</div>
 
-				<select id="topic-forum" class="select-box" name="topic-forum">
+    <div class="content">
+      <div class="field">
+        <span class="label">Forum</span>
+        <label class="screen-reader-text" for="topic-forum">Topic Forum</label>
 
-					<?php
-					foreach ( $all_forum as $forum ) {
-						$forum_data[$forum->forumID] = $forum->forum_name;
-					}
+        <?php echo Forum::dropdown('select-box', $topicForum); ?>
+      </div>
 
-					foreach ( $forum_data as $id => $item ) : ?>
+      <div class="field">
+        <span class="label">Status</span>
+        <label class="screen-reader-text" for="topic-status">topic Status</label>
+        <select id="topic-status" class="select-box" name="topic-status">
+          <?php
+          $status = ['open' => 'Open', 'locked' => 'Locked'];
+          $status = array_map("trim", $status);
 
-						<option value="<?php echo $id; ?>" <?php selected( $topic_forum, $id ); ?>><?php echo $item; ?></option>
-					<?php endforeach; ?>
-				</select>
-			</p>
+          foreach ($status as $id => $item) : ?>
+            <option value="<?php echo $id ?>" <?php Util::selected($topicStatus, $id); ?>>
+              <?php echo $item; ?>
+            </option>
+          <?php endforeach; ?>
+        </select>
+      </div>
 
-			<p>
-				<span class="label">Status</span>
-				<label class="screen-reader-text" for="topic-status">topic Status</label>
-				<select id="topic-status" class="select-box" name="topic-status">
-					<?php
-					$status = array('open' => 'open', 'locked' => 'locked');
-					$status = array_map( "trim", $status );
+      <div class="field">
+        <span class="label">Pin on Homepage</span>
+        <label class="screen-reader-text" for="pin">Pin on Homepage</label>
+        <select id="pin" class="select-box" name="pin">
+          <?php
+          $pin = array(0 => 'No', 1 => 'Yes');
+          $pin = array_map( "trim", $pin );
 
-					foreach ( $status as $id => $item ) : ?>
-						<option value="<?php echo $item ?>" <?php selected( $topic_status, $item ); ?>>
-							<?php echo ucfirst($item); ?>
-						</option>
-					<?php endforeach; ?>
-				</select>
-			</p>
-			
-		</div>
-		<input type="submit" class="primary-button" value="<?php echo isset($action) ? 'Update' : 'Create'; ?>">
-	</div>
+          foreach ( $pin as $id => $item ) : ?>
+            <option value="<?php echo $id ?>" <?php Util::selected( $topicPinned, $id); ?>>
+              <?php echo $item; ?>
+            </option>
+          <?php endforeach; ?>
+        </select>
+      </div>
+    </div>
+    <input type="submit" class="primary-button" value="<?php echo isset($action) ? 'Update' : 'Create'; ?>">
+  </div>
 </form>

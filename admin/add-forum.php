@@ -3,43 +3,39 @@
  * Add new forum and send to forum.php
  */
 
+use DDForum\Core\User;
+use DDForum\Core\Forum;
+use DDForum\Core\Util;
+
 /** Load admin **/
 require_once( dirname( __FILE__ ) . '/admin.php' );
 
-$user_id = $user->current_userID();
+$user_id = User::currentUserId();
 
-if ( 'POST' == $_SERVER['REQUEST_METHOD'] ) {
-	$forum_name = clean_input( $_POST['forum-title'] );
-	$forum_description = $_POST['forum-description'];
-	$forum_type = $_POST['forum-type'];
-	$forum_status = clean_input( $_POST['forum-status'] );
-	$forum_visibility = clean_input( $_POST['forum-visibility'] );
-	$forum_parent = clean_input( $_POST['forum-parent'] );
+if ('POST' == $_SERVER['REQUEST_METHOD']) {
 
-	if ( !empty($forum_name) ) {
-		$data = array(
-  		'forum_name' => $forum_name,
-	  	'forum_description' => $forum_description,
-	  	'forum_type' => $forum_type,
-	  	'forum_status' => $forum_status,
-	  	'forum_visibility' => $forum_visibility,
-	  	'forum_parent' => $forum_parent,
-	  	'forum_creator' => $user_id,
-		);
+  if (!empty($_POST['forum-title'])) {
+    $data = [
+      'forum_name'         =>  $_POST['forum-title'],
+      'forum_slug'         =>  $_POST['forum-slug'],
+      'forum_description'  =>  $_POST['forum-description'],
+      'forum_type'         =>  $_POST['forum-type'],
+      'forum_status'       =>  $_POST['forum-status'],
+      'forum_visibility'   =>  $_POST['forum-visibility'],
+      'forum_parent'       =>  $_POST['forum-parent'],
+      'forum_creator'      =>  $user_id,
+      'forum_date'         =>  date('Y-m-d H:i:s'),
+      'forum_last_post'    =>  date('Y-m-d H:i:s'),
+    ];
 
-		$insert_forum = $ddf_db->insert_data($ddf_db->forums, $data);
-
-		if ( $ddf_db->affected_rows > 0 ) {
-			redirect("forum.php?action=edit&id=$insert_forum&message=Forum created");
-		}
-		else {
-			redirect("forum-new.php?message=Unable to create forum, try again");
-		}
-	}
-	else {
-		redirect('forum-new.php?message=Enter forum title');
-	}
-}
-else {
-	kill_script('Access Denied');
+    if (Forum::create($data)) {
+      Util::redirect("forum.php?action=edit&id=".Forum::$newForumId."&message=Forum created");
+    } else {
+      Util::redirect("forum-new.php?message=Unable to create forum, try again");
+    }
+  } else {
+    Util::redirect('forum-new.php?message=Enter forum title');
+  }
+} else {
+  Site::info('Access Denied', true, true);
 }

@@ -1,0 +1,26 @@
+/******************************************************************************
+ * Navigation Styles                                                          *
+ ******************************************************************************/
+
+.site-navigation {
+}
+
+.site-navigation-welcome-text {
+  background: #e53e54;
+  padding: 15px;
+  color: #fff;
+  font-size: 20px;
+  border-radius: 0 0 30px 0;
+}
+
+.site-navigation-link {
+  float: left;
+  margin-left: 15px;
+  padding: 19px 0;
+}
+
+.secondary-button {
+  background: #eee;
+  padding: 5px 10px;
+  border: 1px solid #bbb;
+}

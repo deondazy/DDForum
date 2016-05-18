@@ -3,8 +3,9 @@
  * Logged user profile screen
  *
  * @package DDForum
- * @subpackage Admin
+ * @subpackage Administration
  */
 
-define( 'CURRENT_PROFILE', true );
-require_once( dirname(__FILE__) . '/user.php' );
+define('CURRENT_PROFILE', true);
+
+include(dirname(__FILE__) .'/user.php');

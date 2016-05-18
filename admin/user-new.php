@@ -1,57 +1,58 @@
 <?php
 
+use DDForum\Core\User;
+use DDForum\Core\Site;
+use DDForum\Core\Util;
+
+if (!defined('DDFPATH')) {
+  define('DDFPATH', dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR);
+}
+
 /** Load admin **/
-require_once( dirname( __FILE__ ) . '/admin.php' );
+require_once(DDFPATH .'admin/admin.php');
 
-$title = 'Add New User';
-$file = 'user-new.php';
-$parent = 'user-edit.php';
+$title       = 'Add New User';
+$file        = 'user-new.php';
+$parent_menu = 'user-edit.php';
 
-$redirect_url = urlencode(admin_url('user-new.php'));
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
-  
-  $data = array();
-
-  $data['first_name']    =  clean_input($_POST['fname']);
-  $data['last_name']     =  clean_input($_POST['lname']);
-  $data['display_name']  =  clean_input($_POST['uname']);
-  $data['country']       =  clean_input($_POST['country']);
-  $data['birth_day']     =  clean_input($_POST['day']);
-  $data['birth_month']   =  clean_input($_POST['month']);
-  $data['birth_year']    =  clean_input($_POST['year']);
-  $data['age']           =  date( 'Y' ) - clean_input($_POST['year']);
-  $data['gender']        =  clean_input($_POST['gender']);
-  $data['register_date'] =  date( 'Y-m-d' );
-  $data['last_seen']     =  date( 'Y-m-d h:i:s' );
-  $data['level']         =  clean_input($_POST['level']);
-  $data['credit']        =  50; // TODO: Change value to site credit setting
+  $data = [
+    'first_name'    =>  $_POST['fname'],
+    'last_name'     =>  $_POST['lname'],
+    'display_name'  =>  $_POST['uname'],
+    'country'       =>  $_POST['country'],
+    'birth_day'     =>  $_POST['day'],
+    'birth_month'   =>  $_POST['month'],
+    'birth_year'    =>  $_POST['year'],
+    'age'           =>  date( 'Y' ) - $_POST['year'],
+    'gender'        =>  $_POST['gender'],
+    'register_date' =>  date('Y-m-d'),
+    'last_seen'     =>  date('Y-m-d h:i:s'),
+    'level'         =>  $_POST['level'],
+    'credit'        =>  50, // TODO: Change value to site credit setting
+  ];
 
   // Username cannot be empty
-  if ( !empty($_POST['uname']) ) {
+  if (!empty($_POST['uname'])) {
 
     // Username cannot exceed 16 characters
-    if ( strlen($_POST['uname']) <= 16 ) {
+    if (strlen($_POST['uname']) <= 16) {
 
       // Allow only alphanumeric characters, underscores and hyphen
-      if ( preg_match("/^[a-zA-Z0-9-_]+$/", $_POST['uname']) ) {
-
-        $username = $_POST['uname'];
+      if (preg_match("/^[a-zA-Z0-9]+$/", $_POST['uname'])) {
 
         // Check if username is registered
-        $ddf_db->query("SELECT `username` FROM $ddf_db->users WHERE username = '$username'");
-    
-        if ( $ddf_db->row_count == 0 ) {
+        if (!User::findByName($_POST['uname'])) {
 
-          $data['username']      =  clean_input($username);
-         
+          $data['username'] =  $_POST['uname'];
         }
         else {
-          $error[] = "This username $username is already registered. Try another";
+          $error[] = "This username {$username} is already registered. Try another";
         }
       }
       else {
-        $error[] = 'Username can only have alphanumeric, hyphen and underscore characters';
+        $error[] = 'Username can only have alphanumeric characters';
       }
     }
     else {
@@ -61,20 +62,15 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
   else {
     $error[] = 'Username is required';
   }
-  
-  if ( !empty($_POST['email']) ) {
-    
-    if ( preg_match('/^([a-zA-Z0-9_\.-]+)@([\da-zA-Z0-9_\.-]+)\.([a-zA-Z\.]{2,6})$/', $_POST['email']) ) {
 
-      $email = $_POST['email'];
+  if (!empty($_POST['email'])) {
+
+    if (preg_match('/^([a-zA-Z0-9_\.-]+)@([\da-zA-Z0-9_\.-]+)\.([a-zA-Z\.]{2,6})$/', $_POST['email'])) {
 
       // Check if email is registered
-      $ddf_db->query("SELECT `email` FROM $ddf_db->users WHERE email = '$email'");
-    
-      if ( $ddf_db->row_count == 0 ) {
+      if (!User::findByEmail($_POST['email'])) {
 
-        $data['email']      =  clean_input($email);
-       
+        $data['email'] =  $_POST['email'];
       }
       else {
         $error[] = "Email address is already taken";
@@ -87,11 +83,11 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
   else {
     $error[] = 'Email is required';
   }
-  
-  if ( !empty($_POST['pass']) ) {
-    if ( !empty($_POST['cpass']) ) {
-      if ( $_POST['pass'] == $_POST['cpass'] ) {
-        $data['password']      =  md5($_POST['pass']);
+
+  if (!empty($_POST['pass'])) {
+    if (!empty($_POST['cpass'])) {
+      if ($_POST['pass'] == $_POST['cpass']) {
+        $data['password'] = md5($_POST['pass']);
       }
       else {
         $error[] = 'Password mismatch';
@@ -106,42 +102,37 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
   }
 
   // Avatar
-  if ( !empty($_POST['avatar']) ) {
+  if (!empty($_POST['avatar'])) {
     $upload_time  =   date('YmdHis') . '_';
-    $upload_dir   =   ABSPATH . 'inc/avatar/';
+    $upload_dir   =   DDFPATH . 'inc/avatar/';
     $upload_file  =   $upload_dir . basename($upload_time . $_FILES['avatar']['name']);
 
     if (move_uploaded_file($_FILES['avatar']['tmp_name'], $upload_file)) {
-      $data['avatar'] = home_url() . '/inc/avatar/' . $upload_time . $_FILES['avatar']['name'];
+      $data['avatar'] = Site::url() . '/inc/avatar/' . $upload_time . $_FILES['avatar']['name'];
     }
     else {
       $error[] = "Unable to upload avatar.";
     }
   }
   else {
-    $data['avatar'] = home_url() . '/inc/avatar/ddf-avatar.png';
+    $data['avatar'] = Site::url() . '/inc/avatar/ddf-avatar.png';
   }
-  
-  if ( empty($error) ) {
-    $ddf_db->insert_data( $ddf_db->users, $data );
 
-    if ( $ddf_db->affected_rows == -1 ) {
-      show_message('ERROR: Adding new user failed');
-    }
-    else if ( $ddf_db->affected_rows == 0 ) {
-      show_message('ERROR: Unable to add user');
-    }
-    else if ( $ddf_db->affected_rows > 0 ) {
-      redirect("user-edit.php?message=New user added");
+  if (empty($error)) {
+
+    if (!User::create($data)) {
+      Site::info('ERROR: Adding new user failed', true);
+    } else {
+      Util::redirect("user-edit.php?message=New user added", true);
     }
   }
 }
 
-require_once( ABSPATH . 'admin/admin-header.php' );
+require_once(DDFPATH .'admin/admin-header.php');
 
-if ( !empty($error) ) {
+if (!empty($error)) {
   foreach ($error as $e) {
-    show_message( 'ERROR: ' . $e );
+    Site::info('ERROR: ' . $e, true);
   }
 }
 ?>
@@ -167,9 +158,8 @@ if ( !empty($error) ) {
           <td>
             <select name="level" id="level" class="select-box">
               <option value="0">User</option>
-              <option value="1">Head Admin</option>
-              <option value="2">Admin</option>
-              <option value="3">Moderator</option>
+              <option value="1">Admin</option>
+              <option value="2">Moderator</option>
             </select>
           </td>
         </tr>
@@ -196,13 +186,13 @@ if ( !empty($error) ) {
 
         <tr>
           <th scope="row"><label for="byear">Birthday</label></th>
-          <td><?php echo date_select(); ?></td>
+          <td><?php echo Util::selectDate(); ?></td>
         </tr>
 
         <tr>
           <th scope="row"><label for="country">Country</label></th>
           <td>
-            <?php echo json_item_select( ABSPATH . 'inc/country.json', '', 'country', 'country' ); ?>
+            <?php echo Util::selectFromJson(DDFPATH .'inc/country.json', '', 'country', 'country'); ?>
           </td>
         </tr>
 
@@ -210,7 +200,7 @@ if ( !empty($error) ) {
           <th scope="row"><label for="user-avatar">Avatar</label></th>
           <td>
             <input name="MAX_FILE_SIZE" type="hidden" value="‪5242880‬" />
-            <div id="show-avatar"><?php //echo $ddf_user->get_dp( $user_id ) ?></div>
+            <div id="show-avatar"><img src="<?php echo Site::url(); ?>/inc/avatar/ddf-avatar.png"></div>
             <div id="response"></div>
             <input name="avatar" type="file" id="user-avatar" />
           </td>
@@ -234,4 +224,4 @@ if ( !empty($error) ) {
 
 </form>
 
-<?php include( ABSPATH . 'admin/admin-footer.php' );
+<?php include(DDFPATH .'admin/admin-footer.php');

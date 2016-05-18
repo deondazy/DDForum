@@ -1,54 +1,42 @@
 <?php
 /**
- * Add new forum and send to forum.php
+ * Add new reply and send to reply.php
  */
+
+use DDForum\Core\User;
+use DDForum\Core\Forum;
+use DDForum\Core\Topic;
+use DDForum\Core\Util;
+use DDForum\Core\Database;
 
 /** Load admin **/
 require_once( dirname( __FILE__ ) . '/admin.php' );
 
-$user_id = $user->current_userID();
+$user_id = User::currentUserId();
 
-if ( 'POST' == $_SERVER['REQUEST_METHOD'] ) {
-	$reply_message = $_POST['reply-message'];
-	$reply_topic = clean_input($_POST['reply-topic']);
-	$forum_id = $ddf_db->get_topic('forumID', $reply_topic);
+if ('POST' == $_SERVER['REQUEST_METHOD']) {
 
-	if ( !empty($reply_message) ) {
+	if (!empty($_POST['reply-message'])) {
 
-		$data = array(
-		  'topicID' => $reply_topic,
-		  'forumID' => $forum_id,
-		  'reply_message' => $reply_message,
-		  'reply_poster' => $user_id,
-		  'reply_date' => 'now()',
-		);
+		$data = [
+			'topicID'       =>  $_POST['reply-topic'],
+			'forumID'       =>  Topic::get('forumID', $_POST['reply-topic']),
+			'reply_message' =>  $_POST['reply-message'],
+			'reply_poster'  =>  $user_id,
+			'reply_date'    =>  date('Y-m-d H:i:s'),
+		];
 
-		$insert_reply = $ddf_db->insert_data($ddf_db->replies, $data);
-
-		if ( $insert_reply ) {
-			$count_topic_replies = $ddf_db->query("SELECT `replyID` FROM ddf_db->replies WHERE `topicID` = '$reply_topic'" );
-
-			$ddf_db->update_data( $ddf_db->topics, array('topic_replies' => $ddf_db->row_count), "topicID='$reply_topic'" );
-
-			$count_forum_replies = $ddf_db->query("SELECT `replyID` FROM ddf_db->replies WHERE `forumID` = '$forum_id'" );
-
-			$ddf_db->update_data( $ddf_db->forums, array('forum_replies' => $ddf_db->row_count), "forumID='$forum_id'" );
-
-			$count_user_replies = $ddf_db->query("SELECT `replyID` FROM ddf_db->replies WHERE `reply_poster` = '$user_id'" );
-			$count_user_replies = $ddf_db->fetch_object($count_user_replies);
-
-			$ddf_db->update_data( "users", array('reply_count' => $ddf_db->row_count), "userID='$user_id'" );
-
-			redirect("reply.php?action=edit&id=$insert_reply&message=Reply added");
+		if (Reply::create($data)) {
+			Util::redirect("reply.php?action=edit&id=".Database::lastInsertId()."&message=Reply added");
 		}
 		else {
-			redirect("reply-new.php?message=Unable to add reply, try again");
+			Util::redirect("reply-new.php?message=Unable to add reply, try again");
 		}
 	}
 	else {
-		redirect('reply-new.php?message=Enter reply message');
+		Util::redirect('reply-new.php?message=Enter reply message');
 	}
 }
 else {
-	kill_script('Access Denied');
+	Site::info('Access Denied', true, true);
 }

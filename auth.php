@@ -7,33 +7,39 @@
  * @package DDForum
  */
 
-require_once( dirname( __FILE__ ) . '/startup.php' );
+if (!defined('DDFPATH')) {
+  define('DDFPATH', dirname(__FILE__) . DIRECTORY_SEPARATOR);
+}
+
+// Load DDForum Startup
+require_once(DDFPATH . 'startup.php');
+
 
 if ( isset( $_GET['action'] ) ) {
-	$action = $_GET['action'];
+  $action = $_GET['action'];
 }
 else {
-	$action = 'login';
+  $action = 'login';
 }
 
 switch ( $action ) {
-	case 'login':
-		include 'inc/login.php';
-		break;
+  case 'login':
+    include 'inc/login.php';
+    break;
 
-	case 'logout':
-		include 'inc/logout.php';
-		break;
-	
-	case 'register':
-		include 'inc/register.php';
-		break;
+  case 'logout':
+    include 'inc/logout.php';
+    break;
 
-	case 'retrieve-password':
-		include 'inc/retrieve-password.php';
-		break;
+  case 'register':
+    include 'inc/register.php';
+    break;
 
-	default:
-		include 'inc/login.php';
-		break;
+  case 'retrieve-password':
+    include 'inc/retrieve-password.php';
+    break;
+
+  default:
+    include 'inc/login.php';
+    break;
 }
