@@ -17,34 +17,23 @@ require_once(DDFPATH . 'startup.php');
 
 $title = 'Login - ' . Option::get('site_name');
 
-$logout = (isset($_GET['logout']) && $_GET['logout']) ? true : false;
+require_once(DDFPATH . 'header.php');
 
 // Check if form is submitted
-if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
   $remember = (isset($_POST['remember'])) ? true : false;
 
   if (!User::login($_POST['username'], $_POST['password'], $remember) && isset(User::$error)) {
-    foreach (User::$error as $error) {
-      echo $error;
-    }
+    Site::info(User::$error);
   }
 }
-
-require_once( DDFPATH . 'header.php' );
 ?>
 
 <div class="container">
   <div class="form-wrap">
 
-    <?php
-    if ( $logout ) {
-      Site::info('You have logged out');
-    }
-    elseif ( User::isLogged() && !$logout ) {
-      Site::info('You are already logged in', false, true);
-    }
-    ?>
+    <?php if (User::isLogged()) Site::info('You are already logged in', false, true); ?>
 
     <h2 class="page-title">Login To <?php echo Option::get('site_name'); ?></h2>
 

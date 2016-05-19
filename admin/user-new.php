@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       // Allow only alphanumeric characters, underscores and hyphen
       if (preg_match("/^[a-zA-Z0-9]+$/", $_POST['uname'])) {
 
-        // Check if username is registered
+        // Check if username is already taken
         if (!User::findByName($_POST['uname'])) {
 
           $data['username'] =  $_POST['uname'];
@@ -65,6 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
   if (!empty($_POST['email'])) {
 
+    // Check if email is valid
     if (preg_match('/^([a-zA-Z0-9_\.-]+)@([\da-zA-Z0-9_\.-]+)\.([a-zA-Z\.]{2,6})$/', $_POST['email'])) {
 
       // Check if email is registered

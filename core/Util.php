@@ -156,6 +156,7 @@ class Util
 
   public static function selectFromJson($json, $selected = '', $id = '', $name = '')
   {
+    $selected = isset($_POST[$name]) ? htmlspecialchars($_POST[$name]) : '';
     if (file_exists($json)) {
 
       $file     = file_get_contents($json);
@@ -184,6 +185,8 @@ class Util
 
   public static function selectDate($selected_day = '', $selected_month = '', $selected_year = '')
   {
+    $selected_day = isset($_POST['day']) ? htmlspecialchars($_POST['day']) : '';
+
     $day = '<select class="select-box" id="day" name="day">';
 
     for ($i = 1; $i <= 31; $i++) {
@@ -194,6 +197,8 @@ class Util
       $day .= '<option value="'.$item.'" '.self::selected($selected_day, $item, false).'>'.$item.'</option>';
     }
     $day .= '</select>';
+
+    $selected_month = isset($_POST['month']) ? htmlspecialchars($_POST['month']) : '';
 
     $month = '<select class="select-box" id="month" name="month">';
 
@@ -207,6 +212,8 @@ class Util
     }
 
     $month .= '</select>';
+
+    $selected_year = isset($_POST['year']) ? htmlspecialchars($_POST['year']) : '';
 
     $year = '<select class="select-box" id="year" name="year">';
     $current_year = date('Y');
@@ -232,5 +239,48 @@ class Util
     } else {
       return false;
     }
+  }
+
+  /**
+   * Auto Fill a form after submission
+   *
+   * @param string $name
+   *   The name of the form field
+   * @param string $type
+   *   The input type text|textarea|checkbox|radio|select
+   * @param string $value
+   *   The selected value
+   */
+  public static function fill($name, $type = 'text', $value = '')
+  {
+    if (isset($_POST[$name])) {
+      switch ($type) {
+        case 'text':
+          return ' value="' .htmlspecialchars($_POST[$name]).'" ';
+        break;
+
+        case 'textarea':
+          return htmlspecialchars($_POST[$name]);
+        break;
+
+        case 'checkbox':
+          return ' checked ';
+        break;
+
+        case 'radio':
+          if ($_POST[$name] == $value) {
+            return ' checked ';
+          }
+        break;
+
+        case 'select':
+          if ($_POST[$name] == $value) {
+            return ' selected ';
+          }
+        break;
+      }
+    }
+
+    return null;
   }
 }
