@@ -13,7 +13,7 @@ require_once(DDFPATH . 'startup.php');
 
 // Check login
 if (!User::isLogged()) {
-  Util::redirect(Site::url() . '/auth.php');
+  Util::redirect(Site::url() . '/login');
 }
 
 // Check level
