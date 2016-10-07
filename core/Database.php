@@ -2,249 +2,366 @@
 
 namespace DDForum\Core;
 
+use PDO;
+use PDOException;
+
 class Database
 {
-  /**
-   * The active PDO connection
-   *
-   * @var PDO|null
-   */
-  private static $pdo = null;
+    /**
+     * Database instance
+     *
+     * @var PDO
+     */
+    private static $instance;
 
-  /**
-   * The last query string
-   *
-   * @var string|null
-   */
-  public static $statement;
-  public static $lastQuery;
+    /**
+     * The active PDO connection.
+     *
+     * @var PDO
+     */
+    private $pdo;
 
-  /**
-   * Connection options
-   *
-   * @var array
-   */
-  private static $options = [];
+    /**
+     * The prepared PDOStatement.
+     *
+     * @var PDOStatement
+     */
+    private $statement;
 
-  /**
-   * Last query error message
-   *
-   * @var string|null
-   */
-  public static $error = null;
+    /**
+     * The last Query string.
+     *
+     * @var string
+     */
+    public $lastQuery;
 
-  /**
-   * DDForum know database tables
-   *
-   * @var array
-   */
-  private static $tables = [
-    'ads',
-    'attachments',
-    'badwords',
-    'categories',
-    'credit_transfer',
-    'files',
-    'forums',
-    'likes',
-    'notifications',
-    'options',
-    'pms',
-    'replies',
-    'reports',
-    'topics',
-    'users',
-  ];
+    /**
+     * Connection options.
+     *
+     * @var array
+     */
+    private $options = [];
 
-  /**
-   * Prefixed Database Tables
-   *
-   * @var array
-   */
-  public static $prefixTable = [];
+    /**
+     * Last query error message.
+     *
+     * @var string
+     */
+    public $errorMessage = null;
 
-  /*
-   * This class should not be instantiated
-   */
-  private function __construct()
-  {
-  }
-
-  /**
-   * Connect to database
-   *
-   * Sets connection options, set prefix on tables and connect to the database
-   *
-   * @return PDO|PDOException
-   */
-  public static function connect()
-  {
-    if (self::isConnected()) {
-      return;
-    }
-
-    $dsn = 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME;
-
-    self::$options = [
-      \PDO::ATTR_PERSISTENT  => true,
-      \PDO::ATTR_ERRMODE     => \PDO::ERRMODE_EXCEPTION
+    /**
+     * DDForum know database tables.
+     *
+     * @var array
+     */
+    private $tables = [
+        'ads',
+        'attachments',
+        'badwords',
+        'credit_transfer',
+        'files',
+        'forums',
+        'likes',
+        'notifications',
+        'options',
+        'pms',
+        'replies',
+        'reports',
+        'topics',
+        'users',
     ];
 
-    try {
-      self::$pdo = new \PDO($dsn, DB_USER, DB_PASSWORD, self::$options);
+    /**
+     * Prefixed Database Tables.
+     *
+     * @var array
+     */
+    public $prefixTable = [];
 
-      // Set and prefix tables
-      self::tables();
-
-      return self::$pdo;
-    } catch (\PDOException $e) {
-      self::$error = $e->getMessage();
-
-      throw new DatabaseException($e->getMessage());
-    }
-  }
-
-  /**
-   * Checks if there's an active database connection
-   *
-   * @return bool
-   */
-  public static function isConnected()
-  {
-    return isset(self::$pdo);
-  }
-
-  /**
-   * Close database connection
-   *
-   * @return bool
-   */
-  public static function close()
-  {
-    self::$pdo = null;
-    self::$statement = null;
-
-    return true;
-  }
-
-  /**
-   * Prepare a query to run against the database
-   *
-   * @param string $query The query statement
-   * @return void
-   */
-  public static function query($query)
-  {
-    self::$statement = self::$pdo->prepare($query);
-    self::$lastQuery = $query;
-    return self::$statement;
-  }
-
-  /**
-   * Bind the inputs with the query placeholders
-   *
-   * @param string $param
-   *   The query placeholder
-   * @param string $value
-   *   Actual value to bind to the placeholder
-   * @param string $type
-   *   The datatype of the the parameter
-   * @return bool
-   */
-  public static function bind($param, $value, $type = null)
-  {
-    if (is_null($type)) {
-      switch (true) {
-        case is_int($value):
-          $type = \PDO::PARAM_INT;
-          break;
-        case is_bool($value):
-          $type = \PDO::PARAM_BOOL;
-          break;
-        case is_null($value):
-          $type = \PDO::PARAM_NULL;
-          break;
-        default:
-          $type = \PDO::PARAM_STR;
-      }
-    }
-    return self::$statement->bindValue($param, $value, $type);
-  }
-
-  /**
-   * Execute the prepared statement
-   *
-   * @return bool|PDOExeption
-   */
-  public static function execute()
-  {
-    try {
-      return self::$statement->execute();
-    } catch (\PDOException $e) {
-      self::$error = $e->getMessage();
-      return self::$error;
-    }
-  }
-
-  public static function fetchAll()
-  {
-    self::execute();
-
-    return self::$statement->fetchAll(\PDO::FETCH_OBJ);
-  }
-
-  public static function fetchOne()
-  {
-    self::execute();
-
-    return self::$statement->fetch(\PDO::FETCH_OBJ);
-  }
-
-  public static function rowCount()
-  {
-    return self::$statement->rowCount();
-  }
-
-  public static function lastInsertId()
-  {
-    return self::$pdo->lastInsertId();
-  }
-
-  public static function beginTransaction()
-  {
-    return self::$pdo->beginTransaction();
-  }
-
-  public static function endTransaction()
-  {
-    return self::$pdo->commit();
-  }
-
-  public static function cancelTransaction()
-  {
-    return self::$pdo->rollBack();
-  }
-
-  public static function debugDumpParams()
-  {
-    return self::$stmt->debugDumpParams();
-  }
-
-  /**
-   * Set database tables prefix
-   *
-   * @return array
-   */
-  public static function tables()
-  {
-    if (!defined('TABLE_PREFIX')) {
-      define('TABLE_PREFIX', '');
+    /**
+     * This class should not be instantiated
+     */
+    private function __construct()
+    {
     }
 
-    foreach (self::$tables as $table) {
-      self::$prefixTable[$table] = TABLE_PREFIX . $table;
+    /**
+     * This class cannot be cloned
+     */
+    private function __clone()
+    {
     }
 
-    return self::$prefixTable;
-  }
+    /**
+     * Database object instance
+     */
+    public static function instance()
+    {
+        if (empty(self::$instance)) {
+            self::$instance = new self();
+        }
+
+        return self::$instance;
+    }
+
+    /**
+     * Connect to a database.
+     *
+     * Sets connection options, set prefix on tables and connect to the database
+     *
+     * @param PDO $pdo A PDO class object representing the Database connection
+     *
+     * @return PDO A PDO object
+     */
+    public function connect(PDO $pdo)
+    {
+        // Are we already connected?
+        if ($this->isConnected()) {
+            return;
+        }
+
+        $this->options = [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        ];
+
+        $this->pdo = $pdo;
+
+        // Prefix the Database tables
+        $this->prefixTables();
+
+        return $this->pdo;
+    }
+
+    /**
+     * Checks if there's an active Database connection.
+     *
+     * @return bool
+     */
+    public function isConnected()
+    {
+        return isset($this->pdo);
+    }
+
+    /**
+     * Close database connection.
+     *
+     * @return bool
+     */
+    public function close()
+    {
+        $this->pdo = null;
+        $this->statement = null;
+        $this->lastQuery = null;
+        return true;
+    }
+
+    /**
+     * Set database tables prefix.
+     *
+     * @return array
+     */
+    public function prefixTables()
+    {
+        foreach ($this->tables as $table) {
+            $this->prefixTable[$table] = Config::get('db_connection')->table_prefix.$table;
+        }
+
+        return $this->prefixTable;
+    }
+
+    /**
+     * Check that a table exisits in the database
+     *
+     * @param string $tableName Name of the table to checkTables
+     *
+     * @return bool
+     */
+    public function tableExists($tableName)
+    {
+        $query = $this->query("SELECT 1 FROM {$tableName} LIMIT 1");
+        $this->execute();
+
+        if ($query->columnCount() > 0) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function databaseTables()
+    {
+        $dbTtables = [];
+        $db = Config::get('db_connection')->dbname;
+        $this->query("SHOW TABLES FROM {$db}");
+        $tables = $this->fetchOne();
+
+        foreach ($tables as $table) {
+            $dbTables[] = $table;
+        }
+
+        return $dbTables;
+    }
+
+    /**
+     * Check if all prefixed Database tables are available.
+     *
+     * @return bool
+     */
+    public function checkTables()
+    {
+        foreach ($this->prefixTables() as $table) {
+            if (!$this->tableExists($table)) {
+                continue;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Prepare a query to run against the database.
+     *
+     * @param string $query
+     *
+     * @return PDOStatement
+     */
+    public function query($query)
+    {
+        $this->connect($this->pdo);
+
+        try {
+            $this->statement = $this->pdo->prepare($query);
+        } catch (PDOException $e) {
+            throw new DatabaseException('Failed to prepare statement');
+        }
+
+        if ($this->statement) {
+            $this->lastQuery = $query;
+
+            return $this->statement;
+        }
+
+        return false;
+    }
+
+    /**
+     * Bind the inputs with the query placeholders.
+     *
+     * @param string $param
+     * @param string $value
+     * @param string $type
+     *
+     * @return bool
+     */
+    public function bind($param, $value, $type = null)
+    {
+        if (is_null($type)) {
+            switch (true) {
+                case is_int($value):
+                    $type = PDO::PARAM_INT;
+                    break;
+
+                case is_bool($value):
+                    $type = PDO::PARAM_BOOL;
+                    break;
+
+                case is_null($value):
+                    $type = PDO::PARAM_NULL;
+                    break;
+
+                default:
+                    $type = PDO::PARAM_STR;
+            }
+        }
+
+        return $this->statement->bindValue($param, $value, $type);
+    }
+
+    /**
+     * Execute the prepared statement.
+     *
+     * @return bool
+     */
+    public function execute()
+    {
+        try {
+            return $this->statement->execute();
+        } catch (PDOException $e) {
+            throw new DatabaseException('Execution of prepared statement failed');
+        }
+    }
+
+    /**
+     * Execute prepared statement and fetch array of all the result set rows.
+     *
+     * @return array
+     */
+    public function fetchAll()
+    {
+        $this->execute();
+
+        return $this->statement->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    /**
+     * Execute the prepared statement and fetch a single row from the result set.
+     *
+     * @return object
+     */
+    public function fetchOne()
+    {
+        $this->execute();
+
+        return $this->statement->fetch(PDO::FETCH_OBJ);
+    }
+
+    /**
+     * Count the affected rows returned by the last query.
+     *
+     * @return int
+     */
+    public function rowCount()
+    {
+        return $this->statement->rowCount();
+    }
+
+    /**
+     * The last AUTO_INCREMENTed id for the last INSERT query.
+     *
+     * @return int
+     */
+    public function lastInsertId()
+    {
+        return (int) $this->pdo->lastInsertId();
+    }
+
+    /**
+     * Begins a transaction.
+     *
+     * @return bool
+     */
+    public function beginTransaction()
+    {
+        return $this->pdo->beginTransaction();
+    }
+
+    /**
+     * Commit the transaction.
+     *
+     * @return bool
+     */
+    public function endTransaction()
+    {
+        return $this->pdo->commit();
+    }
+
+    /**
+     * Roll back active transaction.
+     *
+     * @return bool
+     */
+    public function cancelTransaction()
+    {
+        return $this->pdo->rollBack();
+    }
 }
