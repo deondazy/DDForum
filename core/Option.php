@@ -53,9 +53,7 @@ class Option
         $stmt->bindValue(':value', $value);
         $stmt->bindValue(':option', $option);
 
-        $stmt->execute();
-
-        var_dump($stmt->rowCount());
+        return $stmt->execute();
     }
 
     /**

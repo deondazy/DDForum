@@ -34,8 +34,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $set_option = Option::set($option, $value);
     }
 
-    var_dump($set_option);
-
     if ($set_option) {
         Site::info('Settings saved');
     } else {
