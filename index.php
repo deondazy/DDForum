@@ -1,81 +1,85 @@
 <?php
 /**
- * DDForum index
- *
- * @package DDForum
+ * DDForum index.
  */
-
-use DDForum\Core\Option;
 use DDForum\Core\Util;
-use DDForum\Core\Forum;
-use DDForum\Core\Topic;
 use DDForum\Core\User;
 use DDForum\Core\Site;
+use DDForum\Core\Option;
 
-define('DDFPATH', dirname(__FILE__) . '/');
+define('DDFPATH', dirname(__FILE__)  . DIRECTORY_SEPARATOR);
 
 // Load Startup file
-require_once(DDFPATH . 'startup.php');
+require_once(DDFPATH.'startup.php');
 
 $title = Option::get('site_name');
 
-
-require_once(DDFPATH . 'header.php');
+include(DDFPATH.'header.php');
 ?>
 
 <div class="table-responsive">
-  <table class="topics table">
-    <thead>
-      <th>Topic</th>
-      <th>Category</th>
-      <th>Poster</th>
-      <th>Replies</th>
-      <th>Views</th>
-      <th>Active</th>
-    </thead>
 
-    <?php foreach ($topics as $topic) : ?>
+    <?php if (empty($topics)) : ?>
 
-      <tr class="topic">
-        <td class="the-topic">
+        <?php echo Site::info('No Topics found'); ?>
 
-          <a id="topic-<?php echo $topic->topicID; ?>" href="<?php echo Site::url(); ?>/topics/<?php echo $topic->topicID; ?>">
-            <?php echo $topic->topic_subject; ?>
-          </a>
+    <?php else : ?>
 
-        </td>
+    <table class="topics table">
+      <thead>
+        <th>Topic</th>
+        <th>Category</th>
+        <th>Poster</th>
+        <th>Replies</th>
+        <th>Views</th>
+        <th>Active</th>
+      </thead>
 
-        <td class="the-category">
-          <a id="forum-<?php echo $topic->forumID; ?>" href="<?php echo Site::url(); ?>/forums/<?php echo $topic->forumID; ?>">
-            <?php echo Forum::get('forum_name', $topic->forumID); ?>
-          </a>
-        </td>
+      <tbody>
 
-        <td class="the-poster">
-          <a id="user-<?php echo $topic->topic_poster; ?>" href="<?php echo Site::url(); ?>/users/<?php echo $topic->topic_poster; ?>">
-            <?php echo User::get('display_name', $topic->topic_poster); ?>
-          </a>
-        </td>
+        <?php foreach ($topics as $topic) : ?>
+          <tr class="topic">
+            <td class="the-topic">
+              <a id="topic-<?php echo $topic->id; ?>" href="<?php echo Site::url(); ?>/topic/<?php echo $topic->slug . '/' . $topic->id; ?>">
+                <?php echo $topic->subject; ?>
+              </a>
+            </td>
 
-        <td class="the-reply int-value">
-          <?php echo Topic::countReplies($topic->topicID); ?>
-        </td>
+            <td class="the-category">
+              <a id="forum-<?php echo $topic->forum; ?>" href="<?php echo Site::url(); ?>/forums/<?php echo $topic->forum; ?>">
+                <?php echo $Forum->get('name', $topic->forum); ?>
+              </a>
+            </td>
 
-        <td class="the-view int-value">
-          <?php echo $topic->topic_views; ?>
-        </td>
+            <td class="the-poster">
+              <a id="user-<?php echo $topic->poster; ?>" href="<?php echo Site::url(); ?>/user/<?php echo User::get('username', $topic->poster); ?>">
+                <?php echo User::get('display_name', $topic->poster); ?>
+              </a>
+            </td>
 
-        <td class="the-time">
-          <?php echo Util::time2str(Util::timestamp($topic->topic_date)); ?>
-        </td>
+            <td class="the-reply int-value">
 
+              <?php echo $Topic->countReplies($topic->id); ?>
+            </td>
 
-      </tr>
+            <td class="the-view int-value">
 
-    <?php endforeach; ?>
+              <?php echo $topic->views; ?>
+            </td>
 
-  </table>
+            <td class="the-time">
+
+              <?php echo Util::time2str(Util::timestamp($topic->create_date)); ?>
+            </td>
+          </tr>
+        <?php endforeach; ?>
+
+      </tbody>
+
+    </table>
+
+  <?php endif; ?>
 </div>
 
-<?php include(DDFPATH . 'footer.php'); ?>
-<?php include(DDFPATH . 'inc/topic-form.php'); ?>
+<?php include DDFPATH.'footer.php'; ?>
+<?php include DDFPATH.'inc/topic-form.php'; ?>

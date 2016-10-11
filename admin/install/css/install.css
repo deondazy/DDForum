@@ -247,13 +247,13 @@ body {
 
 .ddf-ui {
   background: #fff;
+  min-height: 200px;
   max-width: 700px;
   margin: 0 auto;
   border: 1px solid #ddd;
   padding: 15px;
   text-align: left;
   position: relative;
-  min-height: 300px;
 }
 
 .logo {

@@ -1,14 +1,6 @@
-* {
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	-ms-box-sizing: border-box;
-	box-sizing: border-box;
-}
-
-html, body {
-	margin: 0;
-}
-
+/******************************************************************************
+ * STYLE                                                                      *
+ ******************************************************************************/
 body {
 	background: #f1f1f1;
 	color: #333;
@@ -17,18 +9,13 @@ body {
 	font-family: "Open Sans", sans-serif;
 }
 
-ul {
-	list-style: none;
-	margin: 0;
-	padding: 0;
-}
-
-h1, h2, h3 {
-	margin: 0;
-}
-
-p {
-	margin-top: 0;
+.site-wrap {
+  background: #fff;
+  border-top: 4px solid #e53e54;
+  padding: 0;
+  position: relative;
+  height: auto;
+  min-height: 100%;
 }
 
 /** Form controls
@@ -101,42 +88,6 @@ a:hover, a:focus {
 	text-decoration: underline;
 }
 
-.action-form {
-  border: 2px solid #19232d;
-  border-radius: 15px;
-  color: #19232d;
-}
-
-.add-btn,
-.action-btn {
-	border: none;
-	padding: 8px 10px;
-  color: #fff;
-  font-size: 14px;
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.add-btn {
-	background: #333;
-}
-
-.add-btn:hover {
-	background: #e53e54;
-	color: #fff;
-	text-decoration: none;
-}
-
-.action-btn {
-	background: #e53e54;
-	margin: 1.5em 0;
-	padding: 8px 20px;
-}
-
-.action-btn:hover {
-	opacity: .9;
-}
-
 .fixed {
   position: fixed;
   left: 50%;
@@ -148,4 +99,64 @@ a:hover, a:focus {
 
 .fixed .info-* {
   box-shadow: 0 0 10px -1px #999;
+}
+
+.reply-editor {
+  padding-bottom: 60px;
+}
+
+.divider {
+    text-align: center;
+    position: relative;
+    top: 2px;
+    padding-top: 1px;
+    margin: 14px auto;
+    line-height: 0;
+    max-width: 400px;
+    width: 100%;
+}
+
+.divider:after {
+      content: "";
+      width: 100%;
+      background-color: transparent;
+      display: block;
+      height: 1px;
+      border-top: 1px solid #e7e7e7;
+      position: absolute;
+      top: 50%;
+      margin-top: -1px;
+      z-index: 1;
+}
+
+.divider h5 {
+    line-height: 1;
+    font-size: 12px;
+    color: #767676;
+    font-weight: 400;
+    z-index: 2;
+    position: relative;
+    display: inline-block;
+    background-color: #fff;
+    padding: 0 8px 0 7px;
+}
+
+.centered {
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+    margin: 15px auto;
+}
+
+.front-login-button {
+    margin-bottom: 0;
+    margin-top: 0;
+}
+
+.sectioner {
+    border-bottom: 5px solid #eee;
+}
+
+.sectioner-top {
+  border-top: 5px solid #eee;
 }

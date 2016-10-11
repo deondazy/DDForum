@@ -14,16 +14,18 @@ if ( !defined( 'DDFPATH' ) ) {
   die( 'Direct access denied' );
 }
 
-$forumId         =   isset($forum_id) ? $forum_id : 0;
-$forumName       =   Forum::get('forum_name', $forumId);
-$forumSlug       =   Forum::get('forum_slug', $forumId);
-$forumDesc       =   Forum::get('forum_description', $forumId);
-$forumType       =   Forum::get('forum_type', $forumId);
-$forumStatus     =   Forum::get('forum_status', $forumId);
-$forumVisibility =   Forum::get('forum_visibility', $forumId);
-$forumParent     =   Forum::get('forum_parent', $forumId);
+$Forum = new Forum();
 
-require_once( DDFPATH . 'admin/admin-header.php' );
+$forumId         =   isset($forum_id) ? $forum_id : 0;
+$forumName       =   $Forum->get('name', $forumId);
+$forumSlug       =   $Forum->get('slug', $forumId);
+$forumDesc       =   $Forum->get('description', $forumId);
+$forumType       =   $Forum->get('type', $forumId);
+$forumStatus     =   $Forum->get('status', $forumId);
+$forumVisibility =   $Forum->get('visibility', $forumId);
+$forumParent     =   $Forum->get('parent', $forumId);
+
+require_once(DDFPATH . 'admin/admin-header.php');
 
 if (isset($message)) {
   Site::info($message);
@@ -110,17 +112,16 @@ elseif (isset($_GET['message'])) {
       <div class="field">
         <span class="label">Parent</span>
         <label class="screen-reader-text" for="forum-status">Forum Parent</label>
-
         <select id="forum-parent" class="select-box" name="forum-parent">
 
           <?php
-          foreach (Forum::getAll() as $parents) {
+          foreach ($Forum->getAll() as $parents) {
             $parent_data[0] = 'None';
-            $parent_data[$parents->forumID] = $parents->forum_name;
+            $parent_data[$parents->id] = $parents->name;
           }
 
           // Remove current forum from list
-          if ( $forumId != 0 ) {
+          if ($forumId != 0) {
             unset($parent_data[$forumId]);
           }
 

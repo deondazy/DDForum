@@ -1,10 +1,52 @@
 /******************************************************************************
- * Buttons style                                                              *
-*******************************************************************************/
+ * BUTTONS                                                                    *
+ ******************************************************************************/
 .primary-button {
-  background: #e53e54;
-  border: none;
-  color: #fff;
-  height: 45px;
-  padding: 0 15px;
+    background: #e53e54;
+    border: none;
+    color: #fff;
+    height: 45px;
+    padding: 0 15px;
 }
+
+.secondary-button {
+    background: #eee;
+    padding: 7px 10px;
+    border: 1px solid #bbb;
+    display: block;
+    color: #666;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.secondary-button:hover { text-decoration: none; }
+
+.add-btn,
+.action-button {
+    background: #e53e54;
+    border: none;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 8px 25px;
+}
+
+.add-btn {
+    background: #333;
+    margin: 10px;
+    text-decoration: none;
+}
+
+.add-btn:hover {
+    background: #e53e54;
+    color: #fff;
+    text-decoration: none;
+}
+
+.action-btn {
+    background: #e53e54;
+    margin: 1.5em 0;
+    padding: 8px 20px;
+}
+
+.action-btn:hover { opacity: .9; }

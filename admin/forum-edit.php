@@ -31,10 +31,12 @@ $message = isset( $_GET['message'] ) ? $_GET['message'] : '';
 
 Site::info($message);
 
-$forums = Forum::getAll();
+$Forum = new Forum();
+
+$forums = $Forum->getAll();
 
 // Pagination
-$all_record = Database::rowCount();
+$all_record = Database::instance()->rowCount();
 $limit = 5;
 
 $current = isset( $_GET['page'] ) ? $_GET['page'] : 1;
@@ -45,7 +47,8 @@ $next    = ( $current + 1 > $last ) ? $last : $current + 1;
 
 $offset = isset( $_GET['page'] ) ? $limit * ( $current - 1 ) : 0;
 
-$forums = Forum::paginate('forum_date DESC', $limit, $offset);
+$forums = $Forum->paginate($limit, $offset);
+
 ?>
 <a href="forum-new.php" class="extra-nav">Add Forum</a>
 <?php if ( $all_record > 5 ) : ?>
@@ -79,7 +82,7 @@ $forums = Forum::paginate('forum_date DESC', $limit, $offset);
 
   <tbody>
 
-    <?php if ( ! $forums ) : ?>
+    <?php if (empty($forums)) : ?>
       <tr>
         <td colspan="10">Nothing to display</td>
       </tr>
@@ -88,40 +91,40 @@ $forums = Forum::paginate('forum_date DESC', $limit, $offset);
 
       <?php foreach ($forums as $forum) : ?>
 
-        <tr id="entry-<?php echo $forum->forumID; ?>">
+        <tr id="entry-<?php echo $forum->id; ?>">
           <!--<th scope="row" class="checker">
             <label class="screen-reader-text" for="item-select-<?php echo $forum->forumID; ?>">Select <?php echo $forum->forum_name; ?></label>
             <input id="item-select-<?php echo $forum->forumID; ?>" type="checkbox"></td>-->
 
           <td>
             <strong>
-              <a href="forum.php?action=edit&amp;id=<?php echo $forum->forumID; ?>">
-                <?php echo $forum->forum_name; ?>
+              <a href="forum.php?action=edit&amp;id=<?php echo $forum->id; ?>">
+                <?php echo $forum->name; ?>
               </a>
-              <div class="item-type">- Type: <?php echo $forum->forum_type; ?></div>
+              <div class="item-type">- Type: <?php echo $forum->type; ?></div>
 
-              <?php if ( $forum->forum_type == 'forum' && $forum->forum_parent != 0 ) : ?>
-                <div class="item-type"> - Parent: <?php echo Forum::get('forum_name', $forum->forum_parent); ?></div>
+              <?php if ( $forum->type == 'forum' && $forum->parent != 0 ) : ?>
+                <div class="item-type"> - Parent: <?php echo $Forum->get('name', $forum->parent); ?></div>
               <?php endif; ?>
 
             </strong>
-            <div class="description"><?php echo $forum->forum_description; ?></div>
+            <div class="description"><?php echo $forum->description; ?></div>
           </td>
 
-          <td class="count-column"><?php echo Forum::countTopics($forum->forumID); ?></td>
+          <td class="count-column"><?php echo $Forum->countTopics($forum->id); ?></td>
 
-          <td class="count-column"><?php echo Forum::countReplies($forum->forumID); ?></td>
+          <td class="count-column"><?php echo $Forum->countReplies($forum->id); ?></td>
 
-          <td><?php echo User::get("username", $forum->forum_creator); ?></td>
+          <td><?php echo User::get("username", $forum->creator); ?></td>
 
-          <td><?php echo Util::time2str(Util::timestamp($forum->forum_last_post)); ?></td>
+          <td><?php echo Util::time2str(Util::timestamp($forum->last_post_date)); ?></td>
 
           <td class="actions">
-            <a class="action-edit" href="forum.php?action=edit&amp;id=<?php echo $forum->forumID; ?>"><span class="fa fa-pencil"></span></a>
+            <a class="action-edit" href="forum.php?action=edit&amp;id=<?php echo $forum->id; ?>"><span class="fa fa-pencil"></span></a>
 
-            <a class="action-view" href="<?php echo Site::url(); ?>/<?php echo $forum->forum_slug; ?>"><span class="fa fa-eye"></span></a>
+            <a class="action-view" href="<?php echo Site::url(); ?>/<?php echo $forum->slug; ?>"><span class="fa fa-eye"></span></a>
 
-            <a class="action-delete" href="forum.php?action=delete&amp;id=<?php echo $forum->forumID; ?>"><span class="fa fa-remove"></span></a>
+            <a class="action-delete" href="forum.php?action=delete&amp;id=<?php echo $forum->id; ?>"><span class="fa fa-remove"></span></a>
           </td>
         </tr>
 

@@ -6,6 +6,7 @@
 use DDForum\Core\User;
 use DDForum\Core\Forum;
 use DDForum\Core\Topic;
+use DDForum\Core\Reply;
 use DDForum\Core\Util;
 use DDForum\Core\Database;
 
@@ -14,20 +15,23 @@ require_once( dirname( __FILE__ ) . '/admin.php' );
 
 $user_id = User::currentUserId();
 
+$Topic = new Topic();
+$Reply = new Reply();
+
 if ('POST' == $_SERVER['REQUEST_METHOD']) {
 
 	if (!empty($_POST['reply-message'])) {
 
 		$data = [
-			'topicID'       =>  $_POST['reply-topic'],
-			'forumID'       =>  Topic::get('forumID', $_POST['reply-topic']),
-			'reply_message' =>  $_POST['reply-message'],
-			'reply_poster'  =>  $user_id,
-			'reply_date'    =>  date('Y-m-d H:i:s'),
+			'topic'   =>  $_POST['reply-topic'],
+			'forum'   =>  $Topic->get('forum', $_POST['reply-topic']),
+			'message' =>  $_POST['reply-message'],
+			'poster'  =>  $user_id,
+			'date'    =>  date('Y-m-d H:i:s'),
 		];
 
-		if (Reply::create($data)) {
-			Util::redirect("reply.php?action=edit&id=".Database::lastInsertId()."&message=Reply added");
+		if ($Reply->create($data)) {
+			Util::redirect("reply.php?action=edit&id=".Database::instance()->lastInsertId()."&message=Reply added");
 		}
 		else {
 			Util::redirect("reply-new.php?message=Unable to add reply, try again");

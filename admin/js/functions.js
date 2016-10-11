@@ -92,4 +92,11 @@ $(document).ready(function() {
     $('.js-slug-box').val(slug(title));
   });
 
+  // Private message recipient username
+  var name = $('.js-pm-recipient');
+
+  //name.keyup(function() {
+
+  })
+
 });

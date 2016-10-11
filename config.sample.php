@@ -41,3 +41,12 @@ define('TABLE_PREFIX', 'ddf_');
 
 // DEV_MODE allows for displaying and logging errors
 define('DEV_MODE', false);
+
+Confit::set('db_connection',
+    [
+        'string' => '',
+        'user' => '',
+        'password' => '',
+        'table_prefix' => 'ddf_'
+    ]
+);

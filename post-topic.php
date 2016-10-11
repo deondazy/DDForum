@@ -16,27 +16,27 @@ define('DDFPATH', dirname(__FILE__) . '/');
 // Load Startup file
 require_once(DDFPATH . 'startup.php');
 
-if ($_POST) {
-
-  $topic_subject = $_POST['topic_subject'];
-  $topic_forum   = $_POST['topic_forum'];
-  $topic_message = $_POST['topic_message'];
+  $topic_subject = $_POST['topic-subject'];
+  $topic_forum   = $_POST['topic-forum'];
+  $topic_message = $_POST['topic-message'];
 
   if (!empty($topic_subject)) {
     if (!empty($topic_message)) {
       if (!empty($topic_forum)) {
+        $Topic = new Topic();
+
         $topic = [
-          'forumID'       => $topic_forum,
-          'topic_subject' => $topic_subject,
-          'topic_slug'    => Util::slug($topic_subject),
-          'topic_message' => $topic_message,
-          'topic_date'    => date('Y-m-d H:i:s'),
-          'topic_last_post_date' => date('Y-m-d H:i:s'),
-          'topic_poster'  => User::currentUserId(),
-          'topic_last_poster' => User::currentUserId(),
+          'forum'          => $topic_forum,
+          'subject'        => $topic_subject,
+          'slug'           => Util::slug($topic_subject),
+          'message'        => $topic_message,
+          'create_date'    => date('Y-m-d H:i:s'),
+          'last_post_date' => date('Y-m-d H:i:s'),
+          'poster'         => User::currentUserId(),
+          'last_poster'    => User::currentUserId(),
         ];
 
-        if (Topic::create($topic)) {
+        if ($Topic->create($topic)) {
           Site::info('Topic created');
         } else {
           Site::info('Unable to create topic, please try again', true);
@@ -50,4 +50,3 @@ if ($_POST) {
   } else {
     Site::info('You should enter a title for your topic', true);
   }
-}

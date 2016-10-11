@@ -2,6 +2,7 @@
 use DDForum\Core\User;
 use DDForum\Core\Forum;
 use DDForum\Core\Topic;
+use DDForum\Core\Reply;
 use DDForum\Core\Util;
 use DDForum\Core\Site;
 
@@ -18,6 +19,9 @@ $topic_id  =  isset( $_GET['topic'] ) ? (int) $_GET['topic'] : 0;
 $action    =  isset($_GET['action']) ? $_GET['action'] : '';
 $user_id   =  User::currentUserId();
 
+$Topic = new Topic();
+$Reply = new Reply();
+
 switch ($action) {
 	case 'edit':
 
@@ -26,16 +30,16 @@ switch ($action) {
 			if (!empty($_POST['reply-message'])) {
 
 				$data = [
-					$reply_message  =  $_POST['reply-message'],
-					$reply_topic    =  $_POST['reply-topic'],
-					$forum_id       =  Topic::get('forumID', $reply_topic),
+					'message'  =>  $_POST['reply-message'],
+					'topic'    =>  $_POST['reply-topic'],
+					'forum'    =>  $Topic->get('forum', $topic_id),
 				];
 			}
 			else {
 				$message = 'Enter reply message';
 			}
 
-			if (Reply::update($data, $reply_id)) {
+			if ($Reply->update($data, $reply_id)) {
 				$message = 'Reply Updated';
 			}
 			else {
@@ -47,7 +51,7 @@ switch ($action) {
 
 	case 'delete':
 
-		if (Reply::delete($reply_id)) {
+		if ($Reply->delete($reply_id)) {
 			redirect("reply-edit.php?message=Reply Deleted");
 		}
 		else {

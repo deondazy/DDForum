@@ -1,24 +1,39 @@
+<IfModule mod_rewrite.c>
 RewriteEngine on
+RewriteBase /ddforum/
+
+RewriteCond %{REQUEST_URI} /+[^\.]+$
+RewriteRule ^(.+[^/])$ %{REQUEST_URI}/ [R=301,L]
 
 RewriteCond %{SCRIPT_FILENAME} !-d
 RewriteCond %{SCRIPT_FILENAME} !-f
 
+# Display single forum,new forum and edit forum
 RewriteRule ^forums*$ ./forum.php
 RewriteRule ^forums/new*$ ./forum-new.php
 RewriteRule ^forums/(\d+)*$ ./forum.php?id=$1
 RewriteRule ^forums/(\d+)/edit*$ ./forum-edit.php?id=$1
 
-RewriteRule ^topics/new*$ ./topic-new.php
-RewriteRule ^topics/(\d+)*$ ./topic.php?id=$1
+# Display newtopic, single topic and edit topic
+RewriteRule ^topic/new*$ ./topic-new.php
+#RewriteRule ^topics/(#[a-z]-[1-9]+)/(\d+)*$ ./topic.php?$1/id=$2
 RewriteRule ^topics/(\d+)/edit*$ ./topic-edit.php?id=$1
-RewriteRule ^topics/([a-z]+)*$ ./index.php?sort=$1
+
+RewriteRule ^topics/([a-z]+)/*$ ./index.php?sort=$1
 
 RewriteRule ^users/new*$ ./user-new.php
-RewriteRule ^users/(\d+)*$ ./user.php?id=$1
+RewriteRule ^user/([a-zA-Z0-9]+)*$ ./user.php?u=$1
 RewriteRule ^users/(\d+)/edit*$ ./user-edit.php?id=$1
 
-RewriteRule ^login*$ ./login.php
-RewriteRule ^logout*$ ./logout.php
-RewriteRule ^register*$ ./register.php
-RewriteRule ^forgot-password*$ ./forgot-password.php
+RewriteRule ^login/$ ./login.php
+RewriteRule ^logout/*$ ./logout.php
+RewriteRule ^register/*$ ./register.php
+RewriteRule ^forgot-password/*$ ./forgot-password.php
 
+RewriteRule ^topic/([a-z0-9-]+)/([0-9]+)/*$ ./topic.php?s=$1&id=$2
+RewriteRule ^topic/([a-z0-9-]+)/([0-9]+)/page=([0-9]+)/*$ ./topic.php?s=$1&id=$2&page=$3 [L]
+
+# Replying to posts
+RewriteRule ^topic/([a-z0-9-]+)/([0-9]+)/replytopost=([0-9]+)/*$ ./topic.php?s=$1&id=$2&replytopost=$3 [L]
+RewriteRule ^topic/([a-z0-9-]+)/([0-9]+)/page=([0-9]+)/replytopost=([0-9]+)/*$ ./topic.php?s=$1&id=$2&page=$3&replytopost=$4 [L]
+</IfModule>

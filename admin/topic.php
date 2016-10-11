@@ -16,30 +16,29 @@ $file        = 'topic-edit.php';
 $topic_id = isset( $_GET['id'] ) ? (int) $_GET['id'] : 0;
 $action   = isset($_GET['action']) ? $_GET['action'] : '';
 $user_id  = User::currentUserId();
+$Topic = new Topic();
 
 switch ($action) {
   case 'edit':
 
-    if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
       if (!empty($_POST['topic-subject'])) {
         $data = [
-          'topic_subject'        =>  $_POST['topic-subject'],
-          'topic_slug'           =>  $_POST['topic-slug'],
-          'topic_message'        =>  $_POST['topic-message'],
-          'forumID'              =>  $_POST['topic-forum'],
-          'topic_status'         =>  $_POST['topic-status'],
-          'pin'                  =>  $_POST['pin'],
+          'subject'        =>  $_POST['topic-subject'],
+          'slug'           =>  $_POST['topic-slug'],
+          'message'        =>  $_POST['topic-message'],
+          'forum'          =>  $_POST['topic-forum'],
+          'status'         =>  $_POST['topic-status'],
+          'pinned'         =>  $_POST['pin'],
         ];
-      }
-      else {
+      } else {
         $message = 'Enter topic subject';
       }
 
-      if (Topic::update($data, $topic_id)) {
+      if ($Topic->update($data, $topic_id)) {
         $message = 'Topic Updated';
-      }
-      else {
+      } else {
         $message = 'Unable to update topic, try again';
       }
     }
@@ -48,10 +47,9 @@ switch ($action) {
 
   case 'delete':
 
-    if (Topic::delete($topic_id)) {
+    if ($Topic->delete($topic_id)) {
         Util::redirect("topic-edit.php?message=Topic Deleted");
-      }
-      else {
+      } else {
         Util::redirect("topic-edit.php?message=Unable to delete topic, try again");
       }
     break;

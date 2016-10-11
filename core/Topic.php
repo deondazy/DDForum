@@ -2,188 +2,50 @@
 
 namespace DDForum\Core;
 
-use DDForum\Core\Database;
-
-class Topic
+class Topic extends ForumItem
 {
-  /**
-   * New created topicID
-   * @var int
-   */
-  public static $newtopicId;
-
-  public static $title;
-
-  public static $description;
-
-  public static $status;
-
-  public static $date;
-
-  public static $lastPostDate;
-
-  public static $author;
-
-  public static $lastReplyAuthor;
-
-  public static $replyCount;
-
-  public static $viewCount;
-
-  public static $sticky;
-
-  public static $pinOnHomepage;
-
-  public static $count;
-
-  private static function table()
-  {
-    return TABLE_PREFIX . 'topics';
-  }
-
-  /**
-   * Create new topic in topics table
-   *
-   * @param array $topic
-   *   Array of "topic table column names" and value pairs
-   */
-  public static function create(array $topic)
-  {
-    if (!is_array($topic) && empty($topic)) {
-      throw new \InvalidArgumentException("Argument must be a non empty array");
+    public function __construct()
+    {
+        parent::__construct('topics');
     }
 
-    $query = "INSERT INTO ". self::table();
-    $col = '';
-    $val = '';
-
-    foreach ($topic as $column => $value) {
-      $col .= "$column, ";
-      $val .= ":". $column . ", ";
+    public function getPinned()
+    {
+        Database::instance()->query("SELECT * FROM {$this->table} WHERE pinned = 1 ORDER BY create_date DESC");
+        return Database::instance()->fetchAll();
     }
 
-    $col = rtrim($col, ', ');
-    $val = rtrim($val, ', ');
-    $query .= " (" . $col . ") VALUES (". $val . ")";
-
-    Database::query($query);
-
-    foreach ($topic as $param => $value) {
-      Database::bind(":{$param}", $value);
+    public function getRecent()
+    {
+        Database::instance()->query("SELECT * FROM {$this->table} ORDER BY create_date DESC");
+        return Database::instance()->fetchAll();
     }
 
-    $execute = Database::execute();
-    self::$newtopicId = (int)Database::lastInsertId();
-
-    return $execute;
-  }
-
-  /**
-   * Update topic entry
-   *
-   * @param array $data
-   *   Array of key => value pairs for update
-   * @param string $id
-   *   Unique id for which topic entry to update
-   * @return bool
-   */
-  public static function update($topic, $id)
-  {
-    if (!is_array($topic) && empty($topic)) {
-      throw new \InvalidArgumentException("Argument must be a non empty array");
+    public function getTrending()
+    {
+        Database::instance()->query("SELECT * FROM {$this->table} WHERE pinned = 1 ORDER BY create_date DESC");
+        return Database::instance()->fetchAll();
     }
 
-    $query = "UPDATE ". self::table() ." SET ";
-    $col = '';
-
-    foreach ($topic as $column => $value) {
-      $col .= "$column = :$column, ";
+    public function countReplies($topic_id)
+    {
+        Database::instance()->query("SELECT * FROM ".Config::get('db_connection')->table_prefix."replies WHERE topic = :topic_id");
+        Database::instance()->bind(':topic_id', $topic_id);
+        Database::instance()->execute();
+        return Database::instance()->rowCount();
     }
 
-    $col = rtrim($col, ', ');
-    $query .= $col . " WHERE topicID = :id";
+    public function check($item, $value, $topicId)
+    {
+        Database::instance()->query("SELECT {$item} FROM {$this->table} WHERE {$item} = :value AND id = :topic_id");
+        Database::instance()->bind(':topic_id', $topicId);
+        Database::instance()->bind(':value', $value);
+        Database::instance()->execute();
 
-    Database::query($query);
+        if (Database::instance()->rowCount() > 0) {
+            return true;
+        }
 
-    Database::bind(':id', $id);
-
-    foreach ($topic as $param => $value) {
-      Database::bind(":{$param}", $value);
+        return false;
     }
-
-    return Database::execute();
-  }
-
-  /**
-   * Remove topic entry
-   *
-   * @param int $id
-   *   topic Id to delete
-   * @return bool
-   */
-  public static function delete($id)
-  {
-    Database::query("DELETE FROM ". self::table() ." WHERE topicID = :id");
-    Database::bind(':id', $id);
-
-    return Database::execute();
-
-  }
-
-  public static function getAll() {
-    Database::query("SELECT * FROM ". self::table());
-
-    self::$count = Database::$statement->rowCount();
-
-    return Database::fetchAll();
-  }
-
-  public static function get($field, $id)
-  {
-    Database::query("SELECT $field FROM " . self::table() . " WHERE topicID = :id");
-    Database::bind(':id', $id);
-
-    if (!Database::fetchOne()) {
-      return null;
-    }
-
-    return Database::fetchOne()->$field;
-  }
-
-  public static function paginate($order = 'topicID DESC', $limit = null, $offset = 1)
-  {
-    $query = '';
-
-    if (!empty($order)) {
-      $query .= ' ORDER BY ' . $order;
-    }
-    if (!empty($limit)) {
-      $query .= ' LIMIT ' . $offset  . ', ' . $limit;
-    }
-
-    Database::query(Database::$lastQuery . $query);
-    self::$count = Database::rowCount();
-    return Database::fetchAll();
-
-  }
-
-  public static function getPinned()
-  {
-    Database::query("SELECT * FROM ". self::table() ." WHERE pin = 1");
-    return Database::fetchAll();
-  }
-
-  public static function getTrending()
-  {
-    Database::query("SELECT * FROM ". self::table() ." WHERE pin = 1");
-    return Database::fetchAll();
-  }
-
-  public static function countReplies($topic_id)
-  {
-    Database::query("SELECT * FROM ". TABLE_PREFIX . 'replies WHERE topicID = :topic_id');
-    Database::bind(':topic_id', $topic_id);
-    Database::execute();
-    return Database::rowCount();
-  }
 }

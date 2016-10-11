@@ -15,16 +15,19 @@ if ( !defined( 'DDFPATH' ) ) {
   die( 'Direct access denied' );
 }
 
+$Forum = new Forum();
+$Topic = new Topic();
+
 $topicId         =   isset($topic_id) ? $topic_id : 0;
 
-$topicSubject    =   Topic::get('topic_subject', $topicId);
-$topicSlug       =   Topic::get('topic_slug', $topicId);
-$topicMessage    =   Topic::get('topic_message', $topicId);
-$topicForum      =   Topic::get('forumID', $topicId);
-$topicStatus     =   Topic::get('topic_status', $topicId);
-$topicPinned     =   Topic::get('pin', $topicId);
+$topicSubject    =   $Topic->get('subject', $topicId);
+$topicSlug       =   $Topic->get('slug', $topicId);
+$topicMessage    =   $Topic->get('message', $topicId);
+$topicForum      =   $Topic->get('forum', $topicId);
+$topicStatus     =   $Topic->get('status', $topicId);
+$topicPinned     =   $Topic->get('pinned', $topicId);
 
-require_once( DDFPATH . 'admin/admin-header.php' );
+require_once(DDFPATH.'admin/admin-header.php');
 
 if (isset($message)) {
   Site::info($message);
@@ -64,7 +67,10 @@ elseif (isset($_GET['message'])) {
         <span class="label">Forum</span>
         <label class="screen-reader-text" for="topic-forum">Topic Forum</label>
 
-        <?php echo Forum::dropdown('select-box', $topicForum); ?>
+        <?php echo $Forum->dropdown([
+          'class'=>'select-box',
+          'name' =>'topic-forum'
+          ], $topicForum); ?>
       </div>
 
       <div class="field">
@@ -91,8 +97,8 @@ elseif (isset($_GET['message'])) {
           $pin = array(0 => 'No', 1 => 'Yes');
           $pin = array_map( "trim", $pin );
 
-          foreach ( $pin as $id => $item ) : ?>
-            <option value="<?php echo $id ?>" <?php Util::selected( $topicPinned, $id); ?>>
+          foreach ($pin as $id => $item ) : ?>
+            <option value="<?php echo $id ?>" <?php Util::selected($topicPinned, $id); ?>>
               <?php echo $item; ?>
             </option>
           <?php endforeach; ?>

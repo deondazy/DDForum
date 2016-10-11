@@ -8,6 +8,7 @@
 
 //include 'core/Paginate.php';
 
+use DDForum\Core\Reply;
 use DDForum\Core\Database;
 use DDForum\Core\Option;
 use DDForum\Core\User;
@@ -17,11 +18,17 @@ use DDForum\Core\Site;
 use DDForum\Core\Forum;
 use DDForum\Core\Paginate;
 use DDForum\Core\Util;
+use DDForum\Core\ForumItem;
+use DDForum\Core\Config;
 
 define('DDFPATH', dirname(__FILE__) . '/');
 
-/** Load DDForum Startup **/
-require_once( dirname( __FILE__ ) . '/startup.php' );
+require(DDFPATH . 'vendor/autoload.php');
 
-include 'header.php';
-var_dump(Database::tables());
+include(DDFPATH . 'config.php');
+
+$db = Config::get('db_connection');
+
+Database::instance()->connect(new PDO($db->string, $db->user, $db->password));
+
+var_dump(Option::set('site_name', 'DDForum Site'));

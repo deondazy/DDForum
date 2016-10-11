@@ -13,14 +13,17 @@ use DDForum\Core\Util;
 
 // Can't be accessed directly
 if ( !defined( 'DDFPATH' ) ) {
-  die( 'Direct access denied' );
+  die('Direct access denied');
 }
 
-$reply_id = isset( $reply_id ) ? $reply_id : 0;
+$reply_id = isset($reply_id) ? $reply_id : 0;
 
-$reply_message =  Reply::get('reply_message', $reply_id);
-$reply_topic   =  Reply::get('topicID', $reply_id);
-$reply_forum   =  Reply::get('forumID', $reply_id);
+$Topic = new Topic();
+$Reply = new Reply();
+
+$reply_message =  $Reply->get('message', $reply_id);
+$reply_topic   =  $Reply->get('topic', $reply_id);
+$reply_forum   =  $Reply->get('forum', $reply_id);
 
 require_once( DDFPATH . 'admin/admin-header.php' );
 

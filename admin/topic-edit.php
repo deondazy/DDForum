@@ -32,10 +32,13 @@ $message = isset( $_GET['message'] ) ? $_GET['message'] : '';
 
 Site::info($message);
 
-$topics = Topic::getAll();
+$Forum = new Forum();
+$Topic = new Topic();
+
+$topics = $Topic->getAll();
 
 // Pagination
-$all_record = Database::rowCount();
+$all_record = Database::instance()->rowCount();
 $limit = 5;
 
 $current = isset( $_GET['page'] ) ? $_GET['page'] : 1;
@@ -46,7 +49,7 @@ $next    = ( $current + 1 > $last ) ? $last : $current + 1;
 
 $offset = isset( $_GET['page'] ) ? $limit * ( $current - 1 ) : 0;
 
-$topics = Topic::paginate('topic_date DESC', $limit, $offset);
+$topics = $Topic->paginate($limit, $offset);
 ?>
 <a href="topic-new.php" class="extra-nav">Add Topic</a>
 <?php if ( $all_record > 5 ) : ?>
@@ -81,7 +84,7 @@ $topics = Topic::paginate('topic_date DESC', $limit, $offset);
 
   <tbody>
 
-    <?php if ( ! $topics ) : ?>
+    <?php if (empty($topics)) : ?>
       <tr>
         <td colspan="10">Nothing to display</td>
       </tr>
@@ -90,35 +93,35 @@ $topics = Topic::paginate('topic_date DESC', $limit, $offset);
 
       <?php foreach ($topics as $topic) : ?>
 
-        <tr id="entry-<?php echo $topic->topicID; ?>">
+        <tr id="entry-<?php echo $topic->id; ?>">
           <!--<th scope="row" class="checker">
             <label class="screen-reader-text" for="item-select-<?php echo $forum->forumID; ?>">Select <?php echo $forum->forum_name; ?></label>
             <input id="item-select-<?php echo $forum->forumID; ?>" type="checkbox"></td>-->
 
           <td>
             <strong>
-              <a href="topic.php?action=edit&amp;id=<?php echo $topic->topicID; ?>">
-                <?php echo $topic->topic_subject; ?>
+              <a href="topic.php?action=edit&amp;id=<?php echo $topic->id; ?>">
+                <?php echo $topic->subject; ?>
               </a>
             </strong>
           </td>
 
-          <td class="count-column"><?php echo Forum::get('forum_name', $topic->forumID); ?></td>
+          <td class="count-column"><?php echo $Forum->get('name', $topic->forum); ?></td>
 
-          <td class="count-column"><?php echo Topic::countReplies($topic->topicID); ?></td>
+          <td class="count-column"><?php echo $Topic->countReplies($topic->id); ?></td>
 
-          <td><?php echo User::get("username", $topic->topic_poster); ?></td>
+          <td><?php echo User::get("username", $topic->poster); ?></td>
 
-          <td><?php echo Util::time2str(Util::timestamp($topic->topic_date)); ?></td>
+          <td><?php echo Util::time2str(Util::timestamp($topic->create_date)); ?></td>
 
-          <td><?php echo Util::time2str(Util::timestamp($topic->topic_last_post_date)); ?></td>
+          <td><?php echo Util::time2str(Util::timestamp($topic->last_post_date)); ?></td>
 
           <td class="actions">
-            <a class="action-edit" href="topic.php?action=edit&amp;id=<?php echo $topic->topicID; ?>"><span class="fa fa-pencil"></span></a>
+            <a class="action-edit" href="topic.php?action=edit&amp;id=<?php echo $topic->id; ?>"><span class="fa fa-pencil"></span></a>
 
-            <a class="action-view" href="<?php echo Site::url(); ?>/topics/<?php echo $topic->topicID; ?>"><span class="fa fa-eye"></span></a>
+            <a class="action-view" href="<?php echo Site::url(); ?>topics/<?php echo $topic->id; ?>"><span class="fa fa-eye"></span></a>
 
-            <a class="action-delete" href="topic.php?action=delete&amp;id=<?php echo $topic->topicID; ?>"><span class="fa fa-remove"></span></a>
+            <a class="action-delete" href="topic.php?action=delete&amp;id=<?php echo $topic->id; ?>"><span class="fa fa-remove"></span></a>
           </td>
         </tr>
 

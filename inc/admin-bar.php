@@ -29,7 +29,7 @@ if ( !defined( 'DDFPATH' ) ) {
 					</li>
 
 					<li class="msg">
-						<a href="message"><i class="fa fa-envelope"></i></li>
+						<a href="<?php echo Site::adminUrl("message.php"); ?>"><i class="fa fa-envelope"></i></li>
 
 					<li class="notif"><i class="fa fa-info"></i></li>
 

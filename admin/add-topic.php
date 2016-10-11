@@ -10,7 +10,7 @@ use DDForum\Core\Util;
 use DDForum\Core\Database;
 
 /** Load admin **/
-require_once( dirname( __FILE__ ) . '/admin.php' );
+require_once(dirname(__FILE__) . '/admin.php');
 
 $user_id = User::currentUserId();
 
@@ -18,29 +18,28 @@ if ('POST' == $_SERVER['REQUEST_METHOD']) {
 
   if (!empty($_POST['topic-subject'])) {
     $data = [
-      'topic_subject'        =>  $_POST['topic-subject'],
-      'topic_slug'           =>  $_POST['topic-slug'],
-      'topic_message'        =>  $_POST['topic-message'],
-      'topic_status'         =>  $_POST['topic-status'],
-      'forumID'              =>  $_POST['topic-forum'],
-      'topic_date'           =>  date('Y-m-d H:i:s'),
-      'topic_last_post_date' =>  date('Y-m-d H:i:s'),
-      'topic_poster'         =>  $user_id,
-      'topic_last_poster'    =>  User::currentUserId(),
-      'pin'                  =>  $_POST['pin'],
+      'subject'        =>  $_POST['topic-subject'],
+      'slug'           =>  $_POST['topic-slug'],
+      'message'        =>  $_POST['topic-message'],
+      'status'         =>  $_POST['topic-status'],
+      'forum'          =>  $_POST['topic-forum'],
+      'create_date'    =>  date('Y-m-d H:i:s'),
+      'last_post_date' =>  date('Y-m-d H:i:s'),
+      'poster'         =>  $user_id,
+      'last_poster'    =>  User::currentUserId(),
+      'pinned'         =>  $_POST['pin'],
     ];
 
-    if (Topic::create($data)) {
-      Util::redirect("topic.php?action=edit&id=".Database::lastInsertId()."&message=Topic created");
-    }
-    else {
+    $Topic = new Topic();
+
+    if ($Topic->create($data)) {
+      Util::redirect("topic.php?action=edit&id=".Database::instance()->lastInsertId()."&message=Topic created");
+    } else {
       Util::redirect("topic-new.php?message=Unable to create topic, try again");
     }
-  }
-  else {
+  } else {
     Util::redirect('topic-new.php?message=Enter a subject for your topic');
   }
-}
-else {
+} else {
   Site::info('Access Denied', true, true);
 }

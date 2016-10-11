@@ -17,6 +17,6 @@ if (!User::isLogged()) {
 }
 
 // Check level
-if ( !User::isAdmin() ) {
+if (!User::isAdmin()) {
 	Site::info('You don\'t have the rights to access this page', true, true);
 }

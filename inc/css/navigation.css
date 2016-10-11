@@ -1,7 +1,6 @@
 /******************************************************************************
- * Navigation Styles                                                          *
+ * NAVIGATION                                                                 *
  ******************************************************************************/
-
 .site-navigation {
 }
 
@@ -17,10 +16,27 @@
   float: left;
   margin-left: 15px;
   padding: 19px 0;
+  list-style: none;
 }
 
-.secondary-button {
-  background: #eee;
-  padding: 5px 10px;
-  border: 1px solid #bbb;
+.paginate {
+    color: #bbb;
+    font-size: 12px;
+}
+
+.paginate-form {
+    margin-top: 25px;
+}
+
+.paginate .page {
+    color: #bbb;
+    font-size: 12px;
+    padding: 10px;
+}
+
+.paginate .current-page {
+    width: 30px;
+    height: 20px;
+    text-align: center;
+    color: #bbb;
 }

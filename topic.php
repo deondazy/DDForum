@@ -1,130 +1,166 @@
 <?php
 
 /**
- * Display screen for Categories, Forums and Topics
- *
- * @package DDForum
+ * The file for displaying a single topic.
  */
-
 use DDForum\Core\Database;
 use DDForum\Core\User;
 use DDForum\Core\Forum;
 use DDForum\Core\Topic;
 use DDForum\Core\Reply;
+use DDForum\Core\Site;
+use DDForum\Core\Util;
 
 if (!defined('DDFPATH')) {
-  define('DDFPATH', dirname(__FILE__) . '/');
+    define('DDFPATH', dirname(__FILE__) . DIRECTORY_SEPARATOR);
 }
 
-/** Load DDForum Startup **/
+// Load DDForum Startup
 require_once(DDFPATH . 'startup.php');
 
-$topic_id = isset( $_GET['id'] ) ? $_GET['id'] : 0;
-$forum_id = Topic::get('forumID', $topic_id);
+$topicId = isset($_GET['id']) ? $_GET['id'] : 0;
+$topicSlug = isset($_GET['s']) ? $_GET['s'] : '';
 
-$title = Topic::get('topic_subject', $topic_id);
+$forum = new Forum();
+$topic = new Topic();
+$reply = new Reply();
 
-//count_topic_view( $topic_id );
+$forumId = $topic->get('forum', $topicId);
 
-require_once( DDFPATH . 'header.php' );
+$title = $topic->get('subject', $topicId);
 
-$replies = Reply::getAll("topicID = '$topic_id'");
+$parent = isset($_GET['replytopost']) ? $_GET['replytopost'] : 0;
+
+$replies = $reply->getAll("topic = {$topicId}", "create_date ASC");
 
 // Pagination
-$all_record = Database::rowCount();
-$limit = 2;
+$allRecords = Database::instance()->rowCount();
+$limit = 5;
 
-$current = isset( $_GET['page'] ) ? $_GET['page'] : 1;
-$first = ( $all_record - $all_record ) + 1;
-$last = ceil( $all_record / $limit );
-$prev = ( $current - 1 < $first ) ? $first : $current - 1;
-$next = ( $current + 1 > $last ) ? $last : $current + 1;
+$current = isset($_GET['page']) ? $_GET['page'] : 1;
+$first   = ($allRecords - $allRecords) + 1;
+$last    = ceil($allRecords / $limit);
+$prev    = ($current - 1 < $first) ? $first : $current - 1;
+$next    = ($current + 1 > $last) ? $last : $current + 1;
 
-$offset = isset( $_GET['page'] ) ? $limit * ( $current - 1 ) : 0;
+$offset = isset($_GET['page']) ? $limit * ($current - 1) : 0;
 
-$replies = Reply::paginate("reply_date DESC", $limit, $offset);
+$replies = $reply->paginate($limit, $offset);
 
-/*if ( empty( $replies) ) {
-  $replies = array();
-}*/
+include(DDFPATH . 'header.php');
+
+if ('POST' == $_SERVER['REQUEST_METHOD']) {
+    if (!empty($_POST['reply-message'])) {
+        $replyData = [
+            'forum'   => $forumId,
+            'topic'   => $topicId,
+            'parent'  => $parent,
+            'message' => $_POST['reply-message'],
+            'poster'  => User::currentUserId(),
+            'create_date'    => date('Y-m-d H:i:s'),
+        ];
+
+        if ($reply->create($replyData)) {
+            $lastInsertId = Database::instance()->lastInsertId();
+
+            if (isset($_GET['page'])) {
+                Site::url() . "/topic/" . $topic->get('slug', $topicId) . "/" . $topicId . "/page={$current}#post-" . $lastInsertId;
+            }
+
+            Util::redirect(
+                Site::url() . "/topic/" . $topic->get('slug', $topicId) . "/" . $topicId . "#post-" . $lastInsertId
+            );
+        } else {
+            Site::info('Unable to post reply, please try again', true);
+        }
+    } else {
+        Site::info('You tried to post an empty reply', true);
+    }
+}
 ?>
 
 <div class="topic-view">
+    <?php
+    if (!$topic->check('slug', $topicSlug, $topicId)) :
+        Site::info("Topic doesn't exist,maybe it was removed or moved", true);
+    else : ?>
 
-  <div class="forum-info">
-    <strong class="forum-name"><?php echo Forum::get('forum_name', $forum_id); ?></strong>
-    <span class="topics-today"></span>
-    <div class="forum-description"><?php echo Forum::get('forum_description', $forum_id); ?></div>
-  </div>
+        <?php if (User::isLogged()) : ?>
+            <a href="#reply-form" class="add-btn pull-right">Add Reply</a>
+        <?php endif; ?>
 
-  <!--<a href="#forum-form" class="add-btn">Add Reply</a>-->
+        <h1 class="topic-subject"><?php echo $topic->get('subject', $topicId); ?></h1>
 
-  <?php if ( $all_record > 2 ) : ?>
+        <ul class="topic-listing sectioner">
+            <li class="topic-view" id="post-<?php echo $topicId; ?>">
+                <div class="topic-poster-image">
+                    <img src="<?php echo User::get('avatar', $topic->get('poster', $topicId)); ?>" height="60" width="60">
+                </div>
 
-    <div class="paginate">
-      <form action="" method="get">
+                <div class="topic-body">
+                    <div class="topic-message">
+                        <div class="topic-meta">
+                            <a href="<?php echo Site::url(); ?>/user/<?php echo User::get('username', $topic->get('poster', $topicId)); ?>" class="topic-author">
+                                <?php echo User::get('display_name', $topic->get('poster', $topicId)); ?>
+                            </a>
 
-        <a class="first-page <?php echo ( $current == $first ) ? 'disabled' : ''; ?>" href="?forum=<?php echo $forum_id; ?>&amp;page=<?php echo $first; ?>">First</a>
-        <a class="prev-page <?php echo ( $current == $prev ) ? 'disabled' : ''; ?>" href="?forum=<?php echo $forum_id; ?>&amp;page=<?php echo $prev; ?>">Prev</a>
+                            <span class="topic-date"><?php echo Util::time2str(Util::timestamp($topic->get('create_date', $topicId))); ?></span>
+                        </div>
+                        <?php echo $topic->get('message', $topicId); ?>
+                    </div>
+                    <footer class="pull-right">
+                        <a href="#" class="topic-action js-like"><i class="fa fa-heart"></i> Like</a>
+                        <a href="#" class="topic-action js-share"><i class="fa fa-chain"></i> Share</a>
+                        <a href="replytopost=<?php echo $topicId; ?>#reply-form" class="topic-action js-reply"><i class="fa fa-reply"></i> Reply</a>
+                    </footer>
+                </div>
+            </li>
 
-        <input class="current-page" type="text" size="2" name="page" value="<?php echo $current; ?>"> of <span class="all-page"><?php echo $last; ?></span>
+            <?php foreach ($replies as $r) : ?>
+                <li class="topic-view" id="post-<?php echo $r->id; ?>">
+                    <div class="topic-poster-image">
+                        <img src="<?php echo User::get('avatar', $r->poster); ?>" height="60" width="60">
+                    </div>
 
-        <a class="next-page <?php echo ( $current == $next ) ? 'disabled' : ''; ?>" href="?forum=<?php echo $forum_id; ?>&amp;page=<?php echo $next; ?>">Next</a>
-        <a class="last-page <?php echo ( $current == $last ) ? 'disabled' : ''; ?>" href="?forum=<?php echo $forum_id; ?>&amp;page=<?php echo $last; ?>">Last</a>
+                    <div class="topic-body">
+                        <div class="topic-message">
+                            <div class="topic-meta">
+                                <a href="<?php echo Site::url(); ?>/user/<?php echo User::get('username', $r->poster); ?>" class="topic-author">
+                                    <?php echo User::get('display_name', $r->poster); ?>
+                                </a>
 
-      </form>
-    </div>
+                                <span class="topic-date"><?php echo Util::time2str(Util::timestamp($r->create_date)); ?></span>
+                            </div>
+                            <?php echo $r->message; ?>
+                        </div>
+                        <footer class="pull-right">
+                            <a href="#" class="topic-action js-like"><i class="fa fa-heart"></i> Like</a>
+                            <a href="#" class="topic-action js-share"><i class="fa fa-chain"></i> Share</a>
+                            <a href="replytopost=<?php echo $r->id; ?>#reply-form" class="topic-action js-reply"><i class="fa fa-reply"></i> Reply</a>
+                        </footer>
+                    </div>
+                </li>
+            <?php endforeach; ?>
+        </ul>
 
-  <?php endif; ?>
+        <?php if ( $allRecords > 5 ) : ?>
+            <form action="" method="get" class="sectioner paginate-form">
+                <div class="paginate centered">
+                    <a class="page first-page <?php echo ($current == $first) ? 'disabled' : ''; ?>" href="<?php echo Site::url(); ?>/topic/<?php echo $topicSlug; ?>/<?php echo $topicId; ?>/page=<?php echo $first; ?>"><< First</a>
 
-  <h1 class="topic-subject"><?php echo Topic::get('topic_subject', $topic_id); ?></h1>
+                    <a class="page prev-page <?php echo ($current == $prev) ? 'disabled' : ''; ?>" href="<?php echo Site::url(); ?>/topic/<?php echo $topicSlug; ?>/<?php echo $topicId; ?>/page=<?php echo $prev; ?>">< Prev</a>
 
-  <table class="table topic-listing">
+                    <input class="current-page" type="text" size="2" name="page" value="<?php echo $current; ?>"> of <span class="all-page"><?php echo $last; ?></span>
+                    <a class="page next-page <?php echo ($current == $next) ? 'disabled' : ''; ?>" href="<?php echo Site::url(); ?>/topic/<?php echo $topicSlug; ?>/<?php echo $topicId; ?>/page=<?php echo $next; ?>">Next ></a>
+                    <a class="page last-page <?php echo ($current == $last) ? 'disabled' : ''; ?>" href="<?php echo Site::url(); ?>/topic/<?php echo $topicSlug; ?>/<?php echo $topicId; ?>/page=<?php echo $last; ?>">Last >></a>
+                </div>
+            </form>
+        <?php endif; ?>
 
-    <tr>
+        <?php if (User::isLogged()) {
+            include(DDFPATH . 'inc/reply-form.php');
+        }
+    endif;
 
-      <td class="topic-poster">
-        <img src="<?php echo User::get('avatar', Topic::get('topic_poster', $topic_id)); ?>" height="50" width="50">
-      </td>
-
-      <td class="topic-message">
-        <?php echo Topic::get('topic_message', $topic_id); ?>
-      </td>
-
-    </tr>
-
-    <?php foreach ($replies as $reply) : ?>
-
-      <tr>
-
-        <td class="topic-poster">
-          <img src="<?php echo User::get('avatar', $reply->reply_poster); ?>" height="50" width="50">
-        </td>
-
-        <td class="topic-message">
-          <?php echo $reply->reply_message; ?>
-        </td>
-
-
-          <!--<div class="topic-author">- by <?php echo $user->get_user("username", $reply->reply_poster); ?></div>-->
-      </tr>
-
-    <?php endforeach; ?>
-
-  </table>
-
-    <?php if ( $all_record > 5 ) : ?>
-      <div class="paginate">
-        <form action="forum.php?forum=<?php echo $forum_id; ?>" method="get">
-
-          <a class="first-page <?php echo ( $current == $first ) ? 'disabled' : ''; ?>" href="?forum=<?php echo $forum_id; ?>&amp;page=<?php echo $first; ?>">First</a>
-          <a class="prev-page <?php echo ( $current == $prev ) ? 'disabled' : ''; ?>" href="?forum=<?php echo $forum_id; ?>&amp;page=<?php echo $prev; ?>">Prev</a>
-
-          <input class="current-page" type="text" size="2" name="page" value="<?php echo $current; ?>"> of <span class="all-page"><?php echo $last; ?></span>
-
-          <a class="next-page <?php echo ( $current == $next ) ? 'disabled' : ''; ?>" href="?forum=<?php echo $forum_id; ?>&amp;page=<?php echo $next; ?>">Next</a>
-          <a class="last-page <?php echo ( $current == $last ) ? 'disabled' : ''; ?>" href="?forum=<?php echo $forum_id; ?>&amp;page=<?php echo $last; ?>">Last</a>
-
-        </form>
-    <?php endif; ?>
+    include(DDFPATH . 'footer.php'); ?>
 </div>
