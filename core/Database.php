@@ -40,7 +40,9 @@ class Database
      *
      * @var array
      */
-    private $options = [];
+    private $options = [
+        \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
+    ];
 
     /**
      * Last query error message.
@@ -72,13 +74,6 @@ class Database
     ];
 
     /**
-     * Prefixed Database Tables.
-     *
-     * @var array
-     */
-    public $prefixTable = [];
-
-    /**
      * This class should not be instantiated
      */
     private function __construct()
@@ -97,37 +92,40 @@ class Database
      */
     public static function instance()
     {
-        if (empty(self::$instance)) {
-            self::$instance = new self();
+        if (empty(static::$instance)) {
+            static::$instance = new static();
         }
 
-        return self::$instance;
+        return static::$instance;
     }
 
     /**
      * Connect to a database.
      *
-     * Sets connection options, set prefix on tables and connect to the database
+     * Sets connection options, and connect to the database
      *
-     * @param PDO $pdo A PDO class object representing the Database connection
+     * @param string $dsn Data Source Name for the database driver
+     * @param string $username Database username
+     * @param string $password Database password
      *
      * @return PDO A PDO object
+     *
+     * @throws \DDForum\Core\Exception\DatabaseException
      */
-    public function connect(PDO $pdo)
+    public function connect($dsn, $username, $password)
     {
         // Are we already connected?
         if ($this->isConnected()) {
             return;
         }
 
-        $this->options = [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        ];
+        $options = $this->options;
 
-        $this->pdo = $pdo;
-
-        // Prefix the Database tables
-        $this->prefixTables();
+        try {
+            $this->pdo = new \PDO($dsn, $username, $password, $options);
+        } catch (\PDOException $e) {
+            throw new \DDForum\Core\Exception\DatabaseException($e->getMessage());
+        }
 
         return $this->pdo;
     }
@@ -153,20 +151,6 @@ class Database
         $this->statement = null;
         $this->lastQuery = null;
         return true;
-    }
-
-    /**
-     * Set database tables prefix.
-     *
-     * @return array
-     */
-    public function prefixTables()
-    {
-        foreach ($this->tables as $table) {
-            $this->prefixTable[$table] = Config::get('db_connection')->table_prefix.$table;
-        }
-
-        return $this->prefixTable;
     }
 
     /**
