@@ -29,6 +29,6 @@ include(DDFPATH . 'config.php');
 
 $db = Config::get('db_connection');
 
-Database::instance()->connect(new PDO($db->string, $db->user, $db->password));
+Database::instance()->connect('mysql:host=localhost;dbname=test', 'root', '');
 
-var_dump(Option::set('site_name', 'DDForum Site'));
+var_dump(Database::instance()->checkTables());

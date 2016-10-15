@@ -1,6 +1,6 @@
 <?php
 
-namespace DDForum\Tests;
+/*namespace DDForum\Tests;
 
 use DDForum\Core\Database as DB;
 use DDForum\Core\Option;
@@ -29,3 +29,4 @@ class OptionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Deon Dazy', Option::get('site_admin'));
     }
 }
+*/

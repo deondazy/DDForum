@@ -54,8 +54,8 @@ abstract class ForumItem
             $val .= ":{$column}, "; // use the column names as named parameter
         }
 
-        $col   = rtrim($col, ', '); // Remove last comma(,) on column names
-        $val   = rtrim($val, ', '); // Remove last comma(,) on named parameters
+        $col = rtrim($col, ', '); // Remove last comma(,) on column names
+        $val = rtrim($val, ', '); // Remove last comma(,) on named parameters
 
         $sql .= " ({$col}) VALUES ({$val})"; // Construct the query
 

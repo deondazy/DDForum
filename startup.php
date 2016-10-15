@@ -40,19 +40,15 @@ require DDFPATH . 'vendor/autoload.php';
 // Use our own exception handler
 DDFException::handle();
 
-/*
- * Check DDForum Installation
- */
-if (file_exists(DDFPATH . 'config.php')) {
-
+// Check DDForum Installation
+if (file_exists(DDFPATH .'config.php')) {
     // The config file exists load it
-    require_once(DDFPATH . 'config.php');
+    include DDFPATH .'config.php';
 
     $db = Config::get('db_connection');
-    $pdo = new \PDO($db->string, $db->user, $db->password);
 
     // Connect to the Database
-    Database::instance()->connect($pdo);
+    Database::instance()->connect($db->string, $db->user, $db->password);
 
     // Are all the tables available?
     if (!Database::instance()->checkTables()) {
@@ -65,7 +61,6 @@ if (file_exists(DDFPATH . 'config.php')) {
         ini_set('log_errors', 1);
         ini_set('error_log', 'error.log');
     }
-
 } else {
     Installer::init();
 }

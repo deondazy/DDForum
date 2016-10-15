@@ -34,31 +34,36 @@ $step = isset($_GET['step']) ? (int)$_GET['step'] : 1;
  */
 function createConfigHeader($title)
 {
-  header('Content-Type: text/html; charset=utf-8');
-  ?><!DOCTYPE html>
-  <html>
-  <head>
-    <meta name="viewport" content="width=device-width" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>DDForum &rsaquo; Installation &rsaquo; <?php echo $title; ?></title>
-    <link rel="stylesheet" href="css/install.css" />
-  </head>
-  <body>
-    <div class="wrap">
-      <h2 class="logo"><a title="DDForum" href="https://github.com/deondazy/ddforum.git">DDForum</a></h2>
-      <div class="ddf-ui">
+    header('Content-Type: text/html; charset=utf-8');
+    ?><!DOCTYPE html>
+    <html>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>DDForum &rsaquo; Installation &rsaquo; <?php echo $title; ?></title>
+        <link rel="stylesheet" href="css/install.css" />
+    </head>
+    <body>
+        <div class="wrap">
+            <h2 class="logo"><a title="DDForum" href="https://github.com/deondazy/ddforum.git">DDForum</a></h2>
+            <div class="ddf-ui">
   <?php
 } // End function create_config_header
 
 switch ($step) {
     case 1:
-        // Check if config.php already exists
-        if (file_exists(DDFPATH . 'config.php')) {
-            createConfigHeader('Error');
-            Site::info('The <code>config.php</code> file already exists. If you want to change any of the values, delete the file and refresh this page.', true, true);
+        createConfigHeader('Database');
+        // Check installation
+        if (file_exists(DDFPATH .'config.php')) {
+            include DDFPATH .'config.php';
+            $db = Config::get('db_connection');
+            Database::instance()->connect($db->string, $db->user, $db->password);
+
+            if (Database::instance()->checkTables()) {
+                Site::info('Seems you have already installed DDForum, to reinstall clear the database tables and try again', true, true);
+            }
         }
 
-        createConfigHeader('Database');
         Installer::step('database');
     ?>
     <form method="post" action="?step=2" class="install-form">
@@ -101,11 +106,6 @@ switch ($step) {
     break;
 
     case 2:
-        // Check if config.php already exists
-        if (file_exists(DDFPATH . 'config.php')) {
-            createConfigHeader('Error');
-            Site::info('The <code>config.php</code> file already exists. If you want to change any of the values, delete the file and refresh this page.', true, true);
-        }
         $dbname = trim(stripslashes($_POST['dbname']));
         $dbuser = trim(stripslashes($_POST['uname']));
         $dbpass = trim(stripslashes($_POST['pwd']));

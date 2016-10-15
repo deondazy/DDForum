@@ -3,7 +3,9 @@
 namespace DDForum\Core;
 
 use PDO;
+use PDOStatement;
 use PDOException;
+use DDForum\Core\Exception\DatabaseException;
 
 class Database
 {
@@ -41,7 +43,10 @@ class Database
      * @var array
      */
     private $options = [
-        \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+
+        // Disable multi query execution
+        PDO::MYSQL_ATTR_MULTI_STATEMENTS => false
     ];
 
     /**
@@ -72,6 +77,13 @@ class Database
         'topics',
         'users',
     ];
+
+    /**
+     * Database tables with prefix
+     *
+     * @var array
+     */
+    public $prefixTable = [];
 
     /**
      * This class should not be instantiated
@@ -112,20 +124,27 @@ class Database
      *
      * @throws \DDForum\Core\Exception\DatabaseException
      */
-    public function connect($dsn, $username, $password)
+    public function connect($dsn, $username = null, $password = null)
     {
         // Are we already connected?
         if ($this->isConnected()) {
             return;
         }
 
-        $options = $this->options;
+        if ($dsn instanceof PDO) {
+            $this->pdo = $dsn;
+        } else {
+            $options = $this->options;
 
-        try {
-            $this->pdo = new \PDO($dsn, $username, $password, $options);
-        } catch (\PDOException $e) {
-            throw new \DDForum\Core\Exception\DatabaseException($e->getMessage());
+            try {
+                $this->pdo = new PDO($dsn, $username, $password, $options);
+            } catch (PDOException $e) {
+                throw new DatabaseException($e->getMessage());
+            }
         }
+
+        // Prefix Database tables
+        $this->prefixTables();
 
         return $this->pdo;
     }
@@ -141,38 +160,38 @@ class Database
     }
 
     /**
-     * Close database connection.
-     *
-     * @return bool
+     * Close database connection (Clean up).
      */
     public function close()
     {
         $this->pdo = null;
         $this->statement = null;
         $this->lastQuery = null;
-        return true;
     }
 
     /**
-     * Check that a table exisits in the database
+     * Check that a table exists in the database
      *
-     * @param string $tableName Name of the table to checkTables
+     * @param string $tableName Name of the table to check
      *
      * @return bool
      */
     public function tableExists($tableName)
     {
-        $query = $this->query("SELECT 1 FROM {$tableName} LIMIT 1");
-        $this->execute();
+        $statement = $this->query("SELECT 1 FROM {$tableName} LIMIT 1");
 
-        if ($query->columnCount() > 0) {
-            return true;
+        if ($statement) {
+            try {
+                $this->execute();
+                return (bool) $statement->columnCount();
+            } catch (DatabaseException $e) {
+                return false;
+            }
         }
-
         return false;
     }
 
-    public function databaseTables()
+    /*public function databaseTables()
     {
         $dbTtables = [];
         $db = Config::get('db_connection')->dbname;
@@ -184,6 +203,20 @@ class Database
         }
 
         return $dbTables;
+    }*/
+
+    /**
+     * Set database tables prefix.
+     *
+     * @return array
+     */
+    public function prefixTables()
+    {
+        foreach ($this->tables as $table) {
+            $this->prefixTable[$table] = Config::getTablePrefix().$table;
+        }
+
+        return $this->prefixTable;
     }
 
     /**
@@ -215,17 +248,14 @@ class Database
 
         try {
             $this->statement = $this->pdo->prepare($query);
+            if ($this->statement instanceof PDOStatement) {
+                $this->lastQuery = $this->statement->queryString;
+            }
         } catch (PDOException $e) {
-            throw new DatabaseException('Failed to prepare statement');
+            throw new DatabaseException('Failed to prepare statement: '.$e->getMessage());
         }
 
-        if ($this->statement) {
-            $this->lastQuery = $query;
-
-            return $this->statement;
-        }
-
-        return false;
+        return $this->statement;
     }
 
     /**
@@ -266,13 +296,45 @@ class Database
      *
      * @return bool
      */
-    public function execute()
+    public function execute(array $param = null)
     {
         try {
-            return $this->statement->execute();
+            if ($this->statement instanceof PDOStatement) {
+                if (!is_null($param)) {
+                    return $this->statement->execute();
+                }
+                return $this->statement->execute($param);
+            }
         } catch (PDOException $e) {
-            throw new DatabaseException('Execution of prepared statement failed');
+            throw new DatabaseException("Execution of prepared statement failed: {$e->getMessage()} in {$e->getFile()} on line {$e->getLine()}");
         }
+    }
+
+    public function insert($table, array $data)
+    {
+        $sql = "INSERT INTO {$table}";
+        $col   = '';
+        $val   = '';
+
+        foreach ($data as $column => $value) {
+            $col .= "{$column}, ";
+            $val .= ":{$column}, "; // use the column names as named parameter
+        }
+
+        $col = rtrim($col, ', '); // Remove last comma(,) on column names
+        $val = rtrim($val, ', '); // Remove last comma(,) on named parameters
+
+        $sql .= " ({$col}) VALUES ({$val})"; // Construct the query
+
+        $this->query($sql);
+
+        //Bind all parameters
+        foreach ($data as $param => $value) {
+            $this->bind(":{$param}", $value);
+        }
+        $this->execute();
+
+        return $this->rowCount();
     }
 
     /**
@@ -283,7 +345,6 @@ class Database
     public function fetchAll()
     {
         $this->execute();
-
         return $this->statement->fetchAll(PDO::FETCH_OBJ);
     }
 
@@ -295,7 +356,6 @@ class Database
     public function fetchOne()
     {
         $this->execute();
-
         return $this->statement->fetch(PDO::FETCH_OBJ);
     }
 
@@ -326,6 +386,7 @@ class Database
      */
     public function beginTransaction()
     {
+        $this->connect($this->pdo);
         return $this->pdo->beginTransaction();
     }
 
@@ -336,6 +397,7 @@ class Database
      */
     public function endTransaction()
     {
+        $this->connect($this->pdo);
         return $this->pdo->commit();
     }
 
@@ -346,6 +408,7 @@ class Database
      */
     public function cancelTransaction()
     {
+        $this->connect($this->pdo);
         return $this->pdo->rollBack();
     }
 }
