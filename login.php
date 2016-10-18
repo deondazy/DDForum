@@ -2,7 +2,7 @@
 /**
  * Loging in.
  */
-use DDForum\Core\Option;
+
 use DDForum\Core\User;
 use DDForum\Core\Site;
 
@@ -11,13 +11,13 @@ if (!defined('DDFPATH')) {
 }
 
 // Load DDForum Startup
-require_once(DDFPATH . 'startup.php');
+require_once DDFPATH.'startup.php';
 
 // Set page title
-$title = 'Login - ' . Option::get('site_name');
+$title = 'Login - '.$option->get('site_name');
 
 // Load page header
-include(DDFPATH . 'header.php'); ?>
+include DDFPATH.'header.php'; ?>
 
 <h2 class="page-title">Login</h2>
 
@@ -49,7 +49,7 @@ if (User::isLogged()) {
     </div>
 
     <div class="form-group">
-        <a class="pull-right" href="<?php echo Site::url(); ?>/forgot-password">Forgot your password?</a>
+        <a class="pull-right" href="<?php echo $siteUrl; ?>/forgot-password">Forgot your password?</a>
       <label for="login-pass">Password</label>
       <input id="login-pass" class="form-control" type="password" name="password">
     </div>
@@ -64,8 +64,8 @@ if (User::isLogged()) {
   </div>
 </form>
 
-<div class="alternative divider"><h5>New to <?php echo Option::get('site_name'); ?>?</h5></div>
-<div class="centered new-account-section"><a class="secondary-button" href="<?php echo Site::url(); ?>/register">Create a new account</a></div>
+<div class="alternative divider"><h5>New to <?php echo $option->get('site_name'); ?>?</h5></div>
+<div class="centered new-account-section"><a class="secondary-button" href="<?php echo $siteUrl; ?>/register">Create a new account</a></div>
 </div>
 
 

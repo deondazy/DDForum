@@ -365,7 +365,7 @@ class User
         Database::instance()->execute();
 
         if (Database::instance()->rowCount() > 0) {
-            return Database::instance()->fetchOne();
+            return Database::instance()->fetchAll()[0];
         }
 
         return false;

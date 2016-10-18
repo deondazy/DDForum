@@ -128,7 +128,14 @@ input[type="checkbox"]:checked:before {
 }
 
 #admin-bar a {
-  color: #fff;
+    color: #19232d;
+    display: inline-block;
+    height: 40px;
+    width: 40px;
+}
+
+#admin-bar a:hover {
+    background: #e53e54;
 }
 
 .admin-bar-tools ul {

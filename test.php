@@ -20,6 +20,7 @@ use DDForum\Core\Paginate;
 use DDForum\Core\Util;
 use DDForum\Core\ForumItem;
 use DDForum\Core\Config;
+use DDForum\Core\Counter;
 
 define('DDFPATH', dirname(__FILE__) . '/');
 
@@ -29,6 +30,9 @@ include(DDFPATH . 'config.php');
 
 $db = Config::get('db_connection');
 
-Database::instance()->connect('mysql:host=localhost;dbname=test', 'root', '');
+Database::instance()->connect('mysql:host=localhost;dbname=ddforum', 'root', '');
+$prefix = Config::getTablePrefix();
 
-var_dump(Database::instance()->checkTables());
+$topic = new Topic();
+
+var_dump($topic->isLocked(10));

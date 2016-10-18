@@ -7,9 +7,9 @@ class Forum extends ForumItem
     /**
      * Construct sets the specific table.
      */
-    public function __construct()
+    public function __construct($table = null)
     {
-        parent::__construct('forums');
+        ($table) ? $this->table = $table : parent::__construct('forums');
     }
 
     /**
@@ -42,23 +42,5 @@ class Forum extends ForumItem
         $output .= '</select>';
 
         return $output;
-    }
-
-    public function countTopics($forum_id)
-    {
-        Database::instance()->query('SELECT * FROM '.Config::get('db_connection')->table_prefix.'topics WHERE forum = :forum_id');
-        Database::instance()->bind(':forum_id', $forum_id);
-        Database::instance()->execute();
-
-        return Database::instance()->rowCount();
-    }
-
-    public function countReplies($forum_id)
-    {
-        Database::instance()->query('SELECT * FROM '.Config::get('db_connection')->table_prefix.'replies WHERE forum = :forum_id');
-        Database::instance()->bind(':forum_id', $forum_id);
-        Database::instance()->execute();
-
-        return Database::instance()->rowCount();
     }
 }

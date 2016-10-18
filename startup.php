@@ -9,8 +9,11 @@
  * @package ddforum
  */
 
-use DDForum\Core\Database;
+use DDForum\Core\Forum;
+use DDForum\Core\Topic;
+use DDForum\Core\Reply;
 use DDForum\Core\Option;
+use DDForum\Core\Database;
 use DDForum\Core\Installer;
 use DDForum\Core\Config;
 use DDForum\Core\Exception\DDFException;
@@ -54,6 +57,12 @@ if (file_exists(DDFPATH .'config.php')) {
     if (!Database::instance()->checkTables()) {
         Installer::init();
     }
+
+    // Create needed objects
+    $forum = new Forum();
+    $topic = new Topic();
+    $reply = new Reply();
+    $option = new Option();
 
     // Set debugging options
     if (defined('DEBUG') && DEBUG) {

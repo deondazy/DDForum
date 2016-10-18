@@ -5,9 +5,6 @@
  */
 use DDForum\Core\Database;
 use DDForum\Core\User;
-use DDForum\Core\Forum;
-use DDForum\Core\Topic;
-use DDForum\Core\Reply;
 use DDForum\Core\Site;
 use DDForum\Core\Util;
 
@@ -16,60 +13,54 @@ if (!defined('DDFPATH')) {
 }
 
 // Load DDForum Startup
-require_once(DDFPATH . 'startup.php');
+require_once DDFPATH.'startup.php';
 
-$topicId = isset($_GET['id']) ? $_GET['id'] : 0;
+$topicId   = isset($_GET['id']) ? $_GET['id'] : 0;
 $topicSlug = isset($_GET['s']) ? $_GET['s'] : '';
-
-$forum = new Forum();
-$topic = new Topic();
-$reply = new Reply();
-
-$forumId = $topic->get('forum', $topicId);
-
-$title = $topic->get('subject', $topicId);
-
-$parent = isset($_GET['replytopost']) ? $_GET['replytopost'] : 0;
-
-$replies = $reply->getAll("topic = {$topicId}", "create_date ASC");
+$forumId   = $topic->get('forum', $topicId);
+$title     = "{$topic->get('subject', $topicId)} - {$option->get('site_name')}";
+$parent    = isset($_GET['replytopost']) ? $_GET['replytopost'] : 0;
+$replies   = $reply->getAll("topic = {$topicId}", "create_date ASC");
 
 // Pagination
 $allRecords = Database::instance()->rowCount();
-$limit = 5;
-
+$limit   = 5; // TODO: Change to site limit settings
 $current = isset($_GET['page']) ? $_GET['page'] : 1;
 $first   = ($allRecords - $allRecords) + 1;
 $last    = ceil($allRecords / $limit);
 $prev    = ($current - 1 < $first) ? $first : $current - 1;
 $next    = ($current + 1 > $last) ? $last : $current + 1;
-
 $offset = isset($_GET['page']) ? $limit * ($current - 1) : 0;
-
 $replies = $reply->paginate($limit, $offset);
 
-include(DDFPATH . 'header.php');
+$pageTitle = ($topic->isLocked($topicId)) ? '<i class="fa fa-lock"></i> '.$topic->get('subject', $topicId) : $topic->get('subject', $topicId);
+
+include DDFPATH.'header.php';
 
 if ('POST' == $_SERVER['REQUEST_METHOD']) {
     if (!empty($_POST['reply-message'])) {
         $replyData = [
-            'forum'   => $forumId,
-            'topic'   => $topicId,
-            'parent'  => $parent,
-            'message' => $_POST['reply-message'],
-            'poster'  => User::currentUserId(),
-            'create_date'    => date('Y-m-d H:i:s'),
+            'forum'       => $forumId,
+            'topic'       => $topicId,
+            'parent'      => $parent,
+            'message'     => $_POST['reply-message'],
+            'poster'      => User::currentUserId(),
+            'create_date' => date('Y-m-d H:i:s'),
         ];
 
-        if ($reply->create($replyData)) {
+        if (0 !== $reply->create($replyData)) {
             $lastInsertId = Database::instance()->lastInsertId();
+            $lastPage = $last;
 
-            if (isset($_GET['page'])) {
-                Site::url() . "/topic/" . $topic->get('slug', $topicId) . "/" . $topicId . "/page={$current}#post-" . $lastInsertId;
+            if ($allRecords > 5) {
+                Util::redirect(
+                    "{$siteUrl}/topic/{$topic->get('slug', $topicId)}/{$topicId}/page={$lastPage}#post-{$lastInsertId}"
+                );
+            } else {
+                Util::redirect(
+                    "{$siteUrl}/topic/{$topic->get('slug', $topicId)}/{$topicId}#post-{$lastInsertId}"
+                );
             }
-
-            Util::redirect(
-                Site::url() . "/topic/" . $topic->get('slug', $topicId) . "/" . $topicId . "#post-" . $lastInsertId
-            );
         } else {
             Site::info('Unable to post reply, please try again', true);
         }
@@ -89,7 +80,7 @@ if ('POST' == $_SERVER['REQUEST_METHOD']) {
             <a href="#reply-form" class="add-btn pull-right">Add Reply</a>
         <?php endif; ?>
 
-        <h1 class="topic-subject"><?php echo $topic->get('subject', $topicId); ?></h1>
+        <h1 class="topic-subject"><?php echo $pageTitle; ?></h1>
 
         <ul class="topic-listing sectioner">
             <li class="topic-view" id="post-<?php echo $topicId; ?>">
@@ -143,22 +134,27 @@ if ('POST' == $_SERVER['REQUEST_METHOD']) {
             <?php endforeach; ?>
         </ul>
 
-        <?php if ( $allRecords > 5 ) : ?>
-            <form action="" method="get" class="sectioner paginate-form">
+        <?php if ($allRecords > 5) : ?>
+            <form action="<?php echo "{$siteUrl}/topic/{$topic->get('slug', $topicId)}/{$topicId}/"; ?>" method="get" class="sectioner paginate-form">
                 <div class="paginate centered">
                     <a class="page first-page <?php echo ($current == $first) ? 'disabled' : ''; ?>" href="<?php echo Site::url(); ?>/topic/<?php echo $topicSlug; ?>/<?php echo $topicId; ?>/page=<?php echo $first; ?>"><< First</a>
 
                     <a class="page prev-page <?php echo ($current == $prev) ? 'disabled' : ''; ?>" href="<?php echo Site::url(); ?>/topic/<?php echo $topicSlug; ?>/<?php echo $topicId; ?>/page=<?php echo $prev; ?>">< Prev</a>
 
-                    <input class="current-page" type="text" size="2" name="page" value="<?php echo $current; ?>"> of <span class="all-page"><?php echo $last; ?></span>
+                    <span class="all-page"><?php echo "{$current} of {$last}"; ?></span>
                     <a class="page next-page <?php echo ($current == $next) ? 'disabled' : ''; ?>" href="<?php echo Site::url(); ?>/topic/<?php echo $topicSlug; ?>/<?php echo $topicId; ?>/page=<?php echo $next; ?>">Next ></a>
                     <a class="page last-page <?php echo ($current == $last) ? 'disabled' : ''; ?>" href="<?php echo Site::url(); ?>/topic/<?php echo $topicSlug; ?>/<?php echo $topicId; ?>/page=<?php echo $last; ?>">Last >></a>
                 </div>
             </form>
         <?php endif; ?>
 
-        <?php if (User::isLogged()) {
-            include(DDFPATH . 'inc/reply-form.php');
+        <?php
+        if (User::isLogged()) {
+            if (!$topic->isLocked($topicId)) {
+                include(DDFPATH . 'inc/reply-form.php');
+            } else {
+                Site::info('Replies are disabled for locked topics');
+            }
         }
     endif;
 

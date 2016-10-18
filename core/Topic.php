@@ -4,9 +4,9 @@ namespace DDForum\Core;
 
 class Topic extends ForumItem
 {
-    public function __construct()
+    public function __construct($table = null)
     {
-        parent::__construct('topics');
+        ($table) ? $this->table = $table : parent::__construct('topics');
     }
 
     public function getPinned()
@@ -47,5 +47,17 @@ class Topic extends ForumItem
         }
 
         return false;
+    }
+
+    /**
+     * Check if a topic is locked
+     *
+     * @param int $id The id of the post to check
+     *
+     * @return bool
+     */
+    public function isLocked($id)
+    {
+        return $this->check('status', 'locked', $id);
     }
 }

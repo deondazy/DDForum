@@ -180,7 +180,7 @@ class Database
     {
         $statement = $this->query("SELECT 1 FROM {$tableName} LIMIT 1");
 
-        if ($statement) {
+        if ($statement instanceof PDOStatement) {
             try {
                 $this->execute();
                 return (bool) $statement->columnCount();
@@ -190,20 +190,6 @@ class Database
         }
         return false;
     }
-
-    /*public function databaseTables()
-    {
-        $dbTtables = [];
-        $db = Config::get('db_connection')->dbname;
-        $this->query("SHOW TABLES FROM {$db}");
-        $tables = $this->fetchOne();
-
-        foreach ($tables as $table) {
-            $dbTables[] = $table;
-        }
-
-        return $dbTables;
-    }*/
 
     /**
      * Set database tables prefix.
@@ -220,16 +206,13 @@ class Database
     }
 
     /**
-     * Check if all prefixed Database tables are available.
+     * Check if the options table is available.
      *
      * @return bool
      */
     public function checkTables()
     {
-        foreach ($this->prefixTables() as $table) {
-            if (!$this->tableExists($table)) {
-                continue;
-            }
+        if ($this->tableExists($this->prefixTable['options'])) {
             return true;
         }
         return false;
@@ -296,26 +279,29 @@ class Database
      *
      * @return bool
      */
-    public function execute(array $param = null)
+    public function execute()
     {
         try {
             if ($this->statement instanceof PDOStatement) {
-                if (!is_null($param)) {
-                    return $this->statement->execute();
-                }
-                return $this->statement->execute($param);
+                return $this->statement->execute();
             }
         } catch (PDOException $e) {
             throw new DatabaseException("Execution of prepared statement failed: {$e->getMessage()} in {$e->getFile()} on line {$e->getLine()}");
         }
     }
 
+    /**
+     * Insert Query
+     *
+     * @param string $table Table to run the query on
+     * @param array $data Array of data to insert
+     *
+     * @return int Number of rows inserted
+     */
     public function insert($table, array $data)
     {
-        $sql = "INSERT INTO {$table}";
         $col   = '';
         $val   = '';
-
         foreach ($data as $column => $value) {
             $col .= "{$column}, ";
             $val .= ":{$column}, "; // use the column names as named parameter
@@ -324,9 +310,8 @@ class Database
         $col = rtrim($col, ', '); // Remove last comma(,) on column names
         $val = rtrim($val, ', '); // Remove last comma(,) on named parameters
 
-        $sql .= " ({$col}) VALUES ({$val})"; // Construct the query
-
-        $this->query($sql);
+        // Construct the query
+        $this->query("INSERT INTO {$table} ({$col}) VALUES ({$val})");
 
         //Bind all parameters
         foreach ($data as $param => $value) {
@@ -334,6 +319,55 @@ class Database
         }
         $this->execute();
 
+        return $this->rowCount();
+    }
+
+    /**
+     * Update Query
+     *
+     * @param string $table Table to update
+     * @param string $id Id of the item to update
+     * @param array $data Array of data to update
+     *
+     * @return int Number of rows updated
+     */
+    public function update($table, $id, array $data)
+    {
+        $set = '';
+        foreach ($data as $column => $value) {
+            // use column names as named parameters
+            $set .= "{$column} = :{$column}, ";
+        }
+        $set = rtrim($set, ', '); // remove last comma(,)
+
+        // Construuct the query
+        $this->query("UPDATE {$table} SET {$set} WHERE id = :id");
+
+        $this->bind(':id', $id);
+
+        // Bind the {$set} parameters
+        foreach ($data as $param => $value) {
+            $this->bind(":{$param}", $value);
+        }
+
+        $this->execute();
+
+        return $this->rowCount();
+    }
+
+    /**
+     * Delete Query
+     *
+     * @param string $table Table to update
+     * @param string $id Id of the item to update
+     *
+     * @return int Number of rows deleted
+     */
+    public function delete($table, $id)
+    {
+        $this->query("DELETE FROM {$table} WHERE id = :id");
+        $this->bind(':id', $id);
+        $this->execute();
         return $this->rowCount();
     }
 

@@ -4,7 +4,7 @@
  *
  * @package DDForum
  */
-use DDForum\Core\Option;
+
 use DDForum\Core\User;
 use DDForum\Core\Filter;
 use DDForum\Core\Site;
@@ -15,11 +15,11 @@ if (!defined('DDFPATH')) {
 }
 
 // Load DDForum Startup
-require_once(DDFPATH . 'startup.php');
+require_once DDFPATH.'startup.php';
 
-$title = 'Register - ' . Option::get('site_name');
+$title = 'Register - '.$option->get('site_name');
 
-include(DDFPATH . 'header.php'); ?>
+include DDFPATH.'header.php'; ?>
 
 <h2 class="page-title">Register</h2>
 
@@ -52,7 +52,7 @@ if ('POST' == $_SERVER['REQUEST_METHOD']) {
     }
     ?>
 
-    <div class="centered">Already registered? <a href="<?php echo Site::url(); ?>/login">Login</a></div>
+    <div class="centered">Already registered? <a href="<?php echo $siteUrl; ?>/login/">Login</a></div>
 
     <form role="form" method="post" class="action-form">
         <div class="form-groups">
@@ -85,10 +85,10 @@ if ('POST' == $_SERVER['REQUEST_METHOD']) {
             </div>
             <div class="form-group">
                 <label for="reg-country">Country</label>
-                <?php echo Util::selectFromJson(DDFPATH .'inc/country.json', '', 'country', 'country'); ?>
+                <?php echo Util::selectFromJson(DDFPATH.'inc/country.json', '', 'country', 'country'); ?>
             </div>
             <input id="reg-submit" class="centered action-button" type="submit" value="Register">
         </div>
     </form>
 </div>
-<?php include(DDFPATH . 'footer.php');
+<?php include DDFPATH.'footer.php';

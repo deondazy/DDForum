@@ -241,8 +241,8 @@ class Site
 
     public static function title()
     {
-        global $title;
+        global $title, $option;
 
-        return isset($title) ? $title : Option::get('site_name');
+        return isset($title) ? $title : $option->get('site_name');
     }
 }

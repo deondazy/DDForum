@@ -9,16 +9,11 @@ class Option
      *
      * @var string
      */
-    private static $table;
+    protected $table;
 
-    private function __construct()
+    public function __construct($table = null)
     {
-    }
-
-    private static function table()
-    {
-        self::$table = Config::get('db_connection')->table_prefix . 'options';
-        return self::$table;
+        $this->table = ($table) ?: Database::instance()->prefixTable['options'];
     }
 
     /**
@@ -27,10 +22,10 @@ class Option
      * @param string $option
      * @return string
      */
-    public static function get($option = 'site_name')
+    public function get($option = 'site_name')
     {
         Database::instance()->query(
-            "SELECT value FROM ".self::table()." WHERE name = :option"
+            "SELECT value FROM {$this->table} WHERE name = :option"
         );
 
         Database::instance()->bind(':option', $option);
@@ -45,10 +40,10 @@ class Option
      * @param string $value
      * @return int
      */
-    public static function set($option, $value)
+    public function set($option, $value)
     {
         $stmt = Database::instance()->query(
-            "UPDATE ".self::table()." SET value = :value WHERE name = :option"
+            "UPDATE {$this->table} SET value = :value WHERE name = :option"
         );
         $stmt->bindValue(':value', $value);
         $stmt->bindValue(':option', $option);
@@ -63,10 +58,10 @@ class Option
      * @param string $value
      * @return int
      */
-    public static function add($option, $value)
+    public function add($option, $value)
     {
         Database::instance()->query(
-            "INSERT INTO ".self::table()." (name, value) VALUES (:option, :value)"
+            "INSERT INTO {$this->table} (name, value) VALUES (:option, :value)"
         );
         Database::instance()->bind(':option', $option);
         Database::instance()->bind(':value', $value);

@@ -13,8 +13,10 @@ require_once DDFPATH.'startup.php';
 
 $title = "Forums - {$option->get('site_name')}";
 
-include DDFPATH.'header.php';
-?>
+include DDFPATH.'header.php'; ?>
+
+<h2 class="page-title">All forums</h2>
+
 <div class="table-responsive">
     <?php
     $forums = $forum->getAll("type = 'forum'");

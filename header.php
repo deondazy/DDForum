@@ -3,34 +3,35 @@
  * DDForum Front-end header.
  */
 use DDForum\Core\Site;
-use DDForum\Core\Option;
 use DDForum\Core\User;
 use DDForum\Core\Forum;
 use DDForum\Core\Topic;
 use DDForum\Core\Reply;
+
+$siteUrl = Site::url();
 
 ?><!DOCTYPE html>
 <html>
     <head>
         <title><?php echo Site::title(); ?></title>
 
-        <meta charset="utf8">
+        <meta charset="utf-8">
         <meta content="width=device-width, initial-scale=1" name="viewport">
 
         <!--<link rel="stylesheet" href="<?php //grunt watchhhhhhffecho Site::url().'/inc/css/font-awesome.css'; ?>">-->
-        <link rel="stylesheet" href="<?php echo Site::url().'/inc/css/dist/production.css'; ?>">
+        <link rel="stylesheet" href="<?php echo "{$siteUrl}/inc/css/dist/production.css" ?>">
 
-        <script src="<?php echo Site::url().'/inc/js/jquery.js'; ?>"></script>
+        <script src="<?php echo "{$siteUrl}/inc/js/jquery.js" ?>"></script>
         <!--<script src="<?php // echo Site::url().'/inc/js/editor.js' ?>"></script>-->
-        <script src="<?php echo Site::url().'/inc/js/functions.js' ?>"></script>
+        <script src="<?php echo "{$siteUrl}/inc/js/functions.js" ?>"></script>
 
         <?php if (Site::isProfilePage()) : ?>
-            <script src="<?php echo Site::url().'/inc/js/user.js' ?>"></script>
+            <script src="<?php echo "{$siteUrl}/inc/js/user.js" ?>"></script>
         <?php endif; ?>
 
         <?php if (Site::isEditorPage() || Site::isHomePage()) : ?>
-            <script src="<?php echo Site::url().'/inc/js/tinymce/js/tinymce/tinymce.js' ?>"></script>
-            <script src="<?php echo Site::url().'/inc/js/front-editor.js' ?>"></script>
+            <script src="<?php echo "{$siteUrl}/inc/js/tinymce/js/tinymce/tinymce.js" ?>"></script>
+            <script src="<?php echo "{$siteUrl}/inc/js/front-editor.js" ?>"></script>
         <?php endif; ?>
     </head>
 
@@ -39,7 +40,7 @@ use DDForum\Core\Reply;
 
             <header id="header" class="site-header">
                 <h1 id="masthead" class="site-title">
-                    <a rel="home" href="<?php echo Site::url(); ?>"><?php echo Option::get('site_name'); ?></a>
+                    <a rel="home" href="<?php echo $siteUrl ?>"><?php echo $option->get('site_name'); ?></a>
                 </h1>
 
                 <nav id="navigation" class="site-navigation clearfix">
@@ -49,26 +50,28 @@ use DDForum\Core\Reply;
                         </div>
 
                         <ul class="pull-left">
-                            <li class="site-navigation-link"><a href="<?php echo Site::url(); ?>/"><b>Home</b></a></li>
-                            <li class="site-navigation-link"><a href="<?php echo Site::url(); ?>/edit-profile/">Edit Profile</a></li>
-                            <li class="site-navigation-link"><a href="<?php echo Site::url(); ?>/logout/">Logout</a></li>
-                            <li class="site-navigation-link"><a href="<?php echo Site::url(); ?>/forums/">Forums</a></li>
+                            <li class="site-navigation-link"><a href="<?php echo $siteUrl; ?>/"><b>Home</b></a></li>
+                            <li class="site-navigation-link"><a href="<?php echo $siteUrl; ?>/edit-profile/">Edit Profile</a></li>
+                            <li class="site-navigation-link"><a href="<?php echo $siteUrl; ?>/logout/">Logout</a></li>
+                            <li class="site-navigation-link"><a href="<?php echo $siteUrl; ?>/forum/all/">Forums</a></li>
+                            <?php if (User::isAdmin()) : ?>
+                                <li class="site-navigation-link"><a href="<?php echo Site::adminUrl(); ?>/">Dashboard</a></li>
+                            <?php endif; ?>
                         </ul>
                     <?php else : ?>
                         <div class="site-navigation-welcome-text pull-left">Welcome <strong>Guest</strong></div>
 
                         <ul class="pull-left">
-                            <li class="site-navigation-link"><a href="<?php echo Site::url(); ?>"><b>Home</b></a></li>
-                            <li class="site-navigation-link"><a href="<?php echo Site::url(); ?>/register/"><b>Register</b></a></li>
-                            <li class="site-navigation-link"><a href="<?php echo Site::url(); ?>/login/">Login</a></li>
-                            <li class="site-navigation-link"><a href="<?php echo Site::url(); ?>/forums/">Forums</a></li>
+                            <li class="site-navigation-link"><a href="<?php echo $siteUrl; ?>/"><b>Home</b></a></li>
+                            <li class="site-navigation-link"><a href="<?php echo $siteUrl; ?>/register/"><b>Register</b></a></li>
+                            <li class="site-navigation-link"><a href="<?php echo $siteUrl; ?>/login/">Login</a></li>
+                            <li class="site-navigation-link"><a href="<?php echo $siteUrl; ?>/forum/all/">Forums</a></li>
                         </ul>
                     <?php endif; ?>
                 </nav>
             </header>
 
             <div id="main" class="site-main">
-
                 <?php
                 function active($page, $active)
                 {
@@ -76,28 +79,24 @@ use DDForum\Core\Reply;
                 }
 
                 if (Site::isHomePage() || Site::isForumPage()) :
-                    $Forum = new Forum();
-                    $Topic = new Topic();
-                    $Reply = new Reply();
-
                     $sort = isset($_GET['sort']) ? $_GET['sort'] : '';
 
                     switch ($sort) {
                         case 'recent':
-                            $topics = $Topic->getRecent();
+                            $topics = $topic->getRecent();
                             break;
 
                         case 'trending':
-                            $topics = $Topic->getTrending();
+                            $topics = $topic->getTrending();
                             break;
 
                         case 'all':
-                            $topics = $Topic->getAll();
+                            $topics = $topic->getAll();
                             break;
 
                         default:
-                            $sort = 'pinned';
-                            $topics = $Topic->getPinned();
+                            //$sort = 'pinned';
+                            $topics = $topic->getPinned();
                             break;
                     }
                     ?>
@@ -105,21 +104,21 @@ use DDForum\Core\Reply;
                     <div class="sort-view clearfix">
                         <ul class="view pull-left">
                             <li class="sort-item <?php echo active($sort, 'pinned'); ?>">
-                                <a href="<?php echo Site::url(); ?>">Pinned</a>
+                                <a href="<?php echo $siteUrl; ?>/">Pinned</a>
                             </li>
                             <li class="sort-item <?php echo active($sort, 'recent'); ?>">
-                                <a href="<?php echo Site::url(); ?>/topics/recent">Recent</a>
+                                <a href="<?php echo $siteUrl; ?>/topics/recent/">Recent</a>
                             </li>
                             <li class="sort-item <?php echo active($sort, 'trending'); ?>">
-                                <a href="<?php echo Site::url(); ?>/topics/trending">Trending</a>
+                                <a href="<?php echo $siteUrl; ?>/topics/trending/">Trending</a>
                             </li>
                             <li class="sort-item <?php echo active($sort, 'all'); ?>">
-                                <a href="<?php echo Site::url(); ?>/topics/all">All</a>
+                                <a href="<?php echo $siteUrl; ?>/topics/all/">All</a>
                             </li>
                         </ul>
 
                         <?php if (User::isLogged()) : ?>
-                            <a class="secondary-button open-editor new-topic pull-right" href="<?php echo Site::url(); ?>/topic/new">
+                            <a class="secondary-button open-editor new-topic pull-right" href="<?php echo $siteUrl; ?>/topic/new/">
                                 New Topic
                             </a>
                         <?php endif; ?>

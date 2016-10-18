@@ -26,47 +26,25 @@ abstract class ForumItem
     public $count;
 
     /**
-     * Constructor sets the Database table
+     * Constructor sets the Database table to use
      *
-     * @param string $table
-     * @return string
+     * @param string $table The Database table
      */
     public function __construct($table)
     {
-        $this->table = Config::get('db_connection')->table_prefix . $table;
-        return $this->table;
+        $this->table = Database::instance()->prefixTable[$table];
     }
 
     /**
      * Create a new item
      *
      * @param array $item
-     * @return int
+     *
+     * @return bool
      */
     public function create(array $items)
     {
-        $sql = "INSERT INTO {$this->table}";
-        $col   = '';
-        $val   = '';
-
-        foreach ($items as $column => $value) {
-            $col .= "{$column}, ";
-            $val .= ":{$column}, "; // use the column names as named parameter
-        }
-
-        $col = rtrim($col, ', '); // Remove last comma(,) on column names
-        $val = rtrim($val, ', '); // Remove last comma(,) on named parameters
-
-        $sql .= " ({$col}) VALUES ({$val})"; // Construct the query
-
-        Database::instance()->query($sql);
-
-        //Bind all parameters
-        foreach ($items as $param => $value) {
-            Database::instance()->bind(":{$param}", $value);
-        }
-
-        return Database::instance()->execute();
+        return Database::instance()->insert($this->table, $items);
     }
 
     /**
@@ -78,30 +56,7 @@ abstract class ForumItem
      */
     public function update(array $data, $id)
     {
-        $query = "UPDATE {$this->table} SET ";
-        $col = '';
-
-        foreach ($data as $column => $value) {
-            $col .= "{$column} = :{$column}, "; // use column names as named parameters
-        }
-
-        $col = rtrim($col, ', '); // remove last comma(,)
-        $query .= $col . " WHERE id = :id";
-
-        if (Database::instance()->query($query)) {
-            // Bind :named parameters
-            Database::instance()->bind(':id', $id);
-
-            foreach ($data as $param => $value) {
-                Database::instance()->bind(":{$param}", $value);
-            }
-
-            if (Database::instance()->execute()) {
-                return Database::instance()->rowCount();
-            }
-            return -1;
-        }
-        return -1;
+        return Database::instance()->update($this->table, $id, $data);
     }
 
     /**
@@ -112,18 +67,7 @@ abstract class ForumItem
      */
     public function delete($id)
     {
-        // Does item exist
-        if (!$this->itemExist($id)) {
-            throw new ItemNotFoundException("You tried to delete an item that does not exist, maybe it was already deleted");
-        }
-
-        if (Database::instance()->query("DELETE FROM {$this->table} WHERE id = :id")) {
-            if (Database::instance()->bind(':id', $id)) {
-                return Database::instance()->rowCount();
-            }
-            return -1;
-        }
-        return -1;
+        return Database::instance()->delete($this->table, $id);
     }
 
     /**
@@ -143,7 +87,7 @@ abstract class ForumItem
         return null;
     }
 
-    /**git ggjj
+    /**
      * Get all entry columns
      *
      * @return array
@@ -175,7 +119,8 @@ abstract class ForumItem
      */
     public function itemExist($id)
     {
-        $query = Database::instance()->query("SELECT COUNT(*) FROM {$this->table} WHERE id = ?");
+        $query = Database::instance()->query("SELECT COUNT(*) FROM {$this->table} WHERE id = :id");
+        Database::instance()->bind(':id', $id);
         $query->execute();
 
         if ($query->fetchColumn() == 0) {

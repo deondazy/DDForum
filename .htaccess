@@ -9,20 +9,20 @@ RewriteCond %{SCRIPT_FILENAME} !-d
 RewriteCond %{SCRIPT_FILENAME} !-f
 
 # Display single forum,new forum and edit forum
-RewriteRule ^forums*$ ./forum.php
+RewriteRule ^forum/all/*$ ./forum-all.php
 RewriteRule ^forums/new*$ ./forum-new.php
 RewriteRule ^forums/(\d+)*$ ./forum.php?id=$1
 RewriteRule ^forums/(\d+)/edit*$ ./forum-edit.php?id=$1
 
 # Display newtopic, single topic and edit topic
-RewriteRule ^topic/new*$ ./topic-new.php
+RewriteRule ^topic/new/*$ ./topic-new.php
 #RewriteRule ^topics/(#[a-z]-[1-9]+)/(\d+)*$ ./topic.php?$1/id=$2
 RewriteRule ^topics/(\d+)/edit*$ ./topic-edit.php?id=$1
 
 RewriteRule ^topics/([a-z]+)/*$ ./index.php?sort=$1
 
 RewriteRule ^users/new*$ ./user-new.php
-RewriteRule ^user/([a-zA-Z0-9]+)*$ ./user.php?u=$1
+RewriteRule ^user/([a-zA-Z0-9]+)/*$ ./user.php?u=$1
 RewriteRule ^users/(\d+)/edit*$ ./user-edit.php?id=$1
 
 RewriteRule ^login/$ ./login.php

@@ -114,9 +114,9 @@ class UserAuth
                         $loginKey = md5(self::$loginKey);
 
                         if (!$remember) {
-                            setcookie('ddforum', $username.'_'.$loginKey, 0, preg_replace('|https?://[^/]+|i', '', Option::get('site_url') . '/'));
+                            setcookie('ddforum', $username.'_'.$loginKey, 0, preg_replace('|https?://[^/]+|i', '', Site::url() . '/'));
                         } else { // Store cookie for a month
-                            setcookie('ddforum', $username.'_'.$loginKey, time() + 60 * 60 * 24 * 30, preg_replace('|https?://[^/]+|i', '', Option::get('site_url') . '/'));
+                            setcookie('ddforum', $username.'_'.$loginKey, time() + 60 * 60 * 24 * 30, preg_replace('|https?://[^/]+|i', '', Site::url() . '/'));
                         }
 
                         // Where to send user after a successful login
@@ -145,7 +145,7 @@ class UserAuth
     public static function logout()
     {
         if (isset($_COOKIE['ddforum'])) {
-            setcookie('ddforum', '', time() - 60 * 60 * 24 * 30, preg_replace('|https?://[^/]+|i', '', Option::get('site_url') . '/'));
+            setcookie('ddforum', '', time() - 60 * 60 * 24 * 30, preg_replace('|https?://[^/]+|i', '', Site::url() . '/'));
 
             User::update(['online_status' => 0, 'last_seen' => date('Y-m-d H:i:s')], User::currentUserId());
 

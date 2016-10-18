@@ -7,23 +7,17 @@
 
 use DDForum\Core\Database;
 use DDForum\Core\site;
-use DDForum\Core\Option;
 use DDForum\Core\Util;
-use DDForum\Core\Forum;
-use DDForum\Core\Topic;
 use DDForum\Core\User;
 
 define('DDFPATH', dirname(__FILE__) . DIRECTORY_SEPARATOR);
 
 // Load Startup file
-require_once(DDFPATH . 'startup.php');
+require_once DDFPATH.'startup.php';
 
-$title = 'New topic - ' . Option::get('site_name');
+$title = "New topic - {$option->get('site_name')}";
 
-$forum = new Forum();
-$topic = new Topic();
-
-include(DDFPATH . 'header.php');
+include DDFPATH.'header.php';
 
 if ('POST' == $_SERVER['REQUEST_METHOD']) {
     if (!empty($_POST['topic-subject'])) {
@@ -43,7 +37,7 @@ if ('POST' == $_SERVER['REQUEST_METHOD']) {
                 if ($topic->create($topicData)) {
                     $topicId = Database::instance()->lastInsertId();
 
-                    Util::redirect(Site::url() . '/topic/' . Util::slug($_POST['topic-subject']) . "/{$topicId}");
+                    Util::redirect("{$siteUrl}/topic/".Util::slug($_POST['topic-subject'])."/{$topicId}");
                 } else {
                     Site::info('Unable to create topic, please try again', true);
                 }
