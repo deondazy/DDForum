@@ -60,4 +60,11 @@ class Topic extends ForumItem
     {
         return $this->check('status', 'locked', $id);
     }
+
+    public function addView($id)
+    {
+        $view = $this->get('views', $id);
+        $addView = $view + 1;
+        return $this->update(['views' => $addView], $id);
+    }
 }

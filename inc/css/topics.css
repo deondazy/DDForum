@@ -1,16 +1,38 @@
 .topic-view {
     overflow: hidden;
     list-style: none;
+    position: relative;
 }
 
 .topic-listing {
+
+}
+
+.topic-listing .child {
+    background: #f7f7f7;
+    margin-left: 70px;
+}
+
+.topic-listing .child .topic-poster-image {
+    left: 10px;
+}
+
+.topic-listing .child .topic-body {
+    padding-left: 80px;
+    padding-right: 10px;
+}
+
+.topic-main {
     padding: 0 15px;
+    max-width: 800px;
+    width: 100%;
 }
 
 .topic-poster-image {
-    border-top: 1px solid #ddd;
-    float: left;
-    padding-top: 10px;
+    padding-top: 11px;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 .topic-poster-image img {
@@ -20,9 +42,18 @@
 .topic-body {
     border-top: 1px solid #ddd;
     float: left;
-    max-width: 800px;
     width: 100%;
-    padding: 10px 20px;
+    padding-left: 75px;
+    padding-top: 11px;
+}
+
+.topic-body footer {
+    padding-bottom: 15px;
+    font-size: 12px;
+}
+
+.topic-body footer a {
+    text-decoration: none;
 }
 
 .topic-meta {

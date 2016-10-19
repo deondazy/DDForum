@@ -155,10 +155,10 @@ div.mce-tinymce-inline {
 	color: #707070
 }
 .mce-toolbar-grp {
-	padding-bottom: 5px
+	1padding-bottom: 5px
 }
 .mce-toolbar-grp .mce-flow-layout-item {
-	margin-bottom: 0
+	1margin-bottom: 0
 }
 .mce-rtl .mce-wordcount {
 	left: 0;
@@ -210,8 +210,8 @@ div.mce-tinymce-inline {
 	position: relative
 }
 .mce-panel {
-	border: 1px solid #ddd;
-	background-color: #eee
+	border: 1px solid #eee;
+	background-color: #f7f7f7
 }
 .mce-floatpanel {
 	position: absolute
@@ -500,11 +500,10 @@ body .mce-abs-layout-item, .mce-abs-end {
 	border-bottom-color: transparent
 }
 .mce-btn {
-	border: 1px solid #ddd;
-	position: relative;
-	display: inline-block;
-	background-color: #fff;
-	border-radius: 4px
+	border: 1px solid #eee;
+    position: relative;
+    display: inline-block;
+    background-color: #eee;
 }
 .mce-btn:hover, .mce-btn:focus {
 	color: #444;
@@ -892,6 +891,9 @@ i.mce-i-checkbox {
 }
 .mce-tinymce-inline .mce-flow-layout {
 	white-space: nowrap
+	border-top: 1px solid #eee;
+    border-left: 1px solid #eee;
+    border-right: 1px solid #eee;
 }
 .mce-rtl .mce-flow-layout {
 	text-align: right;

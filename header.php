@@ -95,7 +95,7 @@ $siteUrl = Site::url();
                             break;
 
                         default:
-                            //$sort = 'pinned';
+                            $sort = 'pinned';
                             $topics = $topic->getPinned();
                             break;
                     }
