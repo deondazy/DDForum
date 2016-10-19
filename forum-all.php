@@ -5,6 +5,8 @@
 use DDForum\Core\Util;
 use DDForum\Core\User;
 use DDForum\Core\Site;
+use DDForum\Core\Counter;
+use DDForum\Core\Config;
 
 define('DDFPATH', dirname(__FILE__) . DIRECTORY_SEPARATOR);
 
@@ -15,7 +17,7 @@ $title = "Forums - {$option->get('site_name')}";
 
 include DDFPATH.'header.php'; ?>
 
-<h2 class="page-title">All forums</h2>
+<h2 class="page-title sectioner">All forums</h2>
 
 <div class="table-responsive">
     <?php
@@ -32,7 +34,8 @@ include DDFPATH.'header.php'; ?>
                 <th>Active</th>
             </thead>
             <tbody>
-            <?php foreach ($forums as $f) : ?>
+            <?php foreach ($forums as $f) :
+                $counter = new Counter(Config::getTablePrefix().'topics'); ?>
                 <tr class="topic">
                     <td class="the-topic">
                         <a id="topic-<?php echo $f->id; ?>" href="<?php echo Site::url(); ?>/forum/<?php echo $f->slug . '/' . $f->id; ?>">
@@ -48,6 +51,12 @@ include DDFPATH.'header.php'; ?>
                       <a id="user-<?php echo $f->creator; ?>" href="<?php echo Site::url(); ?>/users/<?php echo $f->creator; ?>">
                         <?php echo User::get('display_name', $f->creator); ?>
                       </a>
+                    </td>
+                    <td class="the-poster">
+                      <?php echo $counter->count('topic', ['forum' => $f->id]); ?>
+                    </td>
+                    <td class="the-time">
+                        <?php echo Util::time2str(Util::timestamp($f->last_post_date)); ?>
                     </td>
                   </tr>
                 <?php endforeach; ?>

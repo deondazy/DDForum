@@ -42,14 +42,19 @@ include DDFPATH.'header.php';
 
 if ('POST' == $_SERVER['REQUEST_METHOD']) {
     if (!empty($_POST['reply-message'])) {
+        $date = date('Y-m-d H:i:s');
+        $poster = User::currentUserId();
         $replyData = [
             'forum'       => $forumId,
             'topic'       => $topicId,
             'parent'      => $parent,
             'message'     => $_POST['reply-message'],
-            'poster'      => User::currentUserId(),
-            'create_date' => date('Y-m-d H:i:s'),
+            'poster'      => $poster,
+            'create_date' => $date,
         ];
+
+        $topic->update(['last_post_date' => $date, 'last_poster' => $poster], $topicId);
+        $forum->update(['last_post_date' => $date], $forumId);
 
         if (0 !== $reply->create($replyData)) {
             $lastInsertId = Database::instance()->lastInsertId();

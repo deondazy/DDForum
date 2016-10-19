@@ -10,6 +10,7 @@ RewriteCond %{SCRIPT_FILENAME} !-f
 
 # Display single forum,new forum and edit forum
 RewriteRule ^forum/all/*$ ./forum-all.php
+RewriteRule ^forum/([a-z0-9-]+)/([0-9]+)/*$ ./forum.php?s=$1&id=$2
 RewriteRule ^forums/new*$ ./forum-new.php
 RewriteRule ^forums/(\d+)*$ ./forum.php?id=$1
 RewriteRule ^forums/(\d+)/edit*$ ./forum-edit.php?id=$1

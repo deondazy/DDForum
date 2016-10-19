@@ -44,7 +44,7 @@ include DDFPATH.'header.php'; ?>
                             </a>
                         </td>
                         <td class="the-poster">
-                            <a id="user-<?php echo $t->poster; ?>" href="<?php echo "{$siteUrl}/user/User::get('username', $t->poster)"; ?>">
+                            <a id="user-<?php echo $t->poster; ?>" href="<?php echo "{$siteUrl}/user/".User::get('username', $t->poster); ?>">
                                 <?php echo User::get('display_name', $t->poster); ?>
                             </a>
                         </td>
@@ -55,7 +55,7 @@ include DDFPATH.'header.php'; ?>
                             <?php echo $t->views; ?>
                         </td>
                         <td class="the-time">
-                            <?php echo Util::time2str(Util::timestamp($t->create_date)); ?>
+                            <?php echo Util::time2str(Util::timestamp($t->last_post_date)); ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>

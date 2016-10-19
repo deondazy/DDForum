@@ -14,26 +14,24 @@ if (!defined('DDFPATH')) {
 }
 
 /** Load DDForum Startup **/
-require_once(DDFPATH . 'startup.php');
+require_once DDFPATH.'startup.php';
 
 $username = isset($_GET['u']) ? $_GET['u'] : '';
 
 $user = User::findByName($username);
 
-$forum = new Forum();
-
 if (!$user) {
     Site::info('User does not exist', true, true);
 }
 
-$title = 'Profile - '. User::get('username', $user->id) . ' - ' . Option::get('site_name');
+$title = User::get('username', $user->id).' - '.$option->get('site_name');
 
-require_once(DDFPATH . 'header.php');
+include DDFPATH.'header.php';
 ?>
 
 <div class="user-block">
     <a href="#" class="user-profile-cover">
-        <img src="<?php echo Site::url(); ?>/inc/images/360skibo.com album art.jpg" class="user-profile-cover-photo">
+        <img src="<?php echo "{$siteUrl}/inc/images/360skibo.com album art.jpg"?>" class="user-profile-cover-photo">
     </a>
 
     <div class="user-image"><img src="<?php echo User::get('avatar', $user->id); ?>" height="168" width="168"></div>
@@ -47,9 +45,9 @@ require_once(DDFPATH . 'header.php');
 <div class="user-summary sectioner">
   <div class="user-summary-wrap">
     <span>Joined <strong><?php echo Util::time2str(User::get('register_date', $user->id)); ?></strong></span>
-    <span>Last post <strong><?php echo User::get('last_post', $user->id); ?></strong></span>
+    <!--<span>Last post <strong><?php //echo User::get('', $user->id); ?></strong></span>-->
     <span>Last seen <strong><?php echo Util::time2str(User::get('last_seen', $user->id)); ?></strong></span>
-    <span>Views <strong><?php echo User::get('views', $user->id); ?></strong></span>
+    <!--<span>Views <strong><?php //echo User::get('views', $user->id); ?></strong></span>-->
     <span>Coins <strong><?php echo User::get('credit', $user->id); ?></strong></span>
     <span>Level <strong><?php echo User::level(User::get('level', $user->id)); ?></strong></span>
   </div>
@@ -64,35 +62,32 @@ require_once(DDFPATH . 'header.php');
             <?php
             $topics = User::topics($user->id);
 
-            foreach ($topics as $topic) : ?>
+            foreach ($topics as $t) : ?>
 
             <div class="user-topic-wrap">
-                <a class="avatar-link" href="<?php echo Site::url(); ?>/user/<?php echo User::get('username', $user->id); ?>">
+                <a class="avatar-link" href="<?php echo "{$siteUrl}/user/".User::get('username', $user->id); ?>">
                     <img class="avatar" src="<?php echo User::get('avatar', $user->id); ?>" height="45" width="45">
                 </a>
-                <a class="user-topic" id="<?php echo $topic->id; ?>" href="<?php echo Site::url(); ?>/topic/<?php echo $topic->slug; ?>/<?php echo $topic->id; ?>">
-                    <?php echo $topic->subject; ?>
+                <a class="user-topic" id="<?php echo $t->id; ?>" href="<?php echo "{$siteUrl}/topic/{$t->slug}/{$t->id}"; ?>">
+                    <?php echo $t->subject; ?>
                 </a>
-          <div class="user-topic-forum">
-            <i class="fa fa-arrow-right"></i>
-            <a href="../forum/<?php echo $forum->get('id', $topic->forum); ?>">
-              <?php echo $forum->get('name', $topic->forum); ?>
-            </a>
-          </div>
-          <div class="user-topic-time">
-            <?php echo Util::time2str($topic->create_date); ?>
-          </div>
-        </div>
-
-      <?php endforeach; ?>
+                <div class="user-topic-forum">
+                    <i class="fa fa-arrow-right"></i>
+                    <a href="<?php echo "{$siteUrl}/forum/{$forum->get('id', $t->forum)}"; ?>">
+                        <?php echo $forum->get('name', $t->forum); ?>
+                    </a>
+                </div>
+                <div class="user-topic-time">
+                    <?php echo Util::time2str($t->create_date); ?>
+                </div>
+            </div>
+        <?php endforeach; ?>
     </div>
-  </div>
 </div>
 
 <div class="user-details">
     <div class="user-details-wrap">
         <div class="user-handle js-handle"><strong>Details</strong> <i class="fa fa-chevron-down"></i></div>
-
         <div class="user-field js-field">
             <div class="user-field-info">
                 <span class="info-title">First name</span> <strong><?php echo User::get('first_name', $user->id); ?></strong>
@@ -109,5 +104,4 @@ require_once(DDFPATH . 'header.php');
         </div>
     </div>
 </div>
-
-<?php require_once(DDFPATH . 'footer.php'); ?>
+<?php include DDFPATH.'footer.php';
