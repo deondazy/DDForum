@@ -19,6 +19,10 @@ $title = "New topic - {$option->get('site_name')}";
 
 include DDFPATH.'header.php';
 
+if (!$user->isLogged()) {
+    Util::redirect(Site::url().'/login/');
+}
+
 if ('POST' == $_SERVER['REQUEST_METHOD']) {
     if (!empty($_POST['topic-subject'])) {
         if (!empty($_POST['topic-message'])) {

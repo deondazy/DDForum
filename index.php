@@ -6,7 +6,7 @@ use DDForum\Core\Util;
 use DDForum\Core\User;
 use DDForum\Core\Site;
 
-define('DDFPATH', dirname(__FILE__)  . DIRECTORY_SEPARATOR);
+define('DDFPATH', dirname(__FILE__).DIRECTORY_SEPARATOR);
 
 // Load Startup file
 require_once DDFPATH.'startup.php';
@@ -44,8 +44,8 @@ include DDFPATH.'header.php'; ?>
                             </a>
                         </td>
                         <td class="the-poster">
-                            <a id="user-<?php echo $t->poster; ?>" href="<?php echo "{$siteUrl}/user/".User::get('username', $t->poster); ?>">
-                                <?php echo User::get('display_name', $t->poster); ?>
+                            <a id="user-<?php echo $t->poster; ?>" href="<?php echo "{$siteUrl}/user/{$user->get('username', $t->poster)}"; ?>">
+                                <?php echo $user->get('display_name', $t->poster); ?>
                             </a>
                         </td>
                         <td class="the-reply int-value">

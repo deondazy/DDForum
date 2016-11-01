@@ -110,7 +110,7 @@ $topics = $Topic->paginate($limit, $offset);
 
           <td class="count-column"><?php echo $Topic->countReplies($topic->id); ?></td>
 
-          <td><?php echo User::get("username", $topic->poster); ?></td>
+          <td><?php echo $user->get("username", $topic->poster); ?></td>
 
           <td><?php echo Util::time2str(Util::timestamp($topic->create_date)); ?></td>
 

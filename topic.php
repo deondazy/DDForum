@@ -9,7 +9,7 @@ use DDForum\Core\Site;
 use DDForum\Core\Util;
 
 if (!defined('DDFPATH')) {
-    define('DDFPATH', dirname(__FILE__) . DIRECTORY_SEPARATOR);
+    define('DDFPATH', dirname(__FILE__).DIRECTORY_SEPARATOR);
 }
 
 // Load DDForum Startup
@@ -42,8 +42,11 @@ include DDFPATH.'header.php';
 
 if ('POST' == $_SERVER['REQUEST_METHOD']) {
     if (!empty($_POST['reply-message'])) {
+        $creatorOfTopic = $topic->get('poster', $topicId);
+
         $date = date('Y-m-d H:i:s');
-        $poster = User::currentUserId();
+        $poster = $user->currentUserId();
+
         $replyData = [
             'forum'       => $forumId,
             'topic'       => $topicId,
@@ -59,6 +62,13 @@ if ('POST' == $_SERVER['REQUEST_METHOD']) {
         if (0 !== $reply->create($replyData)) {
             $lastInsertId = Database::instance()->lastInsertId();
             $lastPage = $last;
+
+            $notif->create([
+                'notification' =>
+                    "<a href=\"{$siteUrl}/topic/{$topic->get('slug', $topicId)}/{$topicId}/page={$lastPage}/#post-{$lastInsertId}\">".$user->get('display_name', $poster)." replied to your topic \"".$topic->get('subject', $topicId)."\"</a>",
+                'date' => $date,
+                'to' => $creatorOfTopic,
+            ]);
 
             if ($allRecords > 5) {
                 Util::redirect(
@@ -84,7 +94,7 @@ if ('POST' == $_SERVER['REQUEST_METHOD']) {
         Site::info("Topic doesn't exist,maybe it was removed or moved", true);
     else : ?>
 
-        <?php if (User::isLogged()) : ?>
+        <?php if ($user->isLogged()) : ?>
             <a href="#reply-form" class="add-btn pull-right">Add Reply</a>
         <?php endif; ?>
 
@@ -96,19 +106,19 @@ if ('POST' == $_SERVER['REQUEST_METHOD']) {
                 <?php if ((isset($current) && $current == $first) || !isset($current)) : ?>
                 <li class="topic-view" id="post-<?php echo $topicId; ?>">
                     <div class="topic-poster-image">
-                        <img src="<?php echo User::get('avatar', $topic->get('poster', $topicId)); ?>" height="60" width="60">
+                        <img src="<?php echo $user->get('avatar', $topic->get('poster', $topicId)); ?>" height="60" width="60">
                     </div>
 
                     <div class="topic-body">
                         <div class="topic-message">
                             <div class="topic-meta">
-                                <a href="<?php echo Site::url(); ?>/user/<?php echo User::get('username', $topic->get('poster', $topicId)); ?>" class="topic-author">
-                                    <?php echo User::get('display_name', $topic->get('poster', $topicId)); ?>
+                                <a href="<?php echo Site::url(); ?>/user/<?php echo $user->get('username', $topic->get('poster', $topicId)); ?>" class="topic-author">
+                                    <?php echo $user->get('display_name', $topic->get('poster', $topicId)); ?>
                                 </a>
 
                                 <span class="topic-date"><?php echo Util::time2str(Util::timestamp($topic->get('create_date', $topicId))); ?></span>
                             </div>
-                            <?php echo $topic->get('message', $topicId); ?>
+                            <?php echo Util::parseMentions($topic->get('message', $topicId)); ?>
                         </div>
                         <footer class="pull-right">
                             <a href="#" class="topic-action js-like"><i class="fa fa-heart"></i> Like</a>
@@ -120,19 +130,19 @@ if ('POST' == $_SERVER['REQUEST_METHOD']) {
                 <?php foreach ($replies as $r) : ?>
                     <li class="topic-view" id="post-<?php echo $r->id; ?>">
                         <div class="topic-poster-image">
-                            <img src="<?php echo User::get('avatar', $r->poster); ?>" height="60" width="60">
+                            <img src="<?php echo $user->get('avatar', $r->poster); ?>" height="60" width="60">
                         </div>
 
                         <div class="topic-body">
                             <div class="topic-message">
                                 <div class="topic-meta">
-                                    <a href="<?php echo Site::url(); ?>/user/<?php echo User::get('username', $r->poster); ?>" class="topic-author">
-                                        <?php echo User::get('display_name', $r->poster); ?>
+                                    <a href="<?php echo Site::url(); ?>/user/<?php echo $user->get('username', $r->poster); ?>" class="topic-author">
+                                        <?php echo $user->get('display_name', $r->poster); ?>
                                     </a>
 
                                     <span class="topic-date"><?php echo Util::time2str(Util::timestamp($r->create_date)); ?></span>
                                 </div>
-                                <?php echo $r->message; ?>
+                                <?php echo Util::parseMentions($r->message); ?>
                             </div>
                             <footer class="pull-right">
                                 <a href="#" class="topic-action js-like"><i class="fa fa-heart"></i> Like</a>
@@ -158,7 +168,7 @@ if ('POST' == $_SERVER['REQUEST_METHOD']) {
             <?php endif; ?>
 
             <?php
-            if (User::isLogged()) {
+            if ($user->isLogged()) {
                 if (!$topic->isLocked($topicId)) {
                     include(DDFPATH . 'inc/reply-form.php');
                 } else {

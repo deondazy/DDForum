@@ -24,7 +24,7 @@ $message = isset($_GET['message']) ? $_GET['message'] : '';
 
 Site::info($message);
 
-$users = User::getAll();
+$users = $user->getAll();
 
 // Pagination
 $all_record = Database::instance()->rowCount();
@@ -38,7 +38,7 @@ $next = ($current + 1 > $last) ? $last : $current + 1;
 
 $offset = isset($_GET['page']) ? $limit * ($current - 1) : 0;
 
-$users = User::paginate('id DESC', $limit, $offset);
+$users = $user->paginate('id DESC', $limit, $offset);
 ?>
 <a href="user-new.php" class="extra-nav">Add New User</a>
 
@@ -89,7 +89,7 @@ $users = User::paginate('id DESC', $limit, $offset);
 
                     <td>
                         <strong>
-                            <?php  if ((int) $user->id == (int) User::currentUserId()) : ?>
+                            <?php  if ((int) $user->id == (int) $user->currentUserId()) : ?>
                                 <a href="profile.php">
                             <?php else : ?>
                                 <a href="user.php?action=edit&amp;id=<?php echo $user->id; ?>">
@@ -103,9 +103,9 @@ $users = User::paginate('id DESC', $limit, $offset);
 
                     <td><?php echo $user->email; ?></td>
 
-                    <td><?php echo User::level($user->level); ?></td>
+                    <td><?php echo $user->level($user->level); ?></td>
 
-                    <td  class="count-column"><?php echo User::postCount($user->id); ?></td>
+                    <td  class="count-column"><?php echo $user->postCount($user->id); ?></td>
 
                     <td class="actions">
                         <a class="action-edit" href="user.php?action=edit&amp;id=<?php echo $user->id; ?>"><span class="fa fa-pencil"></span></a>

@@ -236,7 +236,7 @@ switch ($step) {
                                         'last_seen'     => date('Y-m-d h:i:s'),
                                         'level'         => 1,
                                         'credit'        => 100,
-                                        'avatar'        => User::defaultAvatar()
+                                        'avatar'        => $user->defaultAvatar()
                                     ];
 
                                     $db = Config::get('db_connection');
@@ -244,7 +244,7 @@ switch ($step) {
                                     // Connect to database
                                     Database::instance()->connect(new \PDO($db->string, $db->user, $db->password));
 
-                                    $insert = User::create($dataAdmin);
+                                    $insert = $user->create($dataAdmin);
 
                                     Installer::createOptions($siteName, $email);
                                     Installer::createDefaults();

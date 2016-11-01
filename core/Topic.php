@@ -9,6 +9,17 @@ class Topic extends ForumItem
         ($table) ? $this->table = $table : parent::__construct('topics');
     }
 
+    /**
+     * @inheritdoc
+     */
+    public function count($forumId = 0)
+    {
+        if (0 !== $forumId) {
+            return count($this->getAll("forum = '$forumId'"));
+        }
+        return parent::count();
+    }
+
     public function getPinned()
     {
         Database::instance()->query("SELECT * FROM {$this->table} WHERE pinned = 1 ORDER BY create_date DESC");

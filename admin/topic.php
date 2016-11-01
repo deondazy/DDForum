@@ -15,7 +15,7 @@ $file        = 'topic-edit.php';
 
 $topic_id = isset( $_GET['id'] ) ? (int) $_GET['id'] : 0;
 $action   = isset($_GET['action']) ? $_GET['action'] : '';
-$user_id  = User::currentUserId();
+$user_id  = $user->currentUserId();
 $Topic = new Topic();
 
 switch ($action) {

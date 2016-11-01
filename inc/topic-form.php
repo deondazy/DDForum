@@ -54,7 +54,7 @@ if ('POST' == $_SERVER['REQUEST_METHOD']) {
 
                 <div class="field">
                     <label class="screen-reader-text" for="topic-forum">Topic forum</label>
-                    <?php echo $Forum->dropdown([
+                    <?php echo $forum->dropdown([
                         'id'   => 'topic-forum',
                         'name' => 'topic-forum'
                     ]); ?>

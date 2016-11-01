@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit bootstrap="./vendor/autoload.php" colors="true">
-  <testsuites>
-    <testsuite name="DDForum Test Suite">
-      <directory>./tests/</directory>
-    </testsuite>
-  </testsuites>
+<phpunit colors="true" bootstrap="./vendor/autoload.php">
+    <testsuites>
+        <testsuite name="DDForum Test Suite">
+            <directory>./tests/</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./core</directory>
+        </whitelist>
+    </filter>
 </phpunit>

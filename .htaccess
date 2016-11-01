@@ -15,6 +15,8 @@ RewriteRule ^forums/new*$ ./forum-new.php
 RewriteRule ^forums/(\d+)*$ ./forum.php?id=$1
 RewriteRule ^forums/(\d+)/edit*$ ./forum-edit.php?id=$1
 
+RewriteRule ^notifications/*$ ./notifications.php
+
 # Display newtopic, single topic and edit topic
 RewriteRule ^topic/new/*$ ./topic-new.php
 #RewriteRule ^topics/(#[a-z]-[1-9]+)/(\d+)*$ ./topic.php?$1/id=$2

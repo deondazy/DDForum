@@ -2,69 +2,34 @@
 
 namespace DDForum\Core;
 
-class User
+class User extends Base
 {
     /**
-     * Current user's username.
+     * The Logged user username
      *
      * @var string
      */
-    public static $username;
+    public $username;
 
-    /**
-     * User access error.
-     *
-     * @var array
-     */
-    public $error = [];
-
-    public function __construct()
+    public function __construct($table = null)
     {
-        self::isLogged();
-    }
-
-    private static function table()
-    {
-        return Config::get('db_connection')->table_prefix . 'users';
+        ($table) ? $this->table = $table : parent::__construct('users');
     }
 
     public function __get($field)
     {
-        Database::instance()->query("SELECT {$field} FROM ".self::table().' WHERE username = :username');
-        Database::instance()->bind(':username', self::$username);
-
+        Database::instance()->query("SELECT {$field} FROM {$this->table} WHERE username = :username");
+        Database::instance()->bind(':username', $this->username);
         return Database::instance()->fetchOne()->$field;
     }
 
     /**
-     * Create new User.
-     *
-     * @param array $user
-     *
-     * @return bool
+     * @inheritdoc
      */
-    public static function create(array $user)
+    public function get($field, $id = null)
     {
-        $query = 'INSERT INTO '.self::table();
-        $col = '';
-        $val = '';
-
-        foreach ($user as $column => $value) {
-            $col .= "{$column}, ";
-            $val .= ":{$column}, ";
-        }
-
-        $col = rtrim($col, ', ');
-        $val = rtrim($val, ', ');
-        $query .= ' ('.$col.') VALUES ('.$val.')';
-
-        Database::instance()->query($query);
-
-        foreach ($user as $param => $value) {
-            Database::instance()->bind(":{$param}", $value);
-        }
-
-        return Database::instance()->execute();
+        $id = ($id) ?: $this->currentUserId();
+        return parent::get($field, $id);
     }
 
     /**
@@ -72,123 +37,38 @@ class User
      *
      * @return bool
      */
-    public static function isLogged()
+    public function isLogged()
     {
         if (isset($_COOKIE['ddforum'])) {
             // Is cookie valid?
-            list($username, $hash) = preg_split('/_/', $_COOKIE['ddforum']);
-
-            Database::instance()->query('SELECT COUNT(*) FROM '.self::table().' WHERE username = :username');
-            Database::instance()->bind(':username', $username);
-            Database::instance()->execute();
-
-            if (Database::instance()->rowCount() > 0) {
-                self::$username = $username;
-
+            list($username, $hash) = explode('_', $_COOKIE['ddforum']);
+            $query = Database::instance()->query(
+                "SELECT COUNT(id) FROM {$this->table} WHERE username = :username"
+            );
+            $query->bindValue(':username', $username);
+            $query->execute();
+            if ($query->fetchColumn() > 0) {
+                $this->username = $username;
                 return true;
             }
-
             return false;
         }
-
         return false;
     }
 
     /**
-     * Retrieve the current userId of logged user.
-     *
-     * @return bool
-     */
-    public static function currentUserId()
-    {
-        if (self::isLogged()) {
-            $userId = Database::instance()->query('SELECT id FROM '.self::table().' WHERE username = :username');
-            Database::instance()->bind(':username', self::$username);
-
-            return Database::instance()->fetchOne()->id;
-        }
-
-        return 0;
-    }
-
-    /**
-     * Get all users.
-     */
-    public static function getAll($id = null)
-    {
-        $sql = 'SELECT * FROM ' . self::table();
-
-        if (!is_null($id)) {
-            $sql .= ' WHERE id = :id';
-        }
-
-        Database::instance()->query($sql);
-        Database::instance()->bind(':id', $id);
-
-        return Database::instance()->fetchAll();
-    }
-
-    /**
-     * Retrieve info for user with passed $id.
-     *
-     * @param string $field
-     *   The field to retrieve
-     * @param string $id
-     *   ID of user to retrieve info for | current_user
-     *
-     * @return string
-     *   Returns the user info for specified field or false if user doesn't exist
-     */
-    public static function get($field, $id = 'current_user')
-    {
-        if ('current_user' == $id) {
-            $id = self::currentUserId();
-        }
-
-        Database::instance()->query("SELECT $field FROM ".self::table()." WHERE id = $id");
-
-        $info = Database::instance()->fetchOne();
-
-        if (!$info) {
-            return false;
-        }
-
-        return $info->$field;
-    }
-
-    /**
-     * Update user data.
-     *
-     * @param array $data
-     *   Array of key => value pairs for update
-     * @param int $id
-     *   The userID for user to update
+     * Retrieve the id of logged user.
      *
      * @return int
      */
-    public static function update(array $data, $id)
+    public function currentUserId()
     {
-        $query = 'UPDATE '.self::table().' SET ';
-        $col = '';
-
-        foreach ($data as $column => $value) {
-            $col .= "$column = :$column, ";
+        if ($this->isLogged()) {
+            $id = Database::instance()->query("SELECT id FROM {$this->table} WHERE username = :username");
+            Database::instance()->bind(':username', $this->username);
+            return (int)Database::instance()->fetchOne()->id;
         }
-
-        $col = rtrim($col, ', ');
-        $query .= $col.' WHERE id = :id';
-
-        Database::instance()->query($query);
-
-        Database::instance()->bind(':id', $id);
-
-        foreach ($data as $param => $value) {
-            Database::instance()->bind(":{$param}", $value);
-        }
-
-        Database::instance()->execute();
-
-        return Database::instance()->rowCount();
+        return 0;
     }
 
     /**
@@ -196,127 +76,40 @@ class User
      *
      * @return bool
      */
-    public static function isAdmin()
+    public function isAdmin()
     {
-        if (self::isLogged()) {
-            $level = self::get('level');
-
+        if ($this->isLogged()) {
+            $level = $this->level;
             if (1 == $level) {
                 return true;
             }
-
             return false;
         }
-
         return false;
     }
 
     /**
-     * Login user
+     * Translate level number to it's name
      *
-     * @param string $username User supplied username.
-     * @param string $password User supplied password.
-     * @param bool $remember Keep user logged in after session? Default to false.
+     * @param int $level The Level integer representation
+     *
+     * @return bool
      */
-    public static function login($username, $password, $remember = false)
+    public function level($level)
     {
-        if (!empty($username)) {
-            if (!empty($password)) {
-                Database::instance()->query('SELECT id, username, password, level FROM '.self::table().' WHERE username = :username');
-
-                Database::instance()->bind(':username', $username);
-
-                $user = Database::instance()->fetchOne();
-
-                if ($user) {
-                    if (password_verify($password, $user->password)) {
-                        self::update(['online_status' => 1], $user->id);
-
-                        $login_key = md5(self::$loginKey);
-
-                        if (!$remember) {
-                            setcookie('ddforum', $username.'_'.$login_key, 0);
-                        } else {
-                            setcookie('ddforum', $username.'_'.$login_key, time() + 60 * 60 * 24 * 30);
-                        }
-
-                        if (1 == $user->level) {
-                            Util::redirect(Site::adminUrl());
-                        } else {
-                            Util::redirect(Site::url());
-                        }
-                    } else {
-                        self::$error[] = 'Password is incorrect';
-
-                        return false;
-                    }
-                } else {
-                    self::$error[] = 'Username is not registered';
-
-                    return false;
-                }
-            } else {
-                self::$error[] = 'Enter your password';
-
-                return false;
-            }
-        } else {
-            self::$error[] = 'Enter your username';
-
-            return false;
-        }
-    }
-
-    public static function level($level)
-    {
-        if (!empty($level)) {
+        if (is_int($level)) {
             switch ($level) {
                 case '0':
                     return 'Normal user';
-                    break;
-
                 case '1':
                     return 'Administrator';
-                    break;
-
                 case '2':
                     return 'Moderator';
-                    break;
-
                 default:
                     return 'Normal user';
-                    break;
             }
         }
-
         return 'Normal user';
-    }
-
-    public static function postCount($user_id)
-    {
-        return self::topicCount($user_id) + self::replyCount($user_id);
-    }
-
-    public static function topicCount($user_id)
-    {
-        $query = Database::instance()->query('SELECT COUNT(*) FROM '.Config::get('db_connection')->table_prefix.'topics WHERE poster = :id');
-
-        Database::instance()->bind(':id', $user_id);
-
-        Database::instance()->execute();
-
-        return $query->fetchColumn();
-    }
-
-    public static function replyCount($user_id)
-    {
-        $query = Database::instance()->query('SELECT COUNT(*) FROM '.Config::get('db_connection')->table_prefix.'replies WHERE poster = :id');
-
-        Database::instance()->bind(':id', $user_id);
-
-        Database::instance()->execute();
-
-        return $query->fetchColumn();
     }
 
     public static function topics($user_id)
@@ -343,46 +136,65 @@ class User
         return Database::instance()->fetchAll();
     }
 
-    public static function exist($user_id)
+    /**
+     * Check if user exist
+     *
+     * @param int|string $user The username or id for user to Check
+     *
+     * @return bool
+     */
+    public function exist($user)
     {
-        Database::instance()->query('SELECT id FROM '.self::table().' WHERE id = :id');
-        Database::instance()->bind(':id', $user_id);
-
-        Database::instance()->execute();
-
-        if (Database::instance()->rowCount() > 0) {
+        if (is_numeric($user)) {
+            $where = ' WHERE id = :user';
+        } elseif (false !== strpos($user, '@')) {
+            $where = ' WHERE email = :user';
+        } else {
+            $where = ' WHERE username = :user';
+        }
+        $query = Database::instance()->query("SELECT COUNT('id') FROM {$this->table} {$where}");
+        $query->bindValue(':user', $user);
+        $query->execute();
+        if ($query->fetchColumn() > 0) {
             return true;
         }
-
         return false;
     }
 
-    public static function findByName($username)
+    /**
+     * Find user by username
+     *
+     * @param string $username
+     *
+     * @return null|object
+     */
+    public function findByName($username)
     {
-        Database::instance()->query('SELECT * FROM '.self::table().' WHERE username = :name');
-        Database::instance()->bind(':name', $username);
-
-        Database::instance()->execute();
-
-        if (Database::instance()->rowCount() > 0) {
+        $query = Database::instance()->query("SELECT * FROM {$this->table} WHERE username = :name");
+        $query->bindValue(':name', $username);
+        $query->execute();
+        if ($query->fetchColumn() > 0) {
             return Database::instance()->fetchAll()[0];
         }
-
-        return false;
+        return null;
     }
 
-    public static function findByEmail($email)
+    /**
+     * Find user by email
+     *
+     * @param string $email
+     *
+     * @return null|object
+     */
+    public function findByEmail($email)
     {
-        Database::instance()->query('SELECT * FROM '.self::table().' WHERE email = :email');
-        Database::instance()->bind(':email', $email);
-
-        Database::instance()->execute();
-
-        if (Database::instance()->rowCount() > 0) {
-            return Database::instance()->fetchOne();
+        $query = Database::instance()->query("SELECT * FROM {$this->table} WHERE email = :email");
+        $query->bindValue(':email', $email);
+        $query->execute();
+        if ($query->fetchColumn() > 0) {
+            return Database::instance()->fetchAll()[0];
         }
-
-        return false;
+        return null;
     }
 
     public static function defaultAvatar()

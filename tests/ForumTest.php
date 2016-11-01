@@ -7,71 +7,66 @@ use DDForum\Core\Forum;
 
 class ForumTest extends \PHPUnit_Framework_TestCase
 {
-    private $pdo;
-    private $forum;
+    protected $pdo;
+    protected $forum;
 
     public function setup()
     {
-        $this->pdo = new \PDO("sqlite::memory:");
-
-        $this->createForumsTable();
-        $this->insertForums();
-
-        $this->forum = new Forum('testdbforums');
+        $this->pdo = DB::instance()->connect("sqlite::memory:");
+        $this->createTable();
+        $this->fillTable();
+        $this->forum = new Forum('test_forums');
     }
 
-    private function createForumsTable()
+    protected function createTable()
     {
         DB::instance()->connect($this->pdo);
-
-        $stmt = "CREATE TABLE testdbforums (
+        $stmt = "CREATE TABLE test_forums (
             id   INTEGER PRIMARY KEY AUTOINCREMENT,
-            subject VARCHAR(10) NOT NULL,
+            name VARCHAR(10) NOT NULL,
             message VARCHAR(10) NOT NULL
         )";
-
         DB::instance()->query($stmt);
         DB::instance()->execute();
     }
 
-    private function insertForums()
+    protected function fillTable()
     {
         $forums = [
             'id' => 1,
-            'subject' => 'Forum subject 1',
+            'name' => 'Forum name 1',
             'message' => 'Forum message 1',
         ];
-
-        DB::instance()->insert('testdbforums', $forums);
+        DB::instance()->insert('test_forums', $forums);
     }
 
     public function testGetForum()
     {
-        $this->assertEquals('Forum subject 1', $this->forum->get('subject', 1));
+        $this->assertEquals('Forum name 1', $this->forum->get('name', 1));
     }
 
     public function testCreateForum()
     {
         $forum = [
             'id' => 2,
-            'subject' => 'Forum subject 2',
+            'name' => 'Forum name 2',
             'message' => 'Forum message 2',
         ];
         $this->forum->create($forum);
         $this->forum->create(
             [
                 'id' => 3,
-                'subject' => 'Forum subject 3',
+                'name' => 'Forum name 3',
                 'message' => 'Forum message 3'
             ]
         );
-        $this->assertEquals('Forum subject 2', $this->forum->get('subject', 2));
+        $this->assertEquals('Forum name 2', $this->forum->get('name', 2));
     }
 
     public function testUpdateForum()
     {
-        $this->forum->update(['subject' => 'Updated subject 3'], 3);
-        $this->assertEquals('Updated subject 3', $this->forum->get('subject', 3));
+        $this->forum->update(['name' => 'Updated name 3'], 3);
+        $this->assertEquals('Updated name 3', $this->forum->get('name', 3));
     }
 
     public function testDeleteForum()
@@ -83,5 +78,24 @@ class ForumTest extends \PHPUnit_Framework_TestCase
     public function testForumExists()
     {
         $this->assertTrue($this->forum->itemExist(1));
+        $this->assertFalse($this->forum->itemExist(208));
+    }
+
+    public function testPagination()
+    {
+        $this->forum->getAll();
+        $pagination = $this->forum->paginate(2, 1, 'id')[0];
+        $this->assertObjectHasAttribute('name', $pagination);
+    }
+    
+    public function testDropDown()
+    {
+        $dropdown = $this->forum->dropdown([
+            'id' => 'id',
+            'name' => 'name',
+            'class' => 'class1 class2',
+        ]);
+        $this->assertStringStartsWith('<select id="id" name="name" class="class1 class2">', $dropdown);
+        $this->assertStringEndsWith('</select>', $dropdown);
     }
 }

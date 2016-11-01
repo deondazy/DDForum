@@ -13,7 +13,7 @@ use DDForum\Core\Database;
 /** Load admin **/
 require_once( dirname( __FILE__ ) . '/admin.php' );
 
-$user_id = User::currentUserId();
+$user_id = $user->currentUserId();
 
 $Topic = new Topic();
 $Reply = new Reply();

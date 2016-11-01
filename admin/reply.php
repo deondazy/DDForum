@@ -17,7 +17,7 @@ $reply_id  =  isset( $_GET['id'] ) ? (int) $_GET['id'] : 0;
 $forum_id  =  isset( $_GET['forum'] ) ? (int) $_GET['forum'] : 0;
 $topic_id  =  isset( $_GET['topic'] ) ? (int) $_GET['topic'] : 0;
 $action    =  isset($_GET['action']) ? $_GET['action'] : '';
-$user_id   =  User::currentUserId();
+$user_id   =  $user->currentUserId();
 
 $Topic = new Topic();
 $Reply = new Reply();

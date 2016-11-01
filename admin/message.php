@@ -33,7 +33,7 @@ if ('POST' == $_SERVER['REQUEST_METHOD']) {
                 $messageDetails = [
                     'title' => $_POST['subject'],
                     'message' => $_POST['pm-body'],
-                    'sender' => User::currentUserId(),
+                    'sender' => $user->currentUserId(),
                     'to' => $userId,
                     'status' => 'sent',
                 ];
@@ -48,10 +48,10 @@ if ('POST' == $_SERVER['REQUEST_METHOD']) {
     }
 }
 
-if (!User::exist($userId)) {
+if (!$user->exist($userId)) {
     Site::info("User doesn't exist.", true);
 } else {
-    $username = User::get('username', $userId);
+    $username = $user->get('username', $userId);
 ?>
 
 <form method="post" class="action-form clearfix">

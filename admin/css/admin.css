@@ -307,6 +307,7 @@ li.admin-bar-ddf-logo {
 	padding-top: 25px;
 	padding-bottom: 60px;
 	overflow: hidden;
+    position: relative;
 }
 
 .label,
@@ -647,7 +648,15 @@ li.admin-bar-ddf-logo {
 }
 
 .profile-summary {
-	margin-bottom: 15px;
+    margin-bottom: 15px;
+    background: #fff;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    padding: 15px;
+    border-bottom: 1px solid #e53e54;
+    font-size: 12px;
 }
 
 .profile-avatar {
@@ -657,6 +666,11 @@ li.admin-bar-ddf-logo {
 .user-info .display-name {
 	font-weight: 600;
 	font-size: 1.4em;
+    margin-bottom: 5px;
+}
+
+.user-form {
+    padding-top: 130px;
 }
 
 /** Skin **/

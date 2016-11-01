@@ -9,14 +9,14 @@ if (!defined('DDFPATH')) {
 }
 
 // Load DDForum Startup
-require_once(DDFPATH . 'startup.php');
+require_once DDFPATH.'startup.php';
 
 // Check login
-if (!User::isLogged()) {
-  Util::redirect(Site::url() . '/login');
+if (!$user->isLogged()) {
+  Util::redirect(Site::url().'/login');
 }
 
 // Check level
-if (!User::isAdmin()) {
+if (!$user->isAdmin()) {
 	Site::info('You don\'t have the rights to access this page', true, true);
 }

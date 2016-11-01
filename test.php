@@ -30,9 +30,20 @@ include(DDFPATH . 'config.php');
 
 $db = Config::get('db_connection');
 
-Database::instance()->connect('mysql:host=localhost;dbname=ddforum', 'root', '');
-$prefix = Config::getTablePrefix();
+$string = 'user_pass';
 
-$topic = new Topic();
+$s = microtime(true);
+for ($i = 0; $i <= 100000; $i++) {
+    list($user, $pass) = preg_split('/_/', $string);
+}
+$e = microtime(true);
 
-var_dump($topic->isLocked(10));
+echo "preg_split() : " . ($e - $s) . "<br>";
+
+$start = microtime(true);
+for ($i = 0; $i <= 100000; $i++) {
+    list($user, $pass) = explode('_', $string);
+}
+$end = microtime(true);
+
+echo "explode(): " . ($end - $start) . "<br>";

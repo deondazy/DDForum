@@ -7,7 +7,7 @@ use DDForum\Core\User;
 require_once(dirname(__FILE__).'/admin.php');
 
 $user_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-$current_user_id = User::currentUserId();
+$current_user_id = $user->currentUserId();
 $action = isset($_GET['action']) ? $_GET['action'] : '';
 
 if (!defined('CURRENT_PROFILE')) {
@@ -23,7 +23,7 @@ if (0 == $user_id && CURRENT_PROFILE) {
     $action = 'edit';
 } elseif (0 == $user_id && !CURRENT_PROFILE) {
     Site::info('Invalid User ID', true, true);
-} elseif (!User::exist($user_id)) {
+} elseif (!$user->exist($user_id)) {
     Site::info('Invalid User ID', true, true);
 }
 
@@ -31,7 +31,7 @@ switch ($action) {
     case 'edit':
         define('EDIT_PROFILE', true);
 
-        if (!CURRENT_PROFILE && !User::isAdmin()) {
+        if (!CURRENT_PROFILE && !$user->isAdmin()) {
             Site::info('You do not have the rights to edit users', true, true);
         }
 
@@ -63,7 +63,7 @@ switch ($action) {
                 $data['level'] = $_POST['level'];
             }
 
-            if (User::isAdmin()) {
+            if ($user->isAdmin()) {
                 $data['credit'] = $_POST['credit'];
             }
 
@@ -101,7 +101,7 @@ switch ($action) {
             }
 
             if (empty($err)) {
-                $update_user = User::update($data, $user_id);
+                $update_user = $user->update($data, $user_id);
 
                 if (0 == $update_user) {
                     $message = 'No changes';

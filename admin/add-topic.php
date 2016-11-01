@@ -12,7 +12,7 @@ use DDForum\Core\Database;
 /** Load admin **/
 require_once(dirname(__FILE__) . '/admin.php');
 
-$user_id = User::currentUserId();
+$user_id = $user->currentUserId();
 
 if ('POST' == $_SERVER['REQUEST_METHOD']) {
 
@@ -26,7 +26,7 @@ if ('POST' == $_SERVER['REQUEST_METHOD']) {
       'create_date'    =>  date('Y-m-d H:i:s'),
       'last_post_date' =>  date('Y-m-d H:i:s'),
       'poster'         =>  $user_id,
-      'last_poster'    =>  User::currentUserId(),
+      'last_poster'    =>  $user->currentUserId(),
       'pinned'         =>  $_POST['pin'],
     ];
 

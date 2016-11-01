@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       if (preg_match("/^[a-zA-Z0-9]+$/", $_POST['uname'])) {
 
         // Check if username is already taken
-        if (!User::findByName($_POST['uname'])) {
+        if (!$user->findByName($_POST['uname'])) {
 
           $data['username'] =  $_POST['uname'];
         }
@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (preg_match('/^([a-zA-Z0-9_\.-]+)@([\da-zA-Z0-9_\.-]+)\.([a-zA-Z\.]{2,6})$/', $_POST['email'])) {
 
       // Check if email is registered
-      if (!User::findByEmail($_POST['email'])) {
+      if (!$user->findByEmail($_POST['email'])) {
 
         $data['email'] =  $_POST['email'];
       }
@@ -121,7 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
   if (empty($error)) {
 
-    if (!User::create($data)) {
+    if (!$user->create($data)) {
       Site::info('ERROR: Adding new user failed', true);
     } else {
       Util::redirect("user-edit.php?message=New user added", true);

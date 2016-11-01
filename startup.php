@@ -3,12 +3,12 @@
  * The DDForum startup file
  *
  * Loads the config.php file or fail and
- * ask for installation, the config.sample.php file is used for
- * creating the config.php file
+ * ask for installation
  *
- * @package ddforum
+ * @package DDForum
  */
 
+use DDForum\Core\User;
 use DDForum\Core\Forum;
 use DDForum\Core\Topic;
 use DDForum\Core\Reply;
@@ -16,18 +16,19 @@ use DDForum\Core\Option;
 use DDForum\Core\Database;
 use DDForum\Core\Installer;
 use DDForum\Core\Config;
+use DDForum\Core\Notification;
 use DDForum\Core\Exception\DDFException;
 
 // Kill file if not included from root
 if (!defined('DDFPATH')) {
     header('HTTP/1.1 403 Forbidden', true, 403);
-    die();
+    exit();
 }
 
 // Compare PHP versions against our required 5.6
 if (!version_compare(PHP_VERSION, '5.6', '>=')) {
-    die(
-        'PHP 5.6 or higher is required to run DDForum, you currently have PHP ' . PHP_VERSION
+    exit(
+        'PHP 5.6 or higher is required to run DDForum, you currently have PHP '.PHP_VERSION
     );
 }
 
@@ -38,38 +39,41 @@ error_reporting(E_ALL);
 date_default_timezone_set('UTC');
 
 // Autoloader
-require DDFPATH . 'vendor/autoload.php';
+require DDFPATH.'vendor/autoload.php';
 
 // Use our own exception handler
 DDFException::handle();
 
 // Check DDForum Installation
-if (file_exists(DDFPATH .'config.php')) {
+if (!file_exists(DDFPATH.'config.php')) {
+    Installer::init();
+} else {
     // The config file exists load it
-    include DDFPATH .'config.php';
+    include DDFPATH.'config.php';
 
+    // Get Database configuration details
     $db = Config::get('db_connection');
 
     // Connect to the Database
     Database::instance()->connect($db->string, $db->user, $db->password);
 
-    // Are all the tables available?
-    if (!Database::instance()->checkTables()) {
+    // Check for the option table
+    if (!Database::instance()->checkOptionsTable()) {
         Installer::init();
     }
 
-    // Create needed objects
-    $forum = new Forum();
-    $topic = new Topic();
-    $reply = new Reply();
-    $option = new Option();
-
-    // Set debugging options
+    // Check and set debugging options
     if (defined('DEBUG') && DEBUG) {
         ini_set('display_errors', 1);
         ini_set('log_errors', 1);
         ini_set('error_log', 'error.log');
     }
-} else {
-    Installer::init();
+
+    // All good! create needed objects
+    $forum  = new Forum();
+    $topic  = new Topic();
+    $reply  = new Reply();
+    $option = new Option();
+    $user   = new User();
+    $notif  = new Notification();
 }

@@ -2,6 +2,7 @@
 
 namespace DDForum\Core;
 
+use DDForum\Core\User;
 use DDForum\Core\Exception\WrongValueException;
 
 class UserAuth
@@ -11,7 +12,17 @@ class UserAuth
      *
      * @var string
      */
-    private static $loginKey = 'TYgt%gfdrt=1&778h#$&jk';
+    protected $loginKey = 'TYgt%gfdrt=1&778h#$&jk';
+
+    /**
+     * Construct sets the user object
+     *
+     * @param DDForum\Core\User $user The user object
+     */
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
 
     /**
      * Register user.
@@ -20,13 +31,13 @@ class UserAuth
      *
      * @throws DDForum\Core\Exception\WrongValueException
      */
-    public static function register(array $user)
+    public function register(array $user)
     {
         // username is required
         if (!empty($user['username'])) {
             Filter::username($user['username']);
             // Check if username is already taken
-            if (!User::findByName($user['username'])) {
+            if ($this->user->exist($user['username'])) {
                 // Password is required
                 if (!empty($user['password'])) {
                     // Filter password for length
@@ -37,13 +48,12 @@ class UserAuth
                         if ($user['password'] == $user['password2']) {
                             // Encrypt the password
                             $password  = password_hash($user['password'], PASSWORD_DEFAULT);
-
                             // email is required
                             if (!empty($user['email'])) {
                                 // Check if email is valid
                                 Filter::email($user['email']);
                                 // Check if email is already taken
-                                if (!User::findByEmail($user['email'])) {
+                                if (!$this->user->exist($user['email'])) {
                                     $data = [
                                         'username'      => $user['username'],
                                         'password'      => $password,
@@ -82,7 +92,7 @@ class UserAuth
             throw new WrongValueException('Enter your username');
         }
 
-        if (User::create($data)) {
+        if ($this->user->create($data) > 0) {
             Site::info('Registration successful. <a href="' . Site::url() . '/login">Login</a>', false, true);
         } else {
             throw new WrongValueException('Registration failed, try again');
@@ -98,32 +108,27 @@ class UserAuth
      *
      * @throws DDForum\Core\Exception\WrongValueException
      */
-    public static function login($username, $password, $remember = false)
+    public function login($username, $password, $remember = false)
     {
         // Username is required
         if (!empty($username)) {
             // Does this user exist?
-            $user = User::findByName($username);
-
-            if ($user) {
+            if ($this->user->exist($username)) {
+                $user = $this->user->findByName($username);
                 // Password is required
                 if (!empty($password)) {
                     if (password_verify($password, $user->password)) {
-                        User::update(['online_status' => 1], $user->id);
-
-                        $loginKey = md5(self::$loginKey);
-
+                        $this->user->update(['online_status' => 1], $user->id);
+                        $loginKey = md5($this->loginKey);
                         if (!$remember) {
-                            setcookie('ddforum', $username.'_'.$loginKey, 0, preg_replace('|https?://[^/]+|i', '', Site::url() . '/'));
+                            setcookie('ddforum', $username.'_'.$loginKey, 0, preg_replace('|https?://[^/]+|i', '', Site::url().'/'));
                         } else { // Store cookie for a month
-                            setcookie('ddforum', $username.'_'.$loginKey, time() + 60 * 60 * 24 * 30, preg_replace('|https?://[^/]+|i', '', Site::url() . '/'));
+                            setcookie('ddforum', $username.'_'.$loginKey, time() + 60 * 60 * 24 * 30, preg_replace('|https?://[^/]+|i', '', Site::url().'/'));
                         }
-
                         // Where to send user after a successful login
                         if (1 == $user->level) { // User is an Administrator
                             Util::redirect(Site::adminUrl());
                         }
-
                         Util::redirect(Site::url());
                     } else {
                         throw new WrongValueException('Your password is incorrect');
@@ -142,16 +147,11 @@ class UserAuth
     /**
      * Log user out.
      */
-    public static function logout()
+    public function logout()
     {
         if (isset($_COOKIE['ddforum'])) {
-            setcookie('ddforum', '', time() - 60 * 60 * 24 * 30, preg_replace('|https?://[^/]+|i', '', Site::url() . '/'));
-
-            User::update(['online_status' => 0, 'last_seen' => date('Y-m-d H:i:s')], User::currentUserId());
-
-            return true;
+            setcookie('ddforum', '', time() - 60 * 60 * 24 * 30, preg_replace('|https?://[^/]+|i', '', Site::url().'/'));
+            $this->user->update(['online_status' => 0, 'last_seen' => date('Y-m-d H:i:s')], $this->user->currentUserId());
         }
-
-        return false;
     }
 }

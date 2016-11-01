@@ -47,7 +47,7 @@ if ('POST' == $_SERVER['REQUEST_METHOD']) {
 
 <div class="container">
     <?php
-    if (User::isLogged()) {
+    if ($user->isLogged()) {
         Site::info('You are already logged in.', true, true);
     }
     ?>

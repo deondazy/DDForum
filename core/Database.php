@@ -107,7 +107,6 @@ class Database
         if (empty(static::$instance)) {
             static::$instance = new static();
         }
-
         return static::$instance;
     }
 
@@ -130,22 +129,18 @@ class Database
         if ($this->isConnected()) {
             return;
         }
-
         if ($dsn instanceof PDO) {
             $this->pdo = $dsn;
         } else {
             $options = $this->options;
-
             try {
                 $this->pdo = new PDO($dsn, $username, $password, $options);
             } catch (PDOException $e) {
                 throw new DatabaseException($e->getMessage());
             }
         }
-
         // Prefix Database tables
         $this->prefixTables();
-
         return $this->pdo;
     }
 
@@ -210,7 +205,7 @@ class Database
      *
      * @return bool
      */
-    public function checkTables()
+    public function checkOptionsTable()
     {
         if ($this->tableExists($this->prefixTable['options'])) {
             return true;
@@ -303,15 +298,15 @@ class Database
         $col   = '';
         $val   = '';
         foreach ($data as $column => $value) {
-            $col .= "{$column}, ";
+            $col .= "`{$column}`, ";
             $val .= ":{$column}, "; // use the column names as named parameter
         }
 
-        $col = rtrim($col, ', '); // Remove last comma(,) on column names
-        $val = rtrim($val, ', '); // Remove last comma(,) on named parameters
+        $column = rtrim($col, ', '); // Remove last comma(,) on column names
+        $value = rtrim($val, ', '); // Remove last comma(,) on named parameters
 
         // Construct the query
-        $this->query("INSERT INTO {$table} ({$col}) VALUES ({$val})");
+        $this->query("INSERT INTO {$table} ({$column}) VALUES ({$value})");
 
         //Bind all parameters
         foreach ($data as $param => $value) {
@@ -331,7 +326,7 @@ class Database
      *
      * @return int Number of rows updated
      */
-    public function update($table, $id, array $data)
+    public function update($table, Array $data, $id)
     {
         $set = '';
         foreach ($data as $column => $value) {
@@ -369,6 +364,37 @@ class Database
         $this->bind(':id', $id);
         $this->execute();
         return $this->rowCount();
+    }
+
+    /**
+     * Get result of a single entry column
+     *
+     * @param string $field
+     * @param int $id
+     * @return string
+     */
+    public function get($table, $field, $id)
+    {
+        Database::instance()->query("SELECT $field FROM {$table} WHERE id = :id");
+        Database::instance()->bind(':id', $id);
+        if (Database::instance()->fetchOne()) {
+            return Database::instance()->fetchOne()->$field;
+        }
+        return null;
+    }
+
+    public function getAll($table, $where = null, $order = null)
+    {
+        $query = "SELECT * FROM {$table} ";
+
+        if (!is_null($where)) {
+            $query .= "WHERE {$where} ";
+        }
+        if (!is_null($order)) {
+            $query .= "ORDER BY {$order}";
+        }
+        $this->query($query);
+        return $this->fetchAll();
     }
 
     /**

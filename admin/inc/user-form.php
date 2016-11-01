@@ -1,11 +1,7 @@
 <?php
 /**
- * Form for New and Edit User Screen
- *
- * @package DDForum
+ * Form for New and Edit User Screen.
  */
-
-use DDForum\Core\Forum;
 use DDForum\Core\Topic;
 use DDForum\Core\Site;
 use DDForum\Core\Util;
@@ -14,18 +10,18 @@ use DDForum\Core\Option;
 
 // Can't be accessed directly
 if (!defined('DDFPATH')) {
-  die('Direct access denied');
+    die('Direct access denied');
 }
 
 if (CURRENT_PROFILE) {
-    $form_action  = 'profile.php';
+    $form_action = 'profile.php';
     $redirect_url = Site::adminUrl('profile.php');
 } elseif (EDIT_PROFILE && $user_id != 0) {
     $form_action = 'user.php?action=edit&id='.$user_id;
     $redirect_url = Site::adminUrl('user.php?action=edit&id='.$user_id);
 }
 
-require_once(DDFPATH .'admin/admin-header.php');
+require_once DDFPATH.'admin/admin-header.php';
 
 if (isset($message)) {
     Site::info($message);
@@ -40,13 +36,12 @@ if (isset($err)) {
 function User($data)
 {
     global $user_id;
-    return User::get($data, $user_id);
+    return $user->get($data, $user_id);
 }
 ?>
-
 <div class="profile-summary clearfix row">
     <div class="col-lg-4 col-sm-4">
-        <div class="profile-avatar pull-left"><img src="<?php echo User('avatar'); ?>" width="200"></div>
+        <div class="profile-avatar pull-left"><img src="<?php echo User('avatar'); ?>" width="100"></div>
 
         <div class="user-info pull-left">
             <div class="display-name"><?php echo User('display_name'); ?></div>
@@ -57,25 +52,25 @@ function User($data)
             </div>
 
             <div class="online-status">
-                <?php if (User('status') == 1 && User('online_status') == 1 ) : ?>
+                <?php if (User('status') == 1 && User('online_status') == 1) : ?>
                     Online
-                <?php elseif (User('status') == 1 && User('online_status') == 0 ) : ?>
-                    Last seen <?php echo User('last_seen'); ?>
-                <?php elseif (User('status') == 0 ) : ?>
+                <?php elseif (User('status') == 1 && User('online_status') == 0) : ?>
+                    Last seen <?php echo Util::time2str(Util::timestamp(User('last_seen'))); ?>
+                <?php elseif (User('status') == 0) : ?>
                     Banned
-                <?php elseif (User('status') == 2 ) : ?>
+                <?php elseif (User('status') == 2) : ?>
                     Pending activation
                 <?php endif; ?>
             </div>
 
-            <div class="user-level"><?php echo User::level(User('level')); ?></div>
+            <div class="user-level"><?php echo $user->level(User('level')); ?></div>
         </div>
     </div>
 
     <div class="col-lg-4 col-sm-4">
-        <div class="register-date">Member since: <?php echo User('register_date'); ?></div>
-        <div class="topic-count"><?php echo User::topicCount($user_id); ?> Topics</div>
-        <div class="reply-count"><?php echo User::replyCount($user_id); ?> Replies</div>
+        <div class="register-date">Member since: <?php echo Util::time2str(User('register_date')); ?></div>
+        <div class="topic-count"><?php echo $user->topicCount($user_id); ?> Topics</div>
+        <div class="reply-count"><?php echo $user->replyCount($user_id); ?> Replies</div>
         <div class="credits"><?php echo User('credit'); ?> Credits</div>
     </div>
 
@@ -104,11 +99,11 @@ function User($data)
     <div class="col-lg-4 col-sm-4"></div>
 </div>
 
-<form enctype="multipart/form-data" action="<?php echo $form_action; ?>" method="post" role="form">
+<form class="user-form" enctype="multipart/form-data" action="<?php echo $form_action; ?>" method="post" role="form">
 
     <div class="form-wrap-main">
 
-        <?php if (User::isAdmin()) : ?>
+        <?php if ($user->isAdmin()) : ?>
 
             <h3>Admin Tools</h3>
 
@@ -177,7 +172,7 @@ function User($data)
 
                         foreach ($use_pm as $id => $item) : ?>
 
-                            <option value="<?php echo $id; ?>" <?php Util::selected(User('use_pm'), $id ); ?>><?php echo $item; ?></option>
+                            <option value="<?php echo $id; ?>" <?php Util::selected(User('use_pm'), $id); ?>><?php echo $item; ?></option>
 
                         <?php endforeach; ?>
 
@@ -221,7 +216,7 @@ function User($data)
                         if (!empty(User('last_name'))) {
                             $display_name['last_name'] = User('last_name');
                         }
-                        if (!empty(User('first_name')) && !empty(User('last_name')) ) {
+                        if (!empty(User('first_name')) && !empty(User('last_name'))) {
                             $display_name['first_last'] = User('first_name').' '.User('last_name');
                             $display_name['last_first'] = User('last_name').' '.User('first_name');
                         }
@@ -281,7 +276,7 @@ function User($data)
             <tr>
                 <th scope="row"><label for="website-title">Website Title</label></th>
                 <td>
-                    <input placeholder="<?php echo Option::get('site_name'); ?>" class="text-box-lg" type="text" value="<?php echo User('website_title'); ?>" name="website-title" id="website-title">
+                    <input placeholder="<?php echo $option->get('site_name'); ?>" class="text-box-lg" type="text" value="<?php echo User('website_title'); ?>" name="website-title" id="website-title">
                 </td>
             </tr>
 
@@ -316,7 +311,7 @@ function User($data)
 
                         foreach ($gender as $id => $item) : ?>
 
-                            <option <?php Util::selected(User('gender'), $id ); ?>><?php echo $item; ?></option>
+                            <option <?php Util::selected(User('gender'), $id); ?>><?php echo $item; ?></option>
 
                         <?php endforeach; ?>
 
@@ -330,7 +325,7 @@ function User($data)
 
             <tr>
                 <th scope="row"><label for="bio">Biography</label></th>
-                <td><textarea class="textarea-box" id="bio" name="bio"><?php echo User( 'biography' ); ?></textarea></td>
+                <td><textarea class="textarea-box" id="bio" name="bio"><?php echo User('biography'); ?></textarea></td>
             </tr>
 
             <tr>

@@ -28,6 +28,9 @@ class Counter
             case 'reply':
                 $sql = $this->reply();
                 break;
+            case 'notification':
+                $sql = $this->notification();
+                break;
             default:
                 $sql = $this->forum();
         }
@@ -124,6 +127,13 @@ class Counter
             }
         }
 
+        return $this->sql;
+    }
+
+    protected function notification()
+    {
+        $user = new User();
+        $this->sql .= " WHERE `to` = {$user->currentUserId()}";
         return $this->sql;
     }
 }

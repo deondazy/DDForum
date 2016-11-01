@@ -11,6 +11,14 @@ class Forum extends ForumItem
     {
         ($table) ? $this->table = $table : parent::__construct('forums');
     }
+    
+    /**
+     * @inheritdoc
+     */
+    public function count($type = 'forum')
+    {
+        return count($this->getAll("type = '$type'"));
+    }
 
     /**
      * HTML select drop-down with forum names.
@@ -23,24 +31,17 @@ class Forum extends ForumItem
         $tags += [
             'id' => 'forum',
             'name' => 'forum',
-            'class' => 'editor-select',
+            'class' => 'editor-select'
         ];
-
-        Database::instance()->query("SELECT * FROM {$this->table} WHERE type = 'forum'");
-        $forums = Database::instance()->fetchAll();
-
+        $forums = $this->getAll();
         $output = "<select id=\"{$tags['id']}\" name=\"{$tags['name']}\" class=\"{$tags['class']}\">";
-
         if (is_null($selected)) {
             $output .= '<option disabled selected hidden>Select Forum</option>';
         }
-
         foreach ($forums as $forum) {
             $output .= "<option value=\"{$forum->id}\" ".Util::selected($selected, $forum->id, false)."> {$forum->name}</option>";
         }
-
         $output .= '</select>';
-
         return $output;
     }
 }

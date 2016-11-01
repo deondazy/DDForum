@@ -11,6 +11,18 @@ define('DDFPATH', dirname(__FILE__) . DIRECTORY_SEPARATOR);
 // Load Startup file
 require_once DDFPATH.'startup.php';
 
+$forumId   = isset($_GET['id']) ? $_GET['id'] : 0;
+$forumSlug = isset($_GET['s']) ? $_GET['s'] : '';
+//$forumId   = $topic->get('forum', $topicId);
+$title     = "{$topic->get('subject', $topicId)} - {$option->get('site_name')}";
+$parent    = isset($_GET['replytopost']) ? $_GET['replytopost'] : 0;
+$replies   = $reply->getAll("topic = {$topicId}", "create_date ASC");$topicId   = isset($_GET['id']) ? $_GET['id'] : 0;
+$topicSlug = isset($_GET['s']) ? $_GET['s'] : '';
+$forumId   = $topic->get('forum', $topicId);
+$title     = "{$topic->get('subject', $topicId)} - {$option->get('site_name')}";
+$parent    = isset($_GET['replytopost']) ? $_GET['replytopost'] : 0;
+$replies   = $reply->getAll("topic = {$topicId}", "create_date ASC");
+
 $title = "Forums - {$option->get('site_name')}";
 
 include DDFPATH.'header.php';
