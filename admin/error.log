@@ -50,3 +50,5 @@
 [26-Oct-2016 07:06:18 UTC] PHP Stack trace:
 [26-Oct-2016 07:06:18 UTC] PHP   1. {main}() C:\xampp\htdocs\ddforum\admin\forum-edit.php:0
 [01-Nov-2016 22:59:12 UTC] PHP Fatal error:  Call to a member function get() on null in C:\xampp\htdocs\ddforum\admin\inc\user-form.php on line 39
+[02-Nov-2016 19:25:42 UTC] PHP Fatal error:  Call to undefined method stdClass::currentUserId() in C:\xampp\htdocs\ddforum\admin\user-edit.php on line 92
+[02-Nov-2016 19:25:50 UTC] PHP Fatal error:  Call to a member function get() on null in C:\xampp\htdocs\ddforum\admin\inc\user-form.php on line 39
