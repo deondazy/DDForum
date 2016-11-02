@@ -1,0 +1,1 @@
+[02-Nov-2016 19:16:21 UTC] PHP Fatal error:  Call to a member function dropdown() on null in C:\xampp\htdocs\ddforum\inc\topic-form.php on line 57
