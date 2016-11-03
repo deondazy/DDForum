@@ -52,3 +52,13 @@
 [01-Nov-2016 22:59:12 UTC] PHP Fatal error:  Call to a member function get() on null in C:\xampp\htdocs\ddforum\admin\inc\user-form.php on line 39
 [02-Nov-2016 19:25:42 UTC] PHP Fatal error:  Call to undefined method stdClass::currentUserId() in C:\xampp\htdocs\ddforum\admin\user-edit.php on line 92
 [02-Nov-2016 19:25:50 UTC] PHP Fatal error:  Call to a member function get() on null in C:\xampp\htdocs\ddforum\admin\inc\user-form.php on line 39
+[02-Nov-2016 19:51:40 UTC] PHP Fatal error:  Call to a member function get() on null in C:\xampp\htdocs\ddforum\admin\inc\user-form.php on line 39
+[02-Nov-2016 19:54:56 UTC] PHP Fatal error:  Call to a member function get() on null in C:\xampp\htdocs\ddforum\admin\inc\user-form.php on line 39
+[02-Nov-2016 20:16:02 UTC] PHP Fatal error:  Call to undefined method stdClass::currentUserId() in C:\xampp\htdocs\ddforum\admin\user-edit.php on line 92
+[02-Nov-2016 20:44:38 UTC] PHP Fatal error:  Call to undefined method DDForum\Core\User::postCount() in C:\xampp\htdocs\ddforum\admin\user-edit.php on line 95
+[02-Nov-2016 21:05:09 UTC] PHP Fatal error:  Call to a member function get() on null in C:\xampp\htdocs\ddforum\admin\inc\user-form.php on line 39
+[02-Nov-2016 22:35:46 UTC] PHP Fatal error:  Call to a member function get() on null in C:\xampp\htdocs\ddforum\admin\inc\user-form.php on line 39
+[02-Nov-2016 22:39:25 UTC] PHP Fatal error:  Call to undefined method DDForum\Core\User::topicCount() in C:\xampp\htdocs\ddforum\admin\inc\user-form.php on line 69
+[02-Nov-2016 23:15:52 UTC] PHP Fatal error:  Class 'Util' not found in C:\xampp\htdocs\ddforum\admin\user.php on line 71
+[02-Nov-2016 23:20:32 UTC] PHP Fatal error:  Using $this when not in object context in C:\xampp\htdocs\ddforum\core\Option.php on line 28
+[02-Nov-2016 23:24:18 UTC] PHP Fatal error:  Call to a member function set() on string in C:\xampp\htdocs\ddforum\admin\settings-general.php on line 31

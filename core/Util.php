@@ -323,18 +323,18 @@ class Util
 
     public static function parseMentions($input)
     {
-        global $notif;
+        global $notif, $user;
         $regex = '|(@)([a-zA-Z0-9]+)|';
 
         if (is_array($input)) {
-            if (User::exist($input[2])) {
+            if ($user->exist($input[2])) {
                 $notif->create([
                     'notification' =>
                         "<a href=\"#\">User mentioned to you</a>",
                     'date' => date('Y-m-d H:i:s'),
                     'to' => $input[2],
                 ]);
-                $input = "<a href='".Site::url()."/user/{$input[2]}/'>".User::findbyName($input[2])->display_name."</a>";
+                $input = "<a href='".Site::url()."/user/{$input[2]}/'>".$user->findbyName($input[2])->display_name."</a>";
             } else {
                 $input = $input[2];
             }

@@ -203,4 +203,14 @@ class User extends Base
             return Site::url().'/inc/avatar/ddf-avatar.png';
         }
     }
+    
+    /**
+     * The total number of topics and replies posted by user
+     *
+     */
+    public function postCount($userId)
+    {
+        global $topic, $reply;
+        return $topic->count($userId, 'poster') + $reply->count($userId, 'poster');
+    }
 }

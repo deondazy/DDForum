@@ -1,13 +1,9 @@
 <?php
-use DDForum\Core\User;
-use DDForum\Core\Forum;
-use DDForum\Core\Topic;
-use DDForum\Core\Reply;
 use DDForum\Core\Util;
 use DDForum\Core\Site;
 
 /** Load admin **/
-require_once( dirname( __FILE__ ) . '/admin.php' );
+require_once dirname( __FILE__ ).'/admin.php';
 
 $title        = 'Edit Reply';
 $parent_menu  = 'reply-edit.php';
@@ -19,27 +15,21 @@ $topic_id  =  isset( $_GET['topic'] ) ? (int) $_GET['topic'] : 0;
 $action    =  isset($_GET['action']) ? $_GET['action'] : '';
 $user_id   =  $user->currentUserId();
 
-$Topic = new Topic();
-$Reply = new Reply();
-
 switch ($action) {
 	case 'edit':
-
 		if ('POST' == $_SERVER['REQUEST_METHOD']) {
-
 			if (!empty($_POST['reply-message'])) {
-
 				$data = [
-					'message'  =>  $_POST['reply-message'],
-					'topic'    =>  $_POST['reply-topic'],
-					'forum'    =>  $Topic->get('forum', $topic_id),
+					'message' =>  $_POST['reply-message'],
+					'topic'   =>  $_POST['reply-topic'],
+					'forum'   =>  $topic->get('forum', $topic_id),
 				];
 			}
 			else {
 				$message = 'Enter reply message';
 			}
 
-			if ($Reply->update($data, $reply_id)) {
+			if ($reply->update($data, $reply_id)) {
 				$message = 'Reply Updated';
 			}
 			else {
@@ -51,7 +41,7 @@ switch ($action) {
 
 	case 'delete':
 
-		if ($Reply->delete($reply_id)) {
+		if ($reply->delete($reply_id)) {
 			redirect("reply-edit.php?message=Reply Deleted");
 		}
 		else {
@@ -66,5 +56,5 @@ switch ($action) {
 		break;
 }
 
-include( DDFPATH . 'admin/inc/reply-form.php' );
-include( DDFPATH . 'admin/admin-footer.php' );
+include DDFPATH.'admin/inc/reply-form.php';
+include DDFPATH.'admin/admin-footer.php';

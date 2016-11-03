@@ -2,11 +2,8 @@
 /**
  * Form for New and Edit User Screen.
  */
-use DDForum\Core\Topic;
 use DDForum\Core\Site;
 use DDForum\Core\Util;
-use DDForum\Core\User;
-use DDForum\Core\Option;
 
 // Can't be accessed directly
 if (!defined('DDFPATH')) {
@@ -35,7 +32,7 @@ if (isset($err)) {
 
 function User($data)
 {
-    global $user_id;
+    global $user_id, $user;
     return $user->get($data, $user_id);
 }
 ?>
@@ -69,8 +66,8 @@ function User($data)
 
     <div class="col-lg-4 col-sm-4">
         <div class="register-date">Member since: <?php echo Util::time2str(User('register_date')); ?></div>
-        <div class="topic-count"><?php echo $user->topicCount($user_id); ?> Topics</div>
-        <div class="reply-count"><?php echo $user->replyCount($user_id); ?> Replies</div>
+        <div class="topic-count"><?php echo $topic->count($user_id, 'poster'); ?> Topics</div>
+        <div class="reply-count"><?php echo $reply->count($user_id, 'poster'); ?> Replies</div>
         <div class="credits"><?php echo User('credit'); ?> Credits</div>
     </div>
 

@@ -30,13 +30,13 @@ $message = isset($_GET['message']) ? $_GET['message'] : '';
 
 Site::info($message);
 
-$forums = $forum->getAll();
+$forums = $forum->getAll("type = 'forum'");
 
 // Pagination
 $all_record = count($forums);
 $limit = 5;
 
-$current = isset( $_GET['page'] ) ? $_GET['page'] : 1;
+$current = isset($_GET['page']) ? $_GET['page'] : 1;
 $first   = ($all_record - $all_record) + 1;
 $last    = ceil($all_record / $limit);
 $prev    = ($current - 1 < $first) ? $first : $current - 1;
@@ -97,7 +97,6 @@ $forums = $forum->paginate($limit, $offset);
               <a href="forum.php?action=edit&amp;id=<?php echo $f->id; ?>">
                 <?php echo $f->name; ?>
               </a>
-              <div class="item-type">- Type: <?php echo $f->type; ?></div>
 
               <?php if ( $f->type == 'forum' && $f->parent != 0 ) : ?>
                 <div class="item-type"> - Parent: <?php echo $forum->get('name', $f->parent); ?></div>

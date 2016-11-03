@@ -25,7 +25,7 @@ $forumStatus     =   $Forum->get('status', $forumId);
 $forumVisibility =   $Forum->get('visibility', $forumId);
 $forumParent     =   $Forum->get('parent', $forumId);
 
-require_once(DDFPATH . 'admin/admin-header.php');
+require_once DDFPATH.'admin/admin-header.php';
 
 if (isset($message)) {
   Site::info($message);
@@ -51,7 +51,6 @@ elseif (isset($_GET['message'])) {
   </div>
 
   <div class="form-wrap-side">
-
     <div class="field">
       <span class="label">Forum Slug</span>
       <label class="screen-reader-text" for="forum-slug">Forum Slug</label>
@@ -61,21 +60,6 @@ elseif (isset($_GET['message'])) {
     <div class="head">Forum Settings</div>
 
     <div class="content">
-      <div class="field">
-        <span class="label">Type</span>
-        <label class="screen-reader-text" for="forum-type">Forum Type</label>
-        <select id="forum-type" class="select-box" name="forum-type">
-          <?php
-          $type = ['forum' => 'Forum', 'category' => 'Category'];
-          $type = array_map("trim", $type);
-
-          foreach ($type as $id => $item) : ?>
-            <option value="<?php echo $id ?>" <?php Util::selected($forumType, $id); ?>>
-              <?php echo $item; ?>
-            </option>
-          <?php endforeach; ?>
-        </select>
-      </div>
 
       <div class="field">
         <span class="label">Status</span>
@@ -86,7 +70,7 @@ elseif (isset($_GET['message'])) {
           $status = array_map("trim", $status);
 
           foreach ($status as $id => $item) : ?>
-            <option value="<?php echo $id ?>" <?php Util::selected( $forumStatus, $id ); ?>>
+            <option value="<?php echo $id ?>" <?php Util::selected($forumStatus, $id); ?>>
               <?php echo $item; ?>
             </option>
           <?php endforeach; ?>
@@ -115,7 +99,7 @@ elseif (isset($_GET['message'])) {
         <select id="forum-parent" class="select-box" name="forum-parent">
 
           <?php
-          foreach ($Forum->getAll() as $parents) {
+          foreach ($forum->getAll("type = 'category'") as $parents) {
             $parent_data[0] = 'None';
             $parent_data[$parents->id] = $parents->name;
           }

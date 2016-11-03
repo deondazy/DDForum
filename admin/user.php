@@ -1,10 +1,10 @@
 <?php
 
 use DDForum\Core\Site;
-use DDForum\Core\User;
+use DDForum\Core\Util;
 
 /** Load admin **/
-require_once(dirname(__FILE__).'/admin.php');
+require_once dirname(__FILE__).'/admin.php';
 
 $user_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 $current_user_id = $user->currentUserId();
@@ -35,32 +35,32 @@ switch ($action) {
             Site::info('You do not have the rights to edit users', true, true);
         }
 
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if ('POST' == $_SERVER['REQUEST_METHOD']) {
             $data = [
-                'first_name' => $_POST['fname'],
-                'last_name' => $_POST['lname'],
-                'display_name' => $_POST['dname'],
-                'country' => $_POST['country'],
-                'state' => $_POST['state'],
-                'city' => $_POST['city'],
-                'mobile' => $_POST['mobile'],
+                'first_name'    => $_POST['fname'],
+                'last_name'     => $_POST['lname'],
+                'display_name'  => $_POST['dname'],
+                'country'       => $_POST['country'],
+                'state'         => $_POST['state'],
+                'city'          => $_POST['city'],
+                'mobile'        => $_POST['mobile'],
                 'website_title' => $_POST['website-title'],
-                'website_url' => $_POST['website-url'],
-                'facebook' => $_POST['facebook'],
-                'twitter' => $_POST['twitter'],
-                'gender' => $_POST['gender'],
-                'birth_day' => $_POST['day'],
-                'birth_month' => $_POST['month'],
-                'birth_year' => $_POST['year'],
-                'age' => date('Y') - $_POST['year'],
-                'biography' => $_POST['bio'],
-                'use_pm' => $_POST['use-pm'],
+                'website_url'   => $_POST['website-url'],
+                'facebook'      => $_POST['facebook'],
+                'twitter'       => $_POST['twitter'],
+                'gender'        => $_POST['gender'],
+                'birth_day'     => $_POST['day'],
+                'birth_month'   => $_POST['month'],
+                'birth_year'    => $_POST['year'],
+                'age'           => date('Y') - $_POST['year'],
+                'biography'     => $_POST['bio'],
+                'use_pm'        => $_POST['use-pm'],
             ];
 
             // Admin set
             if (!CURRENT_PROFILE) {
                 $data['status'] = $_POST['status'];
-                $data['level'] = $_POST['level'];
+                $data['level']  = $_POST['level'];
             }
 
             if ($user->isAdmin()) {
@@ -68,7 +68,7 @@ switch ($action) {
             }
 
             if (!empty($_POST['email'])) {
-                if (preg_match('/^([a-zA-Z0-9_\.-]+)@([\da-zA-Z0-9_\.-]+)\.([a-zA-Z\.]{2,6})$/', $_POST['email'])) {
+                if (Util::isEmail($_POST['email'])) {
                     $data['email'] = $_POST['email'];
                 } else {
                     $err = 'Email is invalid';
@@ -80,8 +80,7 @@ switch ($action) {
             if (!empty($_POST['pass'])) {
                 if (!empty($_POST['cpass'])) {
                     if ($_POST['pass'] == $_POST['cpass']) {
-                        $pass = md5($_POST['pass']);
-
+                        $pass = password_hash($_POST['pass'], PASSWORD_DEFAULT);
                         $data['password'] = $pass;
                     } else {
                         $err = 'Error: Password mismatch.';

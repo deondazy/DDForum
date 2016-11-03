@@ -11,14 +11,14 @@ class Reply extends ForumItem
     {
         ($table) ? $this->table = $table : parent::__construct('replies');
     }
-
+    
     /**
      * @inheritdoc
      */
-    public function count($topicId = 0)
+    public function count($value = 0, $feild = 'topic')
     {
-        if (0 !== $topicId) {
-            return count($this->getAll("topic = '$topicId'"));
+        if (0 !== $value) {
+            return count($this->getAll("{$feild} = '{$value}'"));
         }
         return parent::count();
     }

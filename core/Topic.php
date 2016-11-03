@@ -12,10 +12,10 @@ class Topic extends ForumItem
     /**
      * @inheritdoc
      */
-    public function count($forumId = 0)
+    public function count($value = 0, $feild = 'forum')
     {
-        if (0 !== $forumId) {
-            return count($this->getAll("forum = '$forumId'"));
+        if (0 !== $value) {
+            return count($this->getAll("{$feild} = '{$value}'"));
         }
         return parent::count();
     }
