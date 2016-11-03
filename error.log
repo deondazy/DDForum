@@ -1,6 +1,10 @@
+<<<<<<< HEAD
 [30-Oct-2016 15:20:34 UTC] PHP Fatal error:  Call to undefined method DDForum\Core\Notification::isLogged() in C:\xampp\htdocs\ddforum\core\User.php on line 66
 [30-Oct-2016 15:20:34 UTC] PHP Stack trace:
 [30-Oct-2016 15:20:34 UTC] PHP   1. {main}() C:\xampp\htdocs\ddforum\notifications.php:0
 [30-Oct-2016 15:20:34 UTC] PHP   2. DDForum\Core\Notification->getAll() C:\xampp\htdocs\ddforum\notifications.php:26
 [30-Oct-2016 15:20:34 UTC] PHP   3. DDForum\Core\User->currentUserId() C:\xampp\htdocs\ddforum\core\Notification.php:34
 [02-Nov-2016 19:52:30 UTC] PHP Fatal error:  Using $this when not in object context in C:\xampp\htdocs\ddforum\core\User.php on line 155
+=======
+[02-Nov-2016 19:16:21 UTC] PHP Fatal error:  Call to a member function dropdown() on null in C:\xampp\htdocs\ddforum\inc\topic-form.php on line 57
+>>>>>>> master
