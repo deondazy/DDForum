@@ -2,6 +2,8 @@
 
 namespace DDForum\Core;
 
+// TODO: Remove all hard dependencies
+
 class Installer
 {
     public static function init()
@@ -78,8 +80,6 @@ class Installer
 
     public static function createSampleCategory()
     {
-
-
         $sample = new SampleBuilder('Forum');
         $sample->build($sampleCategory);
     }
@@ -96,7 +96,7 @@ class Installer
             'create_date'    => date('Y-m-d H:i:s'),
             'last_post_date' => date('Y-m-d H:i:s'),
         ];
-        
+
         $sampleForum = [
             'id'             => 2,
             'name'           => 'Default Forum',
@@ -120,13 +120,24 @@ class Installer
             'pinned'         => 1
         ];
 
+        $sampleReply = [
+            'id'          => 10,
+            'forum'       => 2,
+            'topic'       => 1,
+            'message'     => 'Sample reply... Delete this from admin.',
+            'poster'      => 1,
+            'create_date' => date('Y-m-d H:i:s'),
+        ];
+
         $forum = new Forum();
         $topic = new Topic();
+        $reply = new Reply();
 
         if (
             $forum->create($sampleCategory) &&
             $forum->create($sampleForum) &&
-            $topic->create($sampleTopic)
+            $topic->create($sampleTopic) &&
+            $reply->create($sampleReply)
         ) {
             return true;
         }
@@ -139,7 +150,7 @@ class Installer
         $options = [
             'site_name'             => $site_name,
             'site_url'              => Site::url(),
-            'site_description'      => '',
+            'site_description'      => 'DDForum PHP based forum site',
             'admin_email'           => $email,
             'enable_pm'             => 1,
             'enable_credits'        => 1,
@@ -152,8 +163,10 @@ class Installer
             'allow_credit_transfer' => 1,
         ];
 
+        $option = new Option();
+
         foreach ($options as $option_name => $value) {
-            $addOptions = Option::add($option_name, $value);
+            $addOptions = $option->add($option_name, $value);
         }
 
         if ($addOptions) {
@@ -161,6 +174,73 @@ class Installer
         }
 
         return false;
+    }
+
+    public static function modRewrite()
+    {
+        $url = parse_url(Site::url());
+        if (isset($url['path'])) {
+            $root = rtrim($url['path'], '/\\').'/';
+        } else {
+            $root = '/';
+        }
+
+        $htaccess = <<<EOF
+<IfModule mod_rewrite.c>
+RewriteEngine on
+RewriteBase {$root}
+
+RewriteCond %{REQUEST_URI} /+[^\.]+$
+RewriteRule ^(.+[^/])$ %{REQUEST_URI}/ [R=301,L]
+
+RewriteCond %{SCRIPT_FILENAME} !-d
+RewriteCond %{SCRIPT_FILENAME} !-f
+
+RewriteRule ^category/([a-z0-9-]+)/*$ ./category.php?s=$1
+RewriteRule ^forum/([a-z0-9-]+)/*$ ./forum.php?s=$1
+RewriteRule ^forum/([a-z0-9-]+)/page=([0-9]+)/*$ ./forum.php?s=$1&page=$2 [L]
+
+# Display single forum,new forum and edit forum
+RewriteRule ^forum/all/*$ ./forum-all.php
+RewriteRule ^forum/([a-z0-9-]+)/([0-9]+)/*$ ./forum.php?s=$1&id=$2
+RewriteRule ^forums/new*$ ./forum-new.php
+RewriteRule ^forums/(\d+)*$ ./forum.php?id=$1
+RewriteRule ^forums/(\d+)/edit*$ ./forum-edit.php?id=$1
+
+RewriteRule ^notifications/*$ ./notifications.php
+
+# Display newtopic, single topic and edit topic
+RewriteRule ^topic/new/*$ ./topic-new.php
+#RewriteRule ^topics/(#[a-z]-[1-9]+)/(\d+)*$ ./topic.php?$1/id=$2
+RewriteRule ^topics/(\d+)/edit*$ ./topic-edit.php?id=$1
+
+RewriteRule ^topics/([a-z]+)/*$ ./index.php?sort=$1
+
+RewriteRule ^users/new*$ ./user-new.php
+RewriteRule ^user/([a-zA-Z0-9]+)/*$ ./user.php?u=$1
+RewriteRule ^users/(\d+)/edit*$ ./user-edit.php?id=$1
+
+RewriteRule ^login/$ ./login.php
+RewriteRule ^logout/*$ ./logout.php
+RewriteRule ^register/*$ ./register.php
+RewriteRule ^forgot-password/*$ ./forgot-password.php
+
+RewriteRule ^topic/([a-z0-9-]+)/*$ ./topic.php?s=$1
+RewriteRule ^topic/([a-z0-9-]+)/page=([0-9]+)/*$ ./topic.php?s=$1&page=$2 [L]
+
+# Replying to posts
+RewriteRule ^topic/([a-z0-9-]+)/([0-9]+)/replytopost=([0-9]+)/*$ ./topic.php?s=$1&id=$2&replytopost=$3 [L]
+RewriteRule ^topic/([a-z0-9-]+)/([0-9]+)/page=([0-9]+)/replytopost=([0-9]+)/*$ ./topic.php?s=$1&id=$2&page=$3&replytopost=$4 [L]
+</IfModule>
+
+EOF;
+
+    $pathToFile = DDFPATH.'.htaccess';
+    $handle = fopen($pathToFile, 'w');
+    fwrite($handle, $htaccess);
+    fclose($handle);
+    chmod($pathToFile, 0666);
+
     }
 
     public static function headAdminForm() {

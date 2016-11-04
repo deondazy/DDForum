@@ -59,7 +59,7 @@ switch ($step) {
             $db = Config::get('db_connection');
             Database::instance()->connect($db->string, $db->user, $db->password);
 
-            if (Database::instance()->checkTables()) {
+            if (Database::instance()->checkOptionsTable()) {
                 Site::info('Seems you have already installed DDForum, to reinstall clear the database tables and try again', true, true);
             }
         }
@@ -184,8 +184,9 @@ switch ($step) {
         // Connect to database
         Database::instance()->connect(new \PDO($db->string, $db->user, $db->password));
 
-        // Check if there's any table
-        if (Database::instance()->checkTables()) {
+        // Check if the options table exist
+        // TODO: Check all tables
+        if (Database::instance()->checkOptionsTable()) {
             // One or more table exist
             Site::info("One or more tables already exist, drop all tables and refresh this page", true, true);
         } else {
@@ -226,6 +227,13 @@ switch ($step) {
                                 if (Util::isEmail($email)) {
                                     $password = password_hash($password, PASSWORD_DEFAULT);
 
+                                    $db = Config::get('db_connection');
+
+                                    // Connect to database
+                                    Database::instance()->connect(new \PDO($db->string, $db->user, $db->password));
+
+                                    $user = new User();
+
                                     $dataAdmin = [
                                         'id'            => 1,
                                         'username'      => $username,
@@ -239,17 +247,14 @@ switch ($step) {
                                         'avatar'        => $user->defaultAvatar()
                                     ];
 
-                                    $db = Config::get('db_connection');
-
-                                    // Connect to database
-                                    Database::instance()->connect(new \PDO($db->string, $db->user, $db->password));
-
                                     $insert = $user->create($dataAdmin);
 
                                     Installer::createOptions($siteName, $email);
                                     Installer::createDefaults();
+                                    Installer::modRewrite();
 
                                     echo 'Installation Complete <p class="step"><a href="' . Site::url() . '/login" class="button-secondary">Login</a></p>';
+                                    exit();
                                 } else {
                                     $err[] = "Email is invalid, email looks like name@example.com";
                                 }
