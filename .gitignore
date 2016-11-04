@@ -1,5 +1,4 @@
 /node_modules
-/vendor
 composer.lock
 ddf-config.php
 /nbproject/private/
