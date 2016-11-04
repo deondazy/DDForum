@@ -24,7 +24,6 @@ switch ($action) {
                     'name' => $_POST['forum-title'],
                     'slug' => $_POST['forum-slug'],
                     'description' => $_POST['forum-description'],
-                    'type' => $_POST['forum-type'],
                     'status' => $_POST['forum-status'],
                     'visibility' => $_POST['forum-visibility'],
                     'parent' => $_POST['forum-parent'],

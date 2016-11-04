@@ -11,35 +11,39 @@ class Forum extends ForumItem
     {
         ($table) ? $this->table = $table : parent::__construct('forums');
     }
-    
+
     /**
      * @inheritdoc
      */
-    public function count($type = 'forum')
+    public function count($value = 0, $feild = 'forum')
     {
-        return count($this->getAll("type = '$type'"));
+        if (0 !== $value) {
+            return count($this->getAll("{$feild} = '{$value}'"));
+        }
+        return parent::count();
     }
 
     /**
      * HTML select drop-down with forum names.
      *
      * @param string $class The dropdown css class
-     * @param string $selected The selected dropdown option
+     * @param string $type WHERE clause for type: forum|category
      */
-    public function dropdown($tags = [], $selected = null)
+    public function dropdown($tags = [], $type = null)
     {
         $tags += [
             'id' => 'forum',
             'name' => 'forum',
-            'class' => 'editor-select'
+            'class' => 'editor-select',
+            'selected' => null,
         ];
-        $forums = $this->getAll();
+        $forums = $this->getAll($type);
         $output = "<select id=\"{$tags['id']}\" name=\"{$tags['name']}\" class=\"{$tags['class']}\">";
-        if (is_null($selected)) {
+        if (is_null($tags['selected'])) {
             $output .= '<option disabled selected hidden>Select Forum</option>';
         }
         foreach ($forums as $forum) {
-            $output .= "<option value=\"{$forum->id}\" ".Util::selected($selected, $forum->id, false)."> {$forum->name}</option>";
+            $output .= "<option value=\"{$forum->id}\" ".Util::selected($tags['selected'], $forum->id, false)."> {$forum->name}</option>";
         }
         $output .= '</select>';
         return $output;

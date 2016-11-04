@@ -375,7 +375,13 @@ class Database
      */
     public function get($table, $field, $id)
     {
-        Database::instance()->query("SELECT $field FROM {$table} WHERE id = :id");
+        if (is_numeric($id)) {
+            $where = " WHERE id = :id";
+        } else {
+            $where = " WHERE slug = :id";
+        }
+
+        Database::instance()->query("SELECT $field FROM {$table} {$where}");
         Database::instance()->bind(':id', $id);
         if (Database::instance()->fetchOne()) {
             return Database::instance()->fetchOne()->$field;

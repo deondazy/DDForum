@@ -150,3 +150,40 @@ a:hover, a:focus {
 .sectioner { border-bottom: 5px solid #eee; }
 
 .sectioner-top { border-top: 5px solid #eee; }
+
+.forum-entry,
+.entry {
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+    list-style: none;
+}
+
+.forum-entry:last-child,
+.entry:last-child {
+    border: none;
+}
+
+.forum-entry a,
+.entry a {
+    font-weight: bold;
+}
+
+.forum-entry p {
+    display: inline-block;
+}
+
+.entry-poster-avatar {
+    border-radius: 30px;
+    vertical-align: middle;
+}
+
+.entry-poster,
+.entry-meta span {
+    font-size: 12px;
+    color: #bbb;
+}
+
+.entry-poster a,
+.entry-meta a {
+    color: #bbb;
+}

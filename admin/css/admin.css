@@ -762,3 +762,20 @@ li.admin-bar-ddf-logo {
 .mce-fullscreen {
   top: 54px !important;
 }
+
+.category-add {
+    border: 1px solid #bbb;
+    padding: 15px;
+}
+
+.category-add .form-control {
+    padding-left: 0;
+}
+
+.category-add .form-control label {
+    width: 150px;
+}
+
+.section-title {
+    margin-bottom: 20px;
+}

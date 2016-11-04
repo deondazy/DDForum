@@ -34,14 +34,18 @@ if ('POST' == $_SERVER['REQUEST_METHOD']) {
                     'message'        => $_POST['topic-message'],
                     'create_date'    => date('Y-m-d H:i:s'),
                     'last_post_date' => date('Y-m-d H:i:s'),
-                    'poster'         => User::currentUserId(),
-                    'last_poster'    => User::currentUserId(),
+                    'poster'         => $user->currentUserId(),
+                    'last_poster'    => $user->currentUserId(),
                 ];
+
+                if ($user->isAdmin()) {
+                    $topicData['pinned'] = isset($_POST['pin']) ? 1 : 0;
+                }
 
                 if ($topic->create($topicData)) {
                     $topicId = Database::instance()->lastInsertId();
 
-                    Util::redirect("{$siteUrl}/topic/".Util::slug($_POST['topic-subject'])."/{$topicId}");
+                    Util::redirect("{$siteUrl}/topic/".Util::slug($_POST['topic-subject'])."/");
                 } else {
                     Site::info('Unable to create topic, please try again', true);
                 }
@@ -72,14 +76,25 @@ if ('POST' == $_SERVER['REQUEST_METHOD']) {
             <?php echo $forum->dropdown([
                 'class' => 'form-control',
                 'id'    => 'topic-forum',
-                'name'  => 'topic-forum'
-            ]); ?>
+                'name'  => 'topic-forum',
+            ],
+            "type = 'forum'"); ?>
         </div>
 
         <div class="form-group">
             <label class="screen-reader-text" for="front-editor"></label>
             <textarea class="editor-message" id="front-editor" name="topic-message"></textarea>
         </div>
+
+        <?php if ($user->isAdmin()) : ?>
+            <div class="form-group">
+                <label for="pin">
+                    <input type="checkbox" class="form-control" id="pin" name="pin"></textarea>
+                    Pin on homepage
+                </label>
+            </div>
+        <?php endif; ?>
+
         <input type="submit" class="action-button centered" value="Post">
     </div>
 </form>

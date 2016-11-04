@@ -8,6 +8,12 @@ use DDForum\Core\Exception\WrongValueException;
 class UserAuth
 {
     /**
+     * The user object
+     * @var DDForum\Core\User
+     */
+    protected $user;
+
+    /**
      * Random login Key.
      *
      * @var string
@@ -37,7 +43,7 @@ class UserAuth
         if (!empty($user['username'])) {
             Filter::username($user['username']);
             // Check if username is already taken
-            if ($this->user->exist($user['username'])) {
+            if (!$this->user->exist($user['username'])) {
                 // Password is required
                 if (!empty($user['password'])) {
                     // Filter password for length

@@ -4,9 +4,9 @@
  * The file for displaying a single topic.
  */
 use DDForum\Core\Database;
-use DDForum\Core\User;
 use DDForum\Core\Site;
 use DDForum\Core\Util;
+use DDForum\Core\Like;
 
 if (!defined('DDFPATH')) {
     define('DDFPATH', dirname(__FILE__).DIRECTORY_SEPARATOR);
@@ -15,8 +15,10 @@ if (!defined('DDFPATH')) {
 // Load DDForum Startup
 require_once DDFPATH.'startup.php';
 
-$topicId   = isset($_GET['id']) ? $_GET['id'] : 0;
+$like = new Like();
+
 $topicSlug = isset($_GET['s']) ? $_GET['s'] : '';
+$topicId   = $topic->get('id', $topicSlug);
 $forumId   = $topic->get('forum', $topicId);
 $title     = "{$topic->get('subject', $topicId)} - {$option->get('site_name')}";
 $parent    = isset($_GET['replytopost']) ? $_GET['replytopost'] : 0;
@@ -65,18 +67,18 @@ if ('POST' == $_SERVER['REQUEST_METHOD']) {
 
             $notif->create([
                 'notification' =>
-                    "<a href=\"{$siteUrl}/topic/{$topic->get('slug', $topicId)}/{$topicId}/page={$lastPage}/#post-{$lastInsertId}\">".$user->get('display_name', $poster)." replied to your topic \"".$topic->get('subject', $topicId)."\"</a>",
+                    "<a href=\"{$siteUrl}/topic/{$topic->get('slug', $topicId)}/page={$lastPage}/#post-{$lastInsertId}\">".$user->get('display_name', $poster)." replied to your topic \"".$topic->get('subject', $topicId)."\"</a>",
                 'date' => $date,
                 'to' => $creatorOfTopic,
             ]);
 
             if ($allRecords > 5) {
                 Util::redirect(
-                    "{$siteUrl}/topic/{$topic->get('slug', $topicId)}/{$topicId}/page={$lastPage}#post-{$lastInsertId}"
+                    "{$siteUrl}/topic/{$topic->get('slug', $topicId)}/page={$lastPage}#post-{$lastInsertId}"
                 );
             } else {
                 Util::redirect(
-                    "{$siteUrl}/topic/{$topic->get('slug', $topicId)}/{$topicId}#post-{$lastInsertId}"
+                    "{$siteUrl}/topic/{$topic->get('slug', $topicId)}/#post-{$lastInsertId}"
                 );
             }
         } else {
@@ -90,8 +92,8 @@ if ('POST' == $_SERVER['REQUEST_METHOD']) {
 
 <div class="topic-view">
     <?php
-    if (!$topic->check('slug', $topicSlug, $topicId)) :
-        Site::info("Topic doesn't exist,maybe it was removed or moved", true);
+    if (!$topic->exist($topicSlug)) :
+        Site::info("Topic doesn't exist, maybe it was removed or moved", true);
     else : ?>
 
         <?php if ($user->isLogged()) : ?>
@@ -121,8 +123,16 @@ if ('POST' == $_SERVER['REQUEST_METHOD']) {
                             <?php echo Util::parseMentions($topic->get('message', $topicId)); ?>
                         </div>
                         <footer class="pull-right">
-                            <a href="#" class="topic-action js-like"><i class="fa fa-heart"></i> Like</a>
-                            <a href="#" class="topic-action js-share"><i class="fa fa-chain"></i> Share</a>
+                            <form style="display:inline-block" method="post" action="<?php echo "{$siteUrl}/like.php"; ?>">
+                                <input type="hidden" name="isLiked" value="<?php echo $like->isLiked($topicId, $user->currentUserId()); ?>">
+                                <input type="hidden" name="like-item" value="<?php echo $topicId; ?>">
+                                <input type="hidden" name="liker" value="<?php echo $user->currentUserId(); ?>">
+                                <input type="hidden" name="like-return-url" value="<?php echo "{$siteUrl}/topic/{$topicSlug}/#post-{$topicId}"; ?>">
+                                <span class="likes"><i class="fa fa-heart"></i> <?php echo $like->count($topicId); ?></span>
+
+                                <?php $value = $like->isLiked($topicId, $user->currentUserId()) ? 'Unlike' : 'Like'; ?>
+                                <input class="topic-action js-like like-button" type="submit" value="<?php echo $value; ?>" name="like-button">
+                            </form>
                         </footer>
                     </div>
                 </li>
@@ -145,8 +155,16 @@ if ('POST' == $_SERVER['REQUEST_METHOD']) {
                                 <?php echo Util::parseMentions($r->message); ?>
                             </div>
                             <footer class="pull-right">
-                                <a href="#" class="topic-action js-like"><i class="fa fa-heart"></i> Like</a>
-                                <a href="#" class="topic-action js-share"><i class="fa fa-chain"></i> Share</a>
+                                <form style="display:inline-block" method="post" action="<?php echo "{$siteUrl}/like.php"; ?>">
+                                    <input type="hidden" name="isLiked" value="<?php echo $like->isLiked($r->id, $user->currentUserId()); ?>">
+                                    <input type="hidden" name="like-item" value="<?php echo $r->id; ?>">
+                                    <input type="hidden" name="liker" value="<?php echo $user->currentUserId(); ?>">
+                                    <input type="hidden" name="like-return-url" value="<?php echo "{$siteUrl}/topic/{$topicSlug}/#post-{$r->id}"; ?>">
+                                    <span class="likes"><i class="fa fa-heart"></i> <?php echo $like->count($r->id); ?></span>
+
+                                    <?php $value = $like->isLiked($r->id, $user->currentUserId()) ? 'Unlike' : 'Like'; ?>
+                                    <input class="topic-action js-like like-button" type="submit" value="<?php echo $value; ?>" name="like-button">
+                                </form>
                             </footer>
                         </div>
                     </li>
@@ -156,13 +174,13 @@ if ('POST' == $_SERVER['REQUEST_METHOD']) {
             <?php if ($allRecords > 5) : ?>
                 <form action="<?php echo "{$siteUrl}/topic/{$topic->get('slug', $topicId)}/{$topicId}/"; ?>" method="get" class="paginate-form">
                     <div class="paginate centered">
-                        <a class="page first-page <?php echo ($current == $first) ? 'disabled' : ''; ?>" href="<?php echo Site::url(); ?>/topic/<?php echo $topicSlug; ?>/<?php echo $topicId; ?>/page=<?php echo $first; ?>"><< First</a>
+                        <a class="page first-page <?php echo ($current == $first) ? 'disabled' : ''; ?>" href="<?php echo Site::url(); ?>/topic/<?php echo $topicSlug; ?>/page=<?php echo $first; ?>"><< First</a>
 
-                        <a class="page prev-page <?php echo ($current == $prev) ? 'disabled' : ''; ?>" href="<?php echo Site::url(); ?>/topic/<?php echo $topicSlug; ?>/<?php echo $topicId; ?>/page=<?php echo $prev; ?>">< Prev</a>
+                        <a class="page prev-page <?php echo ($current == $prev) ? 'disabled' : ''; ?>" href="<?php echo Site::url(); ?>/topic/<?php echo $topicSlug; ?>/page=<?php echo $prev; ?>">< Prev</a>
 
                         <span class="all-page"><?php echo "{$current} of {$last}"; ?></span>
-                        <a class="page next-page <?php echo ($current == $next) ? 'disabled' : ''; ?>" href="<?php echo Site::url(); ?>/topic/<?php echo $topicSlug; ?>/<?php echo $topicId; ?>/page=<?php echo $next; ?>">Next ></a>
-                        <a class="page last-page <?php echo ($current == $last) ? 'disabled' : ''; ?>" href="<?php echo Site::url(); ?>/topic/<?php echo $topicSlug; ?>/<?php echo $topicId; ?>/page=<?php echo $last; ?>">Last >></a>
+                        <a class="page next-page <?php echo ($current == $next) ? 'disabled' : ''; ?>" href="<?php echo Site::url(); ?>/topic/<?php echo $topicSlug; ?>/page=<?php echo $next; ?>">Next ></a>
+                        <a class="page last-page <?php echo ($current == $last) ? 'disabled' : ''; ?>" href="<?php echo Site::url(); ?>/topic/<?php echo $topicSlug; ?>/page=<?php echo $last; ?>">Last >></a>
                     </div>
                 </form>
             <?php endif; ?>

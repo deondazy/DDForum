@@ -30,20 +30,43 @@ include(DDFPATH . 'config.php');
 
 $db = Config::get('db_connection');
 
-$string = 'user_pass';
+Database::instance()->connect('mysql:host=localhost;dbname=ddforum', 'root', '');
 
-$s = microtime(true);
-for ($i = 0; $i <= 100000; $i++) {
-    list($user, $pass) = preg_split('/_/', $string);
+$user = new User();
+
+$users = $user->getAll('id = 1');
+
+$profile = [];
+
+foreach ($users as $userKey => $userVal) {
+    foreach ($userVal as $key => $val) {
+        if (is_numeric($val)) {
+            unset($val);
+        }
+        if (!empty($val)) {
+            $profile[$key] = $val;
+        }
+    }
 }
-$e = microtime(true);
+unset($profile['password'], $profile['avatar']);
 
-echo "preg_split() : " . ($e - $s) . "<br>";
-
-$start = microtime(true);
-for ($i = 0; $i <= 100000; $i++) {
-    list($user, $pass) = explode('_', $string);
+function fixKey($key)
+{
+    $fix = str_replace('_', ' ', $key);
+    $fix = ucfirst($fix);
+    return $fix;
 }
-$end = microtime(true);
 
-echo "explode(): " . ($end - $start) . "<br>";
+foreach ($profile as $key => $val) {
+    if ($key == 'last_seen') {
+        $val = Util::time2str(Util::timestamp($val));
+    }
+    if ($key == 'register_date') {
+        $key = 'Registered';
+        $val = Util::time2str(Util::formatDate($val));
+    }
+
+
+
+    echo fixKey($key) . ' = ' . $val . '<br>';
+}

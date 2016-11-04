@@ -13,7 +13,6 @@ $siteUrl = Site::url();
 <html>
     <head>
         <title><?php echo Site::title(); ?></title>
-
         <meta charset="utf-8">
         <meta content="width=device-width, initial-scale=1" name="viewport">
         <link rel="stylesheet" href="<?php echo "{$siteUrl}/inc/css/dist/production.css" ?>">
@@ -23,7 +22,7 @@ $siteUrl = Site::url();
             <script src="<?php echo "{$siteUrl}/inc/js/user.js" ?>"></script>
         <?php endif; ?>
         <?php if (Site::isEditorPage() || Site::isHomePage()) : ?>
-            <script src="<?php echo "{$siteUrl}/inc/js/tinymce/js/tinymce/tinymce.js" ?>"></script>
+            <script src="<?php echo "{$siteUrl}/ext/tinymce/js/tinymce/tinymce.min.js" ?>"></script>
             <script src="<?php echo "{$siteUrl}/inc/js/front-editor.js" ?>"></script>
         <?php endif; ?>
     </head>
@@ -35,29 +34,60 @@ $siteUrl = Site::url();
                 </h1>
                 <nav id="navigation" class="site-navigation clearfix">
                     <?php if ($user->isLogged()) : ?>
-                        <div class="site-navigation-welcome-text pull-left">
-                            Welcome <strong><?php echo $user->get('display_name'); ?></strong>
+                        <div class="navigation-top  clearfix">
+                            <div class="site-navigation-welcome-text pull-left">
+                                Welcome <strong>
+                                <a href="<?php echo "{$siteUrl}/user/{$user->get('username')}"; ?>">
+                                    <?php echo $user->get('display_name'); ?></strong>
+                                </a>
+                            </div>
+                            <ul class="pull-left">
+                                <li class="site-navigation-link"><a href="<?php echo $siteUrl; ?>/"><b>Home</b></a></li>
+                                <!--<li class="site-navigation-link"><a href="<?php echo $siteUrl; ?>/edit-profile/">Edit Profile</a></li>-->
+                                <li class="site-navigation-link"><a href="<?php echo $siteUrl; ?>/logout/">Logout</a></li>
+                                <!--<li class="site-navigation-link">
+                                    <a href="<?php echo $siteUrl; ?>/notifications/">Notifications (<?php echo $notif->count(); ?>)</a>
+                                </li>-->
+                                <?php if ($user->isAdmin()) : ?>
+                                    <li class="site-navigation-link"><a href="<?php echo Site::adminUrl(); ?>/">Dashboard</a></li>
+                                <?php endif; ?>
+                            </ul>
                         </div>
-                        <ul class="pull-left">
-                            <li class="site-navigation-link"><a href="<?php echo $siteUrl; ?>/"><b>Home</b></a></li>
-                            <li class="site-navigation-link"><a href="<?php echo $siteUrl; ?>/edit-profile/">Edit Profile</a></li>
-                            <li class="site-navigation-link"><a href="<?php echo $siteUrl; ?>/logout/">Logout</a></li>
-                            <li class="site-navigation-link"><a href="<?php echo $siteUrl; ?>/forum/all/">Forums</a></li>
-                            <!--<li class="site-navigation-link">
-                                <a href="<?php echo $siteUrl; ?>/notifications/">Notifications (<?php echo $notif->count(); ?>)</a>
-                            </li>-->
-                            <?php if ($user->isAdmin()) : ?>
-                                <li class="site-navigation-link"><a href="<?php echo Site::adminUrl(); ?>/">Dashboard</a></li>
-                            <?php endif; ?>
-                        </ul>
                     <?php else : ?>
-                        <div class="site-navigation-welcome-text pull-left">Welcome <strong>Guest</strong></div>
-                        <ul class="pull-left">
-                            <li class="site-navigation-link"><a href="<?php echo $siteUrl; ?>/"><b>Home</b></a></li>
-                            <li class="site-navigation-link"><a href="<?php echo $siteUrl; ?>/register/"><b>Register</b></a></li>
-                            <li class="site-navigation-link"><a href="<?php echo $siteUrl; ?>/login/">Login</a></li>
-                            <li class="site-navigation-link"><a href="<?php echo $siteUrl; ?>/forum/all/">Forums</a></li>
-                        </ul>
+                        <div class="navigation-top clearfix">
+                            <div class="site-navigation-welcome-text pull-left">Welcome <strong>Guest</strong></div>
+                            <ul class="pull-left">
+                                <li class="site-navigation-link"><a href="<?php echo $siteUrl; ?>/"><b>Home</b></a></li>
+                                <li class="site-navigation-link"><a href="<?php echo $siteUrl; ?>/register/"><b>Register</b></a></li>
+                                <li class="site-navigation-link"><a href="<?php echo $siteUrl; ?>/login/">Login</a></li>
+                            </ul>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if (Site::isHomePage()) : ?>
+                        <h3 class="section-title sectioner-top">Forum Listing</h3>
+                        <div class="main-navigation">
+                            <?php
+                            $categories = $forum->getAll("type = 'category'");
+                            $allForums = $forum->getAll("type = 'forum'");
+                            foreach ($categories as $cat) : ?>
+                                <ul class="category-section">
+                                    <a class="the-category" href="<?php echo "{$siteUrl}/category/{$cat->slug}"; ?>">
+                                        <?php echo $cat->name . ':'; ?>
+                                    </a>
+
+                                    <?php foreach ($allForums as $theForum) :
+                                        if ($cat->id == $theForum->parent) : ?>
+                                            <li class="child-forum-list">
+                                                <a class="the-forum" href="<?php echo "{$siteUrl}/forum/{$theForum->slug}"; ?>">
+                                                    <?php echo $theForum->name; ?>
+                                                </a>
+                                            </li>
+                                        <?php endif;
+                                    endforeach; ?>
+                                </ul>
+                            <?php endforeach; ?>
+                        </div>
                     <?php endif; ?>
                 </nav>
             </header>
@@ -67,7 +97,7 @@ $siteUrl = Site::url();
                 {
                     return ($page == $active) ? 'selected' : '';
                 }
-                if (Site::isHomePage() || Site::isForumPage()) :
+                if (Site::isHomePage()) :
                     $sort = isset($_GET['sort']) ? $_GET['sort'] : '';
                     switch ($sort) {
                         case 'recent':
@@ -85,7 +115,7 @@ $siteUrl = Site::url();
                             break;
                     }
                     ?>
-                    <div class="sort-view clearfix">
+                    <div class="sort-view sectioner clearfix">
                         <ul class="view pull-left">
                             <li class="sort-item <?php echo active($sort, 'pinned'); ?>">
                                 <a href="<?php echo $siteUrl; ?>/">Pinned</a>

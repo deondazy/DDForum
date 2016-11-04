@@ -8,6 +8,10 @@ RewriteRule ^(.+[^/])$ %{REQUEST_URI}/ [R=301,L]
 RewriteCond %{SCRIPT_FILENAME} !-d
 RewriteCond %{SCRIPT_FILENAME} !-f
 
+RewriteRule ^category/([a-z0-9-]+)/*$ ./category.php?s=$1
+RewriteRule ^forum/([a-z0-9-]+)/*$ ./forum.php?s=$1
+RewriteRule ^forum/([a-z0-9-]+)/page=([0-9]+)/*$ ./forum.php?s=$1&page=$2 [L]
+
 # Display single forum,new forum and edit forum
 RewriteRule ^forum/all/*$ ./forum-all.php
 RewriteRule ^forum/([a-z0-9-]+)/([0-9]+)/*$ ./forum.php?s=$1&id=$2
@@ -33,8 +37,8 @@ RewriteRule ^logout/*$ ./logout.php
 RewriteRule ^register/*$ ./register.php
 RewriteRule ^forgot-password/*$ ./forgot-password.php
 
-RewriteRule ^topic/([a-z0-9-]+)/([0-9]+)/*$ ./topic.php?s=$1&id=$2
-RewriteRule ^topic/([a-z0-9-]+)/([0-9]+)/page=([0-9]+)/*$ ./topic.php?s=$1&id=$2&page=$3 [L]
+RewriteRule ^topic/([a-z0-9-]+)/*$ ./topic.php?s=$1
+RewriteRule ^topic/([a-z0-9-]+)/page=([0-9]+)/*$ ./topic.php?s=$1&page=$2 [L]
 
 # Replying to posts
 RewriteRule ^topic/([a-z0-9-]+)/([0-9]+)/replytopost=([0-9]+)/*$ ./topic.php?s=$1&id=$2&replytopost=$3 [L]

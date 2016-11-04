@@ -71,6 +71,16 @@
     margin-bottom: 15px;
 }
 
+.topic-message ul {
+    margin-bottom: 1.1em;
+    padding-left: 30px;
+}
+
+.topic-message hr {
+    border-bottom: 1px dotted #bbb;
+    margin-bottom: 1.1em;
+}
+
 .topic-action {
     color: #bbb;
     margin-left: 15px;
@@ -88,4 +98,23 @@
     font-size: 1.7em;
     font-weight: 600;
     padding: 25px 15px;
+}
+
+.likes {
+    color: #bbb;
+}
+
+.like-button {
+    background: transparent;
+    border: none;
+    margin-left: 0;
+}
+
+.like-button:hover { color: #e53e54 }
+
+.like-button:focus { outline: none }
+
+.like-button:before {
+    content: "\f004";
+    font-family: FontAwesome;
 }

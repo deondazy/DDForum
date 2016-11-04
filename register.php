@@ -24,9 +24,12 @@ include DDFPATH.'header.php'; ?>
 <h2 class="page-title">Register</h2>
 
 <?php
+// User Authentication object
+$userAuth = new DDForum\Core\UserAuth($user);
+
 // Check if form is submitted
 if ('POST' == $_SERVER['REQUEST_METHOD']) {
-    $user = [
+    $userData = [
         'username'    => $_POST['uname'],
         'password'    => $_POST['pass'],
         'password2'   => $_POST['cpass'],
@@ -39,7 +42,7 @@ if ('POST' == $_SERVER['REQUEST_METHOD']) {
     ];
 
     try {
-        DDForum\Core\UserAuth::register($user);
+        $userAuth->register($userData);
     } catch (DDForum\Core\Exception\WrongValueException $e) {
         Site::info($e->getMessage(), true);
     }

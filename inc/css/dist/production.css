@@ -9199,6 +9199,9 @@ html, body { height: 100%; }
     border-radius: 0 0 30px 0;
 }
 
+.site-navigation-welcome-text a,
+.site-navigation-welcome-text a:hover { color: #fff }
+
 .site-navigation-link {
     float: left;
     margin-left: 15px;
@@ -9227,6 +9230,50 @@ html, body { height: 100%; }
     height: 20px;
     text-align: center;
     color: #bbb;
+}
+
+.main-navigation {
+    padding: 7px 15px;
+}
+
+.category-section {
+    padding: 5px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.category-section:first-child { padding-top: 0 }
+
+.category-section:last-child { border-bottom: none }
+
+.child-forum-list {
+    display: inline-block;
+    list-style: none;
+}
+
+.child-forum-list:after {
+    content: " | ";
+}
+
+.child-forum-list:last-child:after {
+    content: "";
+}
+
+.the-category {
+    font-size: 16px;
+    font-weight: bold;
+    padding-right: 5px;
+}
+
+.the-forum {
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.section-title {
+    background: #fff1f1;
+    font-size: 16px;
+    padding: 5px 15px;
+    text-align: center;
 }
 
 /******************************************************************************
@@ -10079,6 +10126,43 @@ a:hover, a:focus {
 
 .sectioner-top { border-top: 5px solid #eee; }
 
+.forum-entry,
+.entry {
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+    list-style: none;
+}
+
+.forum-entry:last-child,
+.entry:last-child {
+    border: none;
+}
+
+.forum-entry a,
+.entry a {
+    font-weight: bold;
+}
+
+.forum-entry p {
+    display: inline-block;
+}
+
+.entry-poster-avatar {
+    border-radius: 30px;
+    vertical-align: middle;
+}
+
+.entry-poster,
+.entry-meta span {
+    font-size: 12px;
+    color: #bbb;
+}
+
+.entry-poster a,
+.entry-meta a {
+    color: #bbb;
+}
+
 .topic-view {
     overflow: hidden;
     list-style: none;
@@ -10152,6 +10236,16 @@ a:hover, a:focus {
     margin-bottom: 15px;
 }
 
+.topic-message ul {
+    margin-bottom: 1.1em;
+    padding-left: 30px;
+}
+
+.topic-message hr {
+    border-bottom: 1px dotted #bbb;
+    margin-bottom: 1.1em;
+}
+
 .topic-action {
     color: #bbb;
     margin-left: 15px;
@@ -10169,6 +10263,25 @@ a:hover, a:focus {
     font-size: 1.7em;
     font-weight: 600;
     padding: 25px 15px;
+}
+
+.likes {
+    color: #bbb;
+}
+
+.like-button {
+    background: transparent;
+    border: none;
+    margin-left: 0;
+}
+
+.like-button:hover { color: #e53e54 }
+
+.like-button:focus { outline: none }
+
+.like-button:before {
+    content: "\f004";
+    font-family: FontAwesome;
 }
 
 /*******************************************************************************

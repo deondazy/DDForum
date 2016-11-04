@@ -32,7 +32,7 @@ include DDFPATH.'admin/admin-header.php';
 <div class="overview-content">
   <div class="overview-icon"><span class="fa fa-folder category"></span></div>
   <div class="overview-wrap">
-    <div class="overview-number"><?php echo $forum->count('category'); ?></div>
+    <div class="overview-number"><?php echo $forum->count('category', 'type'); ?></div>
     <div class="overview-name">Categories</div>
   </div>
 </div>

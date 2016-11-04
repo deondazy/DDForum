@@ -97,7 +97,7 @@ class User extends Base
      */
     public function level($level)
     {
-        if (is_int($level)) {
+        if (is_numeric($level)) {
             switch ($level) {
                 case '0':
                     return 'Normal user';
@@ -203,7 +203,7 @@ class User extends Base
             return Site::url().'/inc/avatar/ddf-avatar.png';
         }
     }
-    
+
     /**
      * The total number of topics and replies posted by user
      *

@@ -139,7 +139,7 @@ switch ($step) {
 
             $handle = fopen($pathToConfig, 'w');
 
-            $line = "<?php\nDDForum\Core\Config::set('db_connection', [\n\t'string' => 'mysql:host={$dbhost};dbname={$dbname}',\n\t'dbname' => '{$dbname}',\n\t'dbhost' => '{$dbhost}',\n\t'user' => '{$dbuser}',\n\t'password' => '{$dbpass}',\n\t'table_prefix' => '{$prefix}'\n]);";
+            $line = "<?php\nDDForum\Core\Config::set('db_connection', [\n\t'string' => 'mysql:host={$dbhost};dbname={$dbname}',\n\t'dbname' => '{$dbname}',\n\t'dbhost' => '{$dbhost}',\n\t'user' => '{$dbuser}',\n\t'password' => '{$dbpass}',\n\t'table_prefix' => '{$prefix}'\n]);\n\ndefine('DEBUG', false);\n";
 
             fwrite($handle, $line);
             fclose($handle);

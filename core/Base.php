@@ -83,14 +83,37 @@ abstract class Base
     {
         return Database::instance()->delete($this->table, $id);
     }
-    
+
     /*
      * Count all rows in the table
-     * 
+     *
      * @return int
      */
     public function count()
     {
         return count($this->getAll());
+    }
+
+    /**
+     * Check if item exist
+     *
+     * @param int|string $item The item to check
+     *
+     * @return bool
+     */
+    public function exist($item)
+    {
+        if (is_numeric($item)) {
+            $where = ' WHERE id = :item';
+        } else {
+            $where = ' WHERE slug = :item';
+        }
+        $query = Database::instance()->query("SELECT COUNT('id') FROM {$this->table} {$where}");
+        $query->bindValue(':item', $item);
+        $query->execute();
+        if ($query->fetchColumn() > 0) {
+            return true;
+        }
+        return false;
     }
 }

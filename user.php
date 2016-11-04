@@ -31,7 +31,7 @@ include DDFPATH.'header.php';
 
 <div class="user-block">
     <a href="#" class="user-profile-cover">
-        <img src="<?php echo "{$siteUrl}/inc/images/360skibo.com album art.jpg"?>" class="user-profile-cover-photo">
+        <img src="<?php echo "{$siteUrl}/inc/images/profile-cover.jpg"?>" class="user-profile-cover-photo">
     </a>
 
     <div class="user-image"><img src="<?php echo $user->get('avatar', $profile->id); ?>" height="168" width="168"></div>
@@ -84,22 +84,50 @@ include DDFPATH.'header.php';
     </div>
 </div>
 
+<?php
+$users = $user->getAll("id = {$profile->id}");
+$p = [];
+foreach ($users as $userKey => $userVal) {
+    foreach ($userVal as $key => $val) {
+        if (is_numeric($val)) {
+            unset($val);
+        }
+        if (!empty($val)) {
+            $p[$key] = $val;
+        }
+    }
+}
+
+unset($p['password'], $p['avatar']);
+
+function fixKey($key)
+{
+    $fix = str_replace('_', ' ', $key);
+    $fix = ucfirst($fix);
+    return $fix;
+} ?>
+
 <div class="user-details">
     <div class="user-details-wrap">
         <div class="user-handle js-handle"><strong>Details</strong> <i class="fa fa-chevron-down"></i></div>
         <div class="user-field js-field">
-            <div class="user-field-info">
-                <span class="info-title">First name</span> <strong><?php echo $user->get('first_name', $profile->id); ?></strong>
-            </div>
-            <div class="user-field-info">
-                <span class="info-title">Last name</span> <strong><?php echo $user->get('last_name', $profile->id); ?></strong>
-            </div>
-            <div class="user-field-info">
-                <span class="info-title">Display name</span> <strong><?php echo $user->get('display_name', $profile->id); ?></strong>
-            </div>
-            <div class="user-field-info">
-                <span class="info-title">Biography</span> <strong><?php echo $user->get('biography', $profile->id); ?></strong>
-            </div>
+
+            <?php
+            foreach ($p as $key => $val) {
+                if ($key == 'last_seen') {
+                    $val = Util::time2str(Util::timestamp($val));
+                }
+                if ($key == 'register_date') {
+                    $key = 'Registered';
+                    $val = Util::time2str(Util::formatDate($val));
+                } ?>
+
+                <div class="user-field-info">
+                    <span class="info-title"><?php echo fixKey($key); ?></span>
+                    <strong><?php echo $val; ?></strong>
+                </div>
+                <?php
+            } ?>
         </div>
     </div>
 </div>

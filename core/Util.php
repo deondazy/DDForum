@@ -15,6 +15,13 @@ class Util
         return $timestamp;
     }
 
+    public static function formatDate($date)
+    {
+      list($year, $month, $day) = explode('-', $date);
+      $ts = mktime(0, 0, 0, $month, $day, $year);
+      return $ts;
+    }
+
     public static function getdate($timestamp)
     {
         $info = getdate($timestamp);
