@@ -4,5 +4,7 @@ composer.lock
 ddf-config.php
 /nbproject/private/
 error.log
-/avatar/*
-/images/*
+inc/avatar/*
+!inc/avatar/ddf-avatar.png
+inc/images/*
+!inc/images/profile-cover.jpg
