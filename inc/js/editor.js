@@ -1,16 +1,14 @@
 tinymce.init({
     selector: '#form-box',
     plugins: [
-        "advlist autosave autolink fullscreen table link emoticons charmap paste wordcount responsivefilemanager"
+        "advlist autosave autolink image anchor lists hr fullscreen table link emoticons charmap paste wordcount"
     ],
+    toolbar1: 'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist hr | link advlist charmap emoticons fullscreen textcolor',
 
-    toolbar1: 'bold italic underline strikethrough bullist numlist link advlist charmap emoticons fullscreen responsivefilemanager textcolor',
-
-    skin: 'nmfskin',
+    skin: 'lightgray',
     paste_as_text: true,
-    menubar: true,
+    menubar: false,
     gecko_spellcheck : true,
-    resize: false,
     path: false,
 });
 

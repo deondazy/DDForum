@@ -21,10 +21,14 @@ $siteUrl = Site::url();
         <link rel="stylesheet" href="<?php echo "{$siteUrl}/admin/css/admin.css"; ?>">
         <link rel="stylesheet" href="<?php echo "{$siteUrl}/inc/css/font-awesome.css"; ?>">
         <script src="<?php echo "{$siteUrl}/inc/js/jquery.js"; ?>"></script>
-        <script src="<?php echo "{$siteUrl}/inc/js/tinymce/js/tinymce/tinymce.js" ?>"></script>
+        <script src="<?php echo "{$siteUrl}/ext/tinymce/js/tinymce/tinymce.min.js" ?>"></script>
         <script src="<?php echo "{$siteUrl}/inc/js/editor.js" ?>"></script>
         <script src="<?php echo "{$siteUrl}/admin/js/functions.js" ?>"></script>
-        <script src="<?php echo "{$siteUrl}/admin/js/uploader.js" ?>"></script>
+        <?php // TODO: Do something about this
+        if (strpos($_SERVER['REQUEST_URI'], 'user.php') !== false
+            || strpos($_SERVER['REQUEST_URI'], 'profile.php') !== false) : ?>
+            <script src="<?php echo "{$siteUrl}/admin/js/uploader.js" ?>"></script>
+        <?php endif; ?>
     </head>
     <body>
         <div class="wrap">
