@@ -3,7 +3,7 @@
  * DDForum Installation Script
  *
  * We're installing DDForum, using the config.sample.php file
- * to create the config.php then setup the databse tables
+ * to create the ddf-config.php then setup the databse tables
  * from the config file provided details
  */
 
@@ -28,7 +28,7 @@ require DDFPATH . 'vendor/autoload.php';
 $step = isset($_GET['step']) ? (int)$_GET['step'] : 1;
 
 /**
- * Create config.php file header
+ * Create ddf-config.php file header
  *
  * @ignore
  */
@@ -54,8 +54,8 @@ switch ($step) {
     case 1:
         createConfigHeader('Database');
         // Check installation
-        if (file_exists(DDFPATH .'config.php')) {
-            include DDFPATH .'config.php';
+        if (file_exists(DDFPATH .'ddf-config.php')) {
+            include DDFPATH .'ddf-config.php';
             $db = Config::get('db_connection');
             Database::instance()->connect($db->string, $db->user, $db->password);
 
@@ -135,7 +135,7 @@ switch ($step) {
 
             Site::info("Connection Successful");
 
-            $pathToConfig = DDFPATH . 'config.php';
+            $pathToConfig = DDFPATH . 'ddf-config.php';
 
             $handle = fopen($pathToConfig, 'w');
 
@@ -168,12 +168,12 @@ switch ($step) {
 
     case 3:
 
-        // We should have a config.php at this point
-        if (file_exists(DDFPATH.'config.php')) {
-            include(DDFPATH . 'config.php');
+        // We should have a ddf-config.php at this point
+        if (file_exists(DDFPATH.'ddf-config.php')) {
+            include(DDFPATH . 'ddf-config.php');
         } else {
-            // For whatever reason the config.php isn't there
-            Site::info("The <code>config.php</code> is missing, please restart installation", true, true);
+            // For whatever reason the ddf-config.php isn't there
+            Site::info("The <code>ddf-config.php</code> is missing, please restart installation", true, true);
         }
 
         createConfigHeader('Create Tables');
@@ -200,12 +200,12 @@ switch ($step) {
     break;
 
     case 4:
-        // We should have a config.php at this point
-        if (file_exists(DDFPATH . 'config.php')) {
-            include(DDFPATH . 'config.php');
+        // We should have a ddf-config.php at this point
+        if (file_exists(DDFPATH . 'ddf-config.php')) {
+            include(DDFPATH . 'ddf-config.php');
         } else {
-            // For whatever reason the config.php isn't there
-            Site::info("The <code>config.php</code> is missing, please restart installation", true, true);
+            // For whatever reason the ddf-config.php isn't there
+            Site::info("The <code>ddf-config.php</code> is missing, please restart installation", true, true);
         }
 
         createConfigHeader('Site Configuration');

@@ -2,7 +2,7 @@
 /**
  * The DDForum startup file
  *
- * Loads the config.php file or fail and
+ * Loads the ddf-config.php file or fail and
  * ask for installation
  *
  * @package DDForum
@@ -45,11 +45,11 @@ require DDFPATH.'vendor/autoload.php';
 DDFException::handle();
 
 // Check DDForum Installation
-if (!file_exists(DDFPATH.'config.php')) {
+if (!file_exists(DDFPATH.'ddf-config.php')) {
     Installer::init();
 } else {
     // The config file exists load it
-    include DDFPATH.'config.php';
+    include DDFPATH.'ddf-config.php';
 
     // Get Database configuration details
     $db = Config::get('db_connection');

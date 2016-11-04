@@ -26,7 +26,7 @@ define('DDFPATH', dirname(__FILE__) . '/');
 
 require(DDFPATH . 'vendor/autoload.php');
 
-include(DDFPATH . 'config.php');
+include(DDFPATH . 'ddf-config.php');
 
 $db = Config::get('db_connection');
 

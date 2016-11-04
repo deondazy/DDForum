@@ -1,5 +1,8 @@
 /node_modules
 /vendor
-config.php
+/composer.lock
+ddf-config.php
 /nbproject/private/
 *.log
+/avatar/*
+/images/*
