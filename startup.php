@@ -42,7 +42,7 @@ date_default_timezone_set('UTC');
 require DDFPATH.'vendor/autoload.php';
 
 // Use our own exception handler
-DDFException::handle();
+//DDFException::handle();
 
 // Check DDForum Installation
 if (!file_exists(DDFPATH.'ddf-config.php')) {

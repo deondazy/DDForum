@@ -28,7 +28,7 @@ abstract class Base
      *
      * @return int The number of inserted rows.
      */
-    public function create(Array $data)
+    public function create(array $data)
     {
         return Database::instance()->insert($this->table, $data);
     }
@@ -67,7 +67,7 @@ abstract class Base
      *
      * @return int Number of updated columns
      */
-    public function update(Array $data, $id)
+    public function update(array $data, $id)
     {
         return Database::instance()->update($this->table, $data, $id);
     }
