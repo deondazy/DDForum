@@ -44,10 +44,10 @@ $siteUrl = Site::url();
                             <ul class="pull-left">
                                 <li class="site-navigation-link"><a href="<?php echo $siteUrl; ?>/"><b>Home</b></a></li>
                                 <!--<li class="site-navigation-link"><a href="<?php echo $siteUrl; ?>/edit-profile/">Edit Profile</a></li>-->
+                                <li class="site-navigation-link">
+                                    <a href="<?php echo $siteUrl; ?>/messages/">Messages (<?php echo $message->count(); ?>)</a>
+                                </li>
                                 <li class="site-navigation-link"><a href="<?php echo $siteUrl; ?>/logout/">Logout</a></li>
-                                <!--<li class="site-navigation-link">
-                                    <a href="<?php echo $siteUrl; ?>/notifications/">Notifications (<?php echo $notif->count(); ?>)</a>
-                                </li>-->
                                 <?php if ($user->isAdmin()) : ?>
                                     <li class="site-navigation-link"><a href="<?php echo Site::adminUrl(); ?>/">Dashboard</a></li>
                                 <?php endif; ?>

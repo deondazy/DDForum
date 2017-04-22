@@ -9,13 +9,13 @@
 
 .topic a { color: #19232d; }
 
-.topic:hover { background: #e53e54; }
+.topic:hover { background: #3a83dc; }
 
 .topic:hover a { color: #fff; }
 
 .topic:nth-child(even) { background: #f3f3f3; }
 
-.topic:nth-child(even):hover { background: #e53e54; }
+.topic:nth-child(even):hover { background: #3a83dc; }
 
 .view { border-bottom: 3px solid transparent; }
 
@@ -35,10 +35,10 @@
 .sort-item a:hover {
     color: #19232d;
     text-decoration: none;
-    border-bottom: 3px solid #e53e54;
+    border-bottom: 3px solid #3a83dc;
 }
 
-.selected a { border-bottom: 3px solid #e53e54; }
+.selected a { border-bottom: 3px solid #3a83dc; }
 
 .int-value { text-align: center; }
 

@@ -13,7 +13,7 @@ require_once DDFPATH.'startup.php';
 
 $title = $option->get('site_name');
 
-include DDFPATH.'header.php'; ?>
+include DDFPATH . 'header.php'; ?>
 <ul class="entry-lists">
     <?php
     if (empty($topics)) :

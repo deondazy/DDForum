@@ -11,7 +11,7 @@ body {
 
 .site-wrap {
     background: #fff;
-    border-top: 4px solid #e53e54;
+    border-top: 4px solid #3a83dc;
     padding: 0;
     position: relative;
     height: auto;
@@ -47,7 +47,7 @@ input[type="radio"] {
 input[type="checkbox"]:checked:before {
     content: "\f00c";
     font: 400 14px/1 FontAwesome;
-    color: #e53e54;
+    color: #3a83dc;
 }
 
 .text-box {
@@ -79,12 +79,12 @@ input[type="checkbox"]:checked:before {
 }
 
 a  {
-	color: #e53e54;
+	color: #3a83dc;
 	text-decoration: none;
 }
 
 a:hover, a:focus {
-	color: #e53e54;
+	color: #3a83dc;
 	text-decoration: underline;
 }
 

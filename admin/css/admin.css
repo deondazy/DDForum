@@ -678,12 +678,13 @@ li.admin-bar-ddf-logo {
   border: 1px solid #ddd;
   float: left;
   width: 30.6%;
-  margin: 0 4% 4% 0;
+  margin-bottom: 15px;
+  margin-right: 2.734727%;
   cursor: pointer;
   position: relative;
 }
 
-.skin:nth-child(3n) {
+.skin:nth-child(4n) {
   margin-right: 0;
 }
 

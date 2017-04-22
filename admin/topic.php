@@ -33,13 +33,13 @@ switch ($action) {
           'pinned'         =>  $_POST['pin'],
         ];
       } else {
-        $message = 'Enter topic subject';
+        $msg = 'Enter topic subject';
       }
 
       if ($Topic->update($data, $topic_id)) {
-        $message = 'Topic Updated';
+        $msg = 'Topic Updated';
       } else {
-        $message = 'Unable to update topic, try again';
+        $msg = 'Unable to update topic, try again';
       }
     }
 

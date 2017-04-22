@@ -17,6 +17,7 @@ use DDForum\Core\Database;
 use DDForum\Core\Installer;
 use DDForum\Core\Config;
 use DDForum\Core\Notification;
+use DDForum\Core\Message;
 use DDForum\Core\Exception\DDFException;
 
 // Kill file if not included from root
@@ -70,10 +71,11 @@ if (!file_exists(DDFPATH.'ddf-config.php')) {
     }
 
     // All good! create needed objects
-    $forum  = new Forum();
-    $topic  = new Topic();
-    $reply  = new Reply();
-    $option = new Option();
-    $user   = new User();
-    $notif  = new Notification();
+    $forum    = new Forum();
+    $topic    = new Topic();
+    $reply    = new Reply();
+    $option   = new Option();
+    $user     = new User();
+    $notif    = new Notification();
+    $message  = new Message();
 }

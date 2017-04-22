@@ -2,7 +2,7 @@
  * BUTTONS                                                                    *
  ******************************************************************************/
 .primary-button {
-    background: #e53e54;
+    background: #3a83dc;
     border: none;
     color: #fff;
     height: 45px;
@@ -23,7 +23,7 @@
 
 .add-btn,
 .action-button {
-    background: #e53e54;
+    background: #3a83dc;
     border: none;
     color: #fff;
     font-size: 14px;
@@ -38,13 +38,13 @@
 }
 
 .add-btn:hover {
-    background: #e53e54;
+    background: #3a83dc;
     color: #fff;
     text-decoration: none;
 }
 
 .action-btn {
-    background: #e53e54;
+    background: #3a83dc;
     margin: 1.5em 0;
     padding: 8px 20px;
 }

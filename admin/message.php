@@ -38,7 +38,7 @@ if ('POST' == $_SERVER['REQUEST_METHOD']) {
                     'status' => 'sent',
                 ];
 
-                if (Message::send($messageDetails)) {
+                if ($message->send($messageDetails)) {
                     Site::info("Message sent");
                 } else {
                     Site::info('Unable to send message', true);
@@ -48,10 +48,10 @@ if ('POST' == $_SERVER['REQUEST_METHOD']) {
     }
 }
 
-if (!$user->exist($userId)) {
-    Site::info("User doesn't exist.", true);
-} else {
-    $username = $user->get('username', $userId);
+//if (!$user->exist($userId)) {
+//    Site::info("User doesn't exist.", true);
+//} else {
+   $username = $user->get('username', $userId);
 ?>
 
 <form method="post" class="action-form clearfix">
@@ -77,5 +77,5 @@ if (!$user->exist($userId)) {
 </form>
 
 <?php
-}
+//}
 include DDFPATH.'admin/admin-footer.php';

@@ -43,7 +43,7 @@ $admin_menu[6] = [ 'Users', 'user-edit.php', '', 'fa-user'];
     $admin_submenu['user-edit.php'][2] = ['All Users', 'user-edit.php'];
     $admin_submenu['user-edit.php'][3] = ['My Profile', 'profile.php'];
 
-/*$admin_menu[7] = [ 'Skins', 'skins.php', '', 'fa-paint-brush'];*/
+$admin_menu[7] = [ 'Skins', 'skins.php', '', 'fa-paint-brush'];
 
 /*$admin_menu[8] = [ 'Ads Manager', 'ads.php', '', 'fa-bullseye', ''];*/
 

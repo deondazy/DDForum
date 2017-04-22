@@ -27,13 +27,15 @@ $reply_forum   =  $Reply->get('forum', $reply_id);
 
 require_once( DDFPATH . 'admin/admin-header.php' );
 
+/*
 if (isset($message)) {
   Site::info($message);
 }
 elseif (isset($_GET['message'])) {
   Site::info($_GET['message']);
-}
+}*/
 ?>
+
 
 <form action="<?php echo ($reply_id == 0) ? 'add-reply.php' : 'reply.php?action=edit&id=' . $reply_id; ?>" method="post">
 

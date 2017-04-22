@@ -253,7 +253,7 @@ switch ($step) {
                                     Installer::createDefaults();
                                     Installer::modRewrite();
 
-                                    echo 'Installation Complete <p class="step"><a href="' . Site::url() . '/login" class="button-secondary">Login</a></p>';
+                                    echo 'Installation Complete <p class="step"><a href="' . Installer::guessUrl() . '/login" class="button-secondary">Login</a></p>';
                                     exit();
                                 } else {
                                     $err[] = "Email is invalid, email looks like name@example.com";

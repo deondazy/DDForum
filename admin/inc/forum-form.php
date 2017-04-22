@@ -27,8 +27,8 @@ $forumParent     =   $Forum->get('parent', $forumId);
 
 require_once DDFPATH.'admin/admin-header.php';
 
-if (isset($message)) {
-  Site::info($message);
+if (isset($msg)) {
+  Site::info($msg);
 }
 elseif (isset($_GET['message'])) {
   Site::info($_GET['message']);

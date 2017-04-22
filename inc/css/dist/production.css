@@ -9,13 +9,13 @@
 
 .topic a { color: #19232d; }
 
-.topic:hover { background: #e53e54; }
+.topic:hover { background: #3a83dc; }
 
 .topic:hover a { color: #fff; }
 
 .topic:nth-child(even) { background: #f3f3f3; }
 
-.topic:nth-child(even):hover { background: #e53e54; }
+.topic:nth-child(even):hover { background: #3a83dc; }
 
 .view { border-bottom: 3px solid transparent; }
 
@@ -35,10 +35,10 @@
 .sort-item a:hover {
     color: #19232d;
     text-decoration: none;
-    border-bottom: 3px solid #e53e54;
+    border-bottom: 3px solid #3a83dc;
 }
 
-.selected a { border-bottom: 3px solid #e53e54; }
+.selected a { border-bottom: 3px solid #3a83dc; }
 
 .int-value { text-align: center; }
 
@@ -6886,7 +6886,7 @@ button.close {
  * BUTTONS                                                                    *
  ******************************************************************************/
 .primary-button {
-    background: #e53e54;
+    background: #3a83dc;
     border: none;
     color: #fff;
     height: 45px;
@@ -6907,7 +6907,7 @@ button.close {
 
 .add-btn,
 .action-button {
-    background: #e53e54;
+    background: #3a83dc;
     border: none;
     color: #fff;
     font-size: 14px;
@@ -6922,13 +6922,13 @@ button.close {
 }
 
 .add-btn:hover {
-    background: #e53e54;
+    background: #3a83dc;
     color: #fff;
     text-decoration: none;
 }
 
 .action-btn {
-    background: #e53e54;
+    background: #3a83dc;
     margin: 1.5em 0;
     padding: 8px 20px;
 }
@@ -7027,7 +7027,7 @@ html, body { height: 100%; }
     position: fixed;
     bottom: 0;
     width: inherit;
-    border-top: 2px solid #e53e54;
+    border-top: 2px solid #3a83dc;
     padding-bottom: 15px;
 }
 
@@ -9192,7 +9192,7 @@ html, body { height: 100%; }
 }
 
 .site-navigation-welcome-text {
-    background: #e53e54;
+    background: #3a83dc;
     padding: 15px;
     color: #fff;
     font-size: 20px;
@@ -9986,7 +9986,7 @@ body {
 
 .site-wrap {
     background: #fff;
-    border-top: 4px solid #e53e54;
+    border-top: 4px solid #3a83dc;
     padding: 0;
     position: relative;
     height: auto;
@@ -10022,7 +10022,7 @@ input[type="radio"] {
 input[type="checkbox"]:checked:before {
     content: "\f00c";
     font: 400 14px/1 FontAwesome;
-    color: #e53e54;
+    color: #3a83dc;
 }
 
 .text-box {
@@ -10054,12 +10054,12 @@ input[type="checkbox"]:checked:before {
 }
 
 a  {
-	color: #e53e54;
+	color: #3a83dc;
 	text-decoration: none;
 }
 
 a:hover, a:focus {
-	color: #e53e54;
+	color: #3a83dc;
 	text-decoration: underline;
 }
 
@@ -10275,7 +10275,7 @@ a:hover, a:focus {
     margin-left: 0;
 }
 
-.like-button:hover { color: #e53e54 }
+.like-button:hover { color: #3a83dc }
 
 .like-button:focus { outline: none }
 

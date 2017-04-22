@@ -50,37 +50,43 @@ class Site
      */
     public static function url()
     {
-        $abspath_fix = str_replace('\\', '/', DDFPATH);
-        $script_filename_dir = dirname($_SERVER['SCRIPT_FILENAME']);
+        global $option;
 
-        // The request is for the admin
-        if (strpos($_SERVER['REQUEST_URI'], 'admin') !== false || strpos($_SERVER['REQUEST_URI'], 'login.php') !== false) {
-            $path = preg_replace('#/(admin/.*|login.php)#i', '', $_SERVER['REQUEST_URI']);
-
-            // The request is for a file in DDFPATH
-        } elseif ($script_filename_dir.'/' == $abspath_fix) {
-            // Strip off any file/query params in the path
-            $path = preg_replace('#/[^/]*$#i', '', $_SERVER['PHP_SELF']);
+        if (null !== $option->get('site_url')) {
+            return $option->get('site_url');
         } else {
-            if (false !== strpos($_SERVER['SCRIPT_FILENAME'], $abspath_fix)) {
-                // Request is hitting a file inside DDFPATH
-                $directory = str_replace(DDFPATH, '', $script_filename_dir);
-                // Strip off the sub directory, and any file/query paramss
-                $path = preg_replace('#/'.preg_quote($directory, '#').'/[^/]*$#i', '', $_SERVER['REQUEST_URI']);
-            } elseif (false !== strpos($abspath_fix, $script_filename_dir)) {
-                // Request is hitting a file above DDFPATH
-                $subdirectory = substr($abspath_fix, strpos($abspath_fix, $script_filename_dir) + strlen($script_filename_dir));
-                // Strip off any file/query params from the path, appending the sub directory to the install
-                $path = preg_replace('#/[^/]*$#i', '', $_SERVER['REQUEST_URI']).$subdirectory;
+            $abspath_fix = str_replace('\\', '/', XB_PATH);
+            $script_filename_dir = dirname($_SERVER['SCRIPT_FILENAME']);
+
+            // The request is for the Admin or the Login page
+            if (strpos($_SERVER['REQUEST_URI'], 'admin') !== false || strpos($_SERVER['REQUEST_URI'], 'login.php') !== false) {
+                // Remove the Admin or the Login page from the path
+                $path = preg_replace('#/(admin/.*|login.php)#i', '', $_SERVER['REQUEST_URI']);
+                // The request is for a file in XB_PATH
+            } elseif ($script_filename_dir.'/' == $abspath_fix) {
+                // Strip off any file/query params in the path
+                $path = preg_replace('#/[^/]*$#i', '', $_SERVER['PHP_SELF']);
             } else {
-                $path = $_SERVER['REQUEST_URI'];
+                if (false !== strpos($_SERVER['SCRIPT_FILENAME'], $abspath_fix)) {
+                    // Request is hitting a file inside XB_PATH
+                    $directory = str_replace(XB_PATH, '', $script_filename_dir);
+                    // Strip off the sub directory, and any file/query paramss
+                    $path = preg_replace('#/'.preg_quote($directory, '#').'/[^/]*$#i', '', $_SERVER['REQUEST_URI']);
+                } elseif (false !== strpos($abspath_fix, $script_filename_dir)) {
+                    // Request is hitting a file above XB_PATH
+                    $subdirectory = substr($abspath_fix, strpos($abspath_fix, $script_filename_dir) + strlen($script_filename_dir));
+                    // Strip off any file/query params from the path, appending the sub directory to the install
+                    $path = preg_replace('#/[^/]*$#i', '', $_SERVER['REQUEST_URI']).$subdirectory;
+                } else {
+                    $path = $_SERVER['REQUEST_URI'];
+                }
             }
+
+            $schema = self::ssl() ? 'https://' : 'http://'; // set_url_scheme() is not defined yet
+            $url = $schema.$_SERVER['HTTP_HOST'].$path;
+
+            return rtrim($url, '/');
         }
-
-        $schema = self::ssl() ? 'https://' : 'http://'; // set_url_scheme() is not defined yet
-        $url = $schema.$_SERVER['HTTP_HOST'].$path;
-
-        return rtrim($url, '/');
     }
 
     public static function ssl()
@@ -112,30 +118,30 @@ class Site
     /**
      * Display message info on the page in HTML.
      *
-     * @param string $message
+     * @param string $msg
      *                        The message to display
      * @param bool   $error
      *                        True if info is an error, false for notices
      * @param bool   $kill
      *                        Should script be terminated? Defaults to false
      */
-    public static function info($message, $error = false, $kill = false)
+    public static function info($str, $error = false, $kill = false)
     {
         $class = ($error) ? 'info-error' : 'info-notice';
 
-        if (!empty($message)) {
+        if (!empty($str)) {
             $output = '';
 
-            if (is_array($message)) {
+            if (is_array($str)) {
                 $output = '<div class="info"><div class="'.$class.'">';
 
-                foreach ($message as $msg) {
-                    $output .= $msg.'<br />';
+                foreach ($str as $str) {
+                    $output .= $str.'<br />';
                 }
 
                 $output .= '</div></div>';
             } else {
-                $output = '<div class="info"><div class="'.$class.'">'.$message.'</div></div> ';
+                $output = '<div class="info"><div class="'.$class.'">'.$str.'</div></div> ';
             }
 
             if ($kill) {

@@ -200,7 +200,7 @@ class User extends Base
     public static function defaultAvatar()
     {
         if (file_exists(DDFPATH.'inc/avatar/ddf-avatar.png')) {
-            return Site::url().'/inc/avatar/ddf-avatar.png';
+            return Installer::gguessUrl().'/inc/avatar/ddf-avatar.png';
         }
     }
 

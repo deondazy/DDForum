@@ -6,14 +6,49 @@ namespace DDForum\Core;
 
 class Installer
 {
+    public static function guessUrl()
+    {
+        $abspath_fix = str_replace('\\', '/', DDFPATH);
+        $script_filename_dir = dirname($_SERVER['SCRIPT_FILENAME']);
+
+        // The request is for the Admin or the Login page
+        if (strpos($_SERVER['REQUEST_URI'], 'admin') !== false || strpos($_SERVER['REQUEST_URI'], 'login.php') !== false) {
+            // Remove the Admin or the Login page from the path
+            $path = preg_replace('#/(admin/.*|login.php)#i', '', $_SERVER['REQUEST_URI']);
+            // The request is for a file in DDFPATH
+        } elseif ($script_filename_dir.'/' == $abspath_fix) {
+            // Strip off any file/query params in the path
+            $path = preg_replace('#/[^/]*$#i', '', $_SERVER['PHP_SELF']);
+        } else {
+            if (false !== strpos($_SERVER['SCRIPT_FILENAME'], $abspath_fix)) {
+                // Request is hitting a file inside DDFPATH
+                $directory = str_replace(DDFPATH, '', $script_filename_dir);
+                // Strip off the sub directory, and any file/query paramss
+                $path = preg_replace('#/'.preg_quote($directory, '#').'/[^/]*$#i', '', $_SERVER['REQUEST_URI']);
+            } elseif (false !== strpos($abspath_fix, $script_filename_dir)) {
+                // Request is hitting a file above DDFPATH
+                $subdirectory = substr($abspath_fix, strpos($abspath_fix, $script_filename_dir) + strlen($script_filename_dir));
+                // Strip off any file/query params from the path, appending the sub directory to the install
+                $path = preg_replace('#/[^/]*$#i', '', $_SERVER['REQUEST_URI']).$subdirectory;
+            } else {
+                $path = $_SERVER['REQUEST_URI'];
+            }
+        }
+
+        $schema = Site::ssl() ? 'https://' : 'http://'; // set_url_scheme() is not defined yet
+        $url = $schema.$_SERVER['HTTP_HOST'].$path;
+
+        return rtrim($url, '/');
+    }
+    
     public static function init()
     {
-        $installPath = Site::adminUrl('install/index.php');
+        $installPath = self::guessUrl() . '/admin/install/index.php';
 
         // Redirect to install.php
         if (false === strpos($_SERVER['REQUEST_URI'], 'install')) {
-          header('Location: ' . $installPath);
-          die();
+            header('Location: ' . $installPath);
+            exit();
         }
     }
 
@@ -149,7 +184,7 @@ class Installer
     {
         $options = [
             'site_name'             => $site_name,
-            'site_url'              => Site::url(),
+            'site_url'              => self::guessUrl(),
             'site_description'      => 'DDForum PHP based forum site',
             'admin_email'           => $email,
             'enable_pm'             => 1,
@@ -178,7 +213,7 @@ class Installer
 
     public static function modRewrite()
     {
-        $url = parse_url(Site::url());
+        $url = parse_url(self::guessUrl());
         if (isset($url['path'])) {
             $root = rtrim($url['path'], '/\\').'/';
         } else {

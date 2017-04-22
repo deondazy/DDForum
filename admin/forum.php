@@ -29,15 +29,15 @@ switch ($action) {
                     'parent' => $_POST['forum-parent'],
                 ];
             } else {
-                $message = 'Enter forum name';
+                $msg = 'Enter forum name';
             }
 
             $forum = new Forum();
 
             if ($forum->update($data, $forum_id)) {
-                $message = 'Forum Updated';
+                $msg = 'Forum Updated';
             } else {
-                $message = 'Unable to update forum, try again';
+                $msg = 'Unable to update forum, try again';
             }
         }
 

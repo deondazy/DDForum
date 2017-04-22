@@ -326,7 +326,7 @@ class Database
      *
      * @return int Number of rows updated
      */
-    public function update($table, Array $data, $id)
+    public function update($table, array $data, $id)
     {
         $set = '';
         foreach ($data as $column => $value) {

@@ -31,6 +31,9 @@ class Counter
             case 'notification':
                 $sql = $this->notification();
                 break;
+            case 'message':
+                $sql = $this->message();
+                break;
             default:
                 $sql = $this->forum();
         }
@@ -134,6 +137,13 @@ class Counter
     {
         $user = new User();
         $this->sql .= " WHERE `to` = {$user->currentUserId()}";
+        return $this->sql;
+    }
+
+    protected function message()
+    {
+        $user = new User();
+        $this->sql .= " WHERE `to` = {$user->currentUserId()} AND `status` = 'sent'";
         return $this->sql;
     }
 }

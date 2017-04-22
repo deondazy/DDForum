@@ -295,7 +295,7 @@ class Util
    * @param string $value
    *   The selected value
    */
-    public static function fill($name, $type = 'text', $value = '')
+    public static function fill($name, $value = '', $type = 'text')
     {
       if (isset($_POST[$name])) {
           switch ($type) {
