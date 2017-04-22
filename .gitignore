@@ -8,3 +8,4 @@ inc/avatar/*
 !inc/avatar/ddf-avatar.png
 inc/images/*
 !inc/images/profile-cover.jpg
+.htaccess
