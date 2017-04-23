@@ -42,7 +42,6 @@ class UserAuth
      *
      * @param array $data Array of supplied user details
      *
-     * @throws DDForum\Core\Exception\WrongValueException
      */
     public function register(array $user)
     {
@@ -84,31 +83,31 @@ class UserAuth
                                         'credit'        => 50, // TODO: Change value to site credit setting
                                     ];
                                 } else {
-                                    throw new WrongValueException('Email is already registered');
+                                    $this->error = 'Email is already registered';
                                 }
                             } else {
-                                throw new WrongValueException('Enter your email');
+                                $this->error = 'Enter your email';
                             }
                         } else {
-                            throw new WrongValueException('Password mismatch');
+                            $this->error = 'Password mismatch';
                         }
                     } else {
-                        throw new WrongValueException('Confirm your password');
+                        $this->error = 'Confirm your password';
                     }
                 } else {
-                    throw new WrongValueException('Enter your password');
+                    $this->error = 'Enter your password';
                 }
             } else {
-                throw new WrongValueException('Username is already registered');
+                $this->error = 'Username is already registered';
             }
         } else {
-            throw new WrongValueException('Enter your username');
+            $this->error = 'Enter your username';
         }
 
         if ($this->user->create($data) > 0) {
             Site::info('Registration successful. <a href="' . Site::url() . '/login">Login</a>', false, true);
         } else {
-            throw new WrongValueException('Registration failed, try again');
+            $this->error = 'Registration failed, try again';
         }
     }
 
@@ -144,16 +143,16 @@ class UserAuth
                         }
                         Util::redirect(Site::url());
                     } else {
-                        throw new WrongValueException('Your password is incorrect');
+                        $this->error = 'Your password is incorrect';
                     }
                 } else {
-                    throw new WrongValueException('Enter your password');
+                    $this->error = 'Enter your password';
                 }
             } else {
-                throw new WrongValueException('Username is not registered');
+                $this->error = 'Username is not registered';
             }
         } else {
-            throw new WrongValueException('Enter your username');
+            $this->error = 'Enter your username';
         }
     }
 

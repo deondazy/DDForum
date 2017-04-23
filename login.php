@@ -15,21 +15,23 @@ require_once DDFPATH . 'startup.php';
 // Set page title
 $title = 'Login - '.$option->get('site_name');
 
+$userAuth = new DDForum\Core\UserAuth($user);
+
+// Check if form is submitted
+if ('POST' == $_SERVER['REQUEST_METHOD']) {
+    $remember = (isset($_POST['login-remember'])) ? true : false;
+    
+    $userAuth->login($_POST['username'], $_POST['password'], $remember);
+}
+
 // Load page header
 include DDFPATH.'header.php'; ?>
 
 <h2 class="page-title">Login</h2>
 
-<?php
-$userAuth = new DDForum\Core\UserAuth($user);
-// Check if form is submitted
-if ('POST' == $_SERVER['REQUEST_METHOD']) {
-    $remember = (isset($_POST['login-remember'])) ? true : false;
-    try {
-        $userAuth->login($_POST['username'], $_POST['password'], $remember);
-    } catch (DDForum\Core\Exception\WrongValueException $e) {
-        Site::info($e->getMessage(), true);
-    }
+<?php 
+if (isset($userAuth->error)) {
+    Site::info($userAuth->error, true);
 }
 ?>
 
