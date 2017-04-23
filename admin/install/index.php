@@ -7,6 +7,9 @@
  * from the config file provided details
  */
 
+ini_set('log_errors', 1);
+ini_set('error_log', 'error.log');
+
 use DDForum\Core\Database;
 use DDForum\Core\Config;
 use DDForum\Core\Installer;
@@ -48,18 +51,18 @@ function createConfigHeader($title)
             <h2 class="logo"><a title="DDForum" href="https://github.com/deondazy/ddforum.git">DDForum</a></h2>
             <div class="ddf-ui">
   <?php
-} // End function create_config_header
+} // End function createConfigHeader
 
 switch ($step) {
     case 1:
         createConfigHeader('Database');
         // Check installation
-        if (file_exists(DDFPATH .'ddf-config.php')) {
-            include DDFPATH .'ddf-config.php';
+        if (file_exists(DDFPATH . 'ddf-config.php')) {
+            include DDFPATH . 'ddf-config.php';
             $db = Config::get('db_connection');
             Database::instance()->connect($db->string, $db->user, $db->password);
 
-            if (Database::instance()->checkOptionsTable()) {
+            if (Database::instance()->checkOptionsTable()) { // TODO: Check all tables
                 Site::info('Seems you have already installed DDForum, to reinstall clear the database tables and try again', true, true);
             }
         }
@@ -127,10 +130,10 @@ switch ($step) {
         }
 
         try {
-            $pdo = new \PDO("mysql:host={$dbhost};dname={$dbname}", $dbuser, $dbpass);
+            $pdo = new \PDO("mysql:host={$dbhost};dbname={$dbname}", $dbuser, $dbpass);
             Database::instance()->connect($pdo);
 
-            createConfigHeader('Config, file');
+            createConfigHeader('Config. file');
             Installer::step('config');
 
             Site::info("Connection Successful");
@@ -149,8 +152,8 @@ switch ($step) {
             Site::info("Config file created");
 
             echo "<p class='step'><a href='?step=3' class='button-secondary'>Next</a></p>";
-            die();
-        } catch (Exception $e) {
+            exit();
+        } catch (DatabaseException $e) {
             createConfigHeader('Error');
             Site::info(
                 "<h1>ERROR: Unable to connect to database</h1>
@@ -167,9 +170,8 @@ switch ($step) {
     break;
 
     case 3:
-
         // We should have a ddf-config.php at this point
-        if (file_exists(DDFPATH.'ddf-config.php')) {
+        if (file_exists(DDFPATH . 'ddf-config.php')) {
             include(DDFPATH . 'ddf-config.php');
         } else {
             // For whatever reason the ddf-config.php isn't there
@@ -197,7 +199,6 @@ switch ($step) {
                 Site::info("Unable to create tables", true, true);
             }
         }
-
     break;
 
     case 4:
@@ -279,8 +280,6 @@ switch ($step) {
                 Installer::headAdminForm();
             }
         }
-
         Installer::headAdminForm();
-
     break;
 }

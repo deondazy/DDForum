@@ -21,6 +21,13 @@ class UserAuth
     protected $loginKey = 'TYgt%gfdrt=1&778h#$&jk';
 
     /**
+     * Authentication error
+     *
+     * @var string
+     */
+    public $error;
+
+    /**
      * Construct sets the user object
      *
      * @param DDForum\Core\User $user The user object

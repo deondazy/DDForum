@@ -10,7 +10,7 @@ if (!defined('DDFPATH')) {
 }
 
 // Load DDForum Startup
-require_once DDFPATH.'startup.php';
+require_once DDFPATH . 'startup.php';
 
 // Set page title
 $title = 'Login - '.$option->get('site_name');

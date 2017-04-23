@@ -52,6 +52,13 @@ if (!file_exists(DDFPATH.'ddf-config.php')) {
     // The config file exists load it
     include DDFPATH.'ddf-config.php';
 
+    // Check and set debugging options
+    if (defined('DEBUG') && DEBUG) {
+        ini_set('display_errors', 1);
+        ini_set('log_errors', 1);
+        ini_set('error_log', 'error.log');
+    }
+
     // Get Database configuration details
     $db = Config::get('db_connection');
 
@@ -61,13 +68,6 @@ if (!file_exists(DDFPATH.'ddf-config.php')) {
     // Check for the option table
     if (!Database::instance()->checkOptionsTable()) {
         Installer::init();
-    }
-
-    // Check and set debugging options
-    if (defined('DEBUG') && DEBUG) {
-        ini_set('display_errors', 1);
-        ini_set('log_errors', 1);
-        ini_set('error_log', 'error.log');
     }
 
     // All good! create needed objects

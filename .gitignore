@@ -9,3 +9,5 @@ inc/avatar/*
 inc/images/*
 !inc/images/profile-cover.jpg
 .htaccess
+inc/attachment/
+inc/css/less/
