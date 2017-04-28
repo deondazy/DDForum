@@ -10426,3 +10426,8 @@ User profile page styles
     float: right;
     font-size: 11px;
 }
+
+.post-attachment {
+  width: 100%;
+  height: auto;
+}

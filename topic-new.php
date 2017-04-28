@@ -43,7 +43,26 @@ if ('POST' == $_SERVER['REQUEST_METHOD']) {
                 if ($topic->create($topicData)) {
                     $topicId = Database::instance()->lastInsertId();
 
-                    Util::redirect("{$siteUrl}/topic/".Util::slug($_POST['topic-subject'])."/");
+                    if (isset($_FILES['attachment'])) {
+                        // Attachment
+                        $upload_time = date('YmdHis').'_';
+                        $upload_dir  = __DIR__ . '/uploads/attachments/';
+                        $upload_file = $upload_dir . basename($upload_time . $_FILES['attachment']['name']);
+
+                        if (move_uploaded_file($_FILES['attachment']['tmp_name'], $upload_file)) {
+                            $attach->create([
+                                'item'        => $topicId,
+                                'name'        => $_FILES['attachment']['name'],
+                                'size'        => $_FILES['attachment']['size'],
+                                'owner'       => $user->currentUserId(),
+                                'create_date' => date('Y-m-d H:i:s'),
+                                'url'         => Site::url() . '/uploads/attachments/' . $upload_time . $_FILES['attachment']['name'],
+                                'mime'        => $_FILES['attachment']['type'],
+                            ]);
+                        }
+                    }
+
+                    Util::redirect(Site::url()."/topic/".Util::slug($_POST['topic-subject'])."/");
                 } else {
                     $err = 'Unable to create topic, please try again';
                 }
@@ -63,7 +82,7 @@ include DDFPATH.'header.php';
 
 <h2 class="page-title">Create new Topic</h2>
 
-<form action="" method="post" id="stopic-form" class="action-form">
+<form action="" method="post" id="stopic-form" class="action-form" enctype="multipart/form-data">
 
     <?php
     if (isset($err)) {
@@ -100,6 +119,11 @@ include DDFPATH.'header.php';
                 </label>
             </div>
         <?php endif; ?>
+
+        <p style="margin-bottom: 5px" class="description"><strong>ATTACHMENTS</strong> (only images, maximum size: <strong>5MB</strong>)</p>
+
+        <input type="hidden" name="MAX_FILE_SIZE" value="‪5000000">
+        <input type="file" name="attachment" id="attachment">
 
         <input type="submit" class="action-button centered" value="Post">
     </div>

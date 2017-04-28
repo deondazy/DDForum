@@ -65,6 +65,25 @@ if ('POST' == $_SERVER['REQUEST_METHOD']) {
             $lastInsertId = Database::instance()->lastInsertId();
             $lastPage = $last;
 
+            if (isset($_FILES['attachment'])) {
+                // Attachment
+                $upload_time = date('YmdHis').'_';
+                $upload_dir  = __DIR__ . '/uploads/attachments/';
+                $upload_file = $upload_dir . basename($upload_time . $_FILES['attachment']['name']);
+
+                if (move_uploaded_file($_FILES['attachment']['tmp_name'], $upload_file)) {
+                    $attach->create([
+                        'item'        => $lastInsertId,
+                        'name'        => $_FILES['attachment']['name'],
+                        'size'        => $_FILES['attachment']['size'],
+                        'owner'       => $user->currentUserId(),
+                        'create_date' => date('Y-m-d H:i:s'),
+                        'url'         => Site::url() . '/uploads/attachments/' . $upload_time . $_FILES['attachment']['name'],
+                        'mime'        => $_FILES['attachment']['type'],
+                    ]);
+                }
+            }
+
             $notif->create([
                 'notification' =>
                     "<a href=\"{$siteUrl}/topic/{$topic->get('slug', $topicId)}/page={$lastPage}/#post-{$lastInsertId}\">".$user->get('display_name', $poster)." replied to your topic \"".$topic->get('subject', $topicId)."\"</a>",
@@ -94,10 +113,6 @@ include DDFPATH.'header.php';
 
 <div class="topic-view">
     <?php
-    if (isset($err)) {
-        Site::info($err, true);
-    }
-
     if (!$topic->exist($topicSlug)) :
         Site::info("Topic doesn't exist, maybe it was removed or moved", true);
     else : ?>
@@ -107,42 +122,46 @@ include DDFPATH.'header.php';
         <?php endif; ?>
 
         <section class="topic-main">
-
             <h1 class="topic-subject"><?php echo $pageTitle; ?></h1>
-
             <ul class="topic-listing">
                 <?php if ((isset($current) && $current == $first) || !isset($current)) : ?>
-                <li class="topic-view" id="post-<?php echo $topicId; ?>">
-                    <div class="topic-poster-image">
-                        <img src="<?php echo $user->get('avatar', $topic->get('poster', $topicId)); ?>" height="60" width="60">
-                    </div>
-
-                    <div class="topic-body">
-                        <div class="topic-message">
-                            <div class="topic-meta">
-                                <a href="<?php echo Site::url(); ?>/user/<?php echo $user->get('username', $topic->get('poster', $topicId)); ?>" class="topic-author">
-                                    <?php echo $user->get('display_name', $topic->get('poster', $topicId)); ?>
-                                </a>
-
-                                <span class="topic-date"><?php echo Util::time2str(Util::timestamp($topic->get('create_date', $topicId))); ?></span>
-                            </div>
-                            <?php echo Util::parseMentions($topic->get('message', $topicId)); ?>
+                    <li class="topic-view" id="post-<?php echo $topicId; ?>">
+                        <div class="topic-poster-image">
+                            <img src="<?php echo $user->get('avatar', $topic->get('poster', $topicId)); ?>" height="60" width="60">
                         </div>
-                        <footer class="pull-right">
-                            <form style="display:inline-block" method="post" action="<?php echo "{$siteUrl}/like.php"; ?>">
-                                <input type="hidden" name="isLiked" value="<?php echo $like->isLiked($topicId, $user->currentUserId()); ?>">
-                                <input type="hidden" name="like-item" value="<?php echo $topicId; ?>">
-                                <input type="hidden" name="liker" value="<?php echo $user->currentUserId(); ?>">
-                                <input type="hidden" name="like-return-url" value="<?php echo "{$siteUrl}/topic/{$topicSlug}/#post-{$topicId}"; ?>">
-                                <span class="likes"><i class="fa fa-heart"></i> <?php echo $like->count($topicId); ?></span>
 
-                                <?php $value = $like->isLiked($topicId, $user->currentUserId()) ? 'Unlike' : 'Like'; ?>
-                                <input class="topic-action js-like like-button" type="submit" value="<?php echo $value; ?>" name="like-button">
-                            </form>
-                        </footer>
-                    </div>
-                </li>
+                        <div class="topic-body">
+                            <div class="topic-message">
+                                <div class="topic-meta">
+                                    <a href="<?php echo Site::url(); ?>/user/<?php echo $user->get('username', $topic->get('poster', $topicId)); ?>" class="topic-author">
+                                        <?php echo $user->get('display_name', $topic->get('poster', $topicId)); ?>
+                                    </a>
+
+                                    <span class="topic-date"><?php echo Util::time2str(Util::timestamp($topic->get('create_date', $topicId))); ?></span>
+                                </div>
+                                <?php echo Util::parseMentions($topic->get('message', $topicId)); ?>
+                            </div>
+
+                            <footer class="pull-right">
+                                <form style="display:inline-block" method="post" action="<?php echo "{$siteUrl}/like.php"; ?>">
+                                    <input type="hidden" name="isLiked" value="<?php echo $like->isLiked($topicId, $user->currentUserId()); ?>">
+                                    <input type="hidden" name="like-item" value="<?php echo $topicId; ?>">
+                                    <input type="hidden" name="liker" value="<?php echo $user->currentUserId(); ?>">
+                                    <input type="hidden" name="like-return-url" value="<?php echo "{$siteUrl}/topic/{$topicSlug}/#post-{$topicId}"; ?>">
+                                    <span class="likes"><i class="fa fa-heart"></i> <?php echo $like->count($topicId); ?></span>
+
+                                    <?php $value = $like->isLiked($topicId, $user->currentUserId()) ? 'Unlike' : 'Like'; ?>
+                                    <input class="topic-action js-like like-button" type="submit" value="<?php echo $value; ?>" name="like-button">
+                                </form>
+                            </footer>
+                            <?php if ($attach->exist($topicId)) : ?>
+                                <div style="border-bottom: 1px solid #ddd; clear: both; margin-bottom: 10px;"></div>
+                                <img class="post-attachment" src="<?php echo $attach->get('url', $topicId); ?>">
+                            <?php endif; ?>
+                        </div>
+                    </li>
                 <?php endif; ?>
+                
                 <?php foreach ($replies as $r) : ?>
                     <li class="topic-view" id="post-<?php echo $r->id; ?>">
                         <div class="topic-poster-image">
@@ -172,6 +191,10 @@ include DDFPATH.'header.php';
                                     <input class="topic-action js-like like-button" type="submit" value="<?php echo $value; ?>" name="like-button">
                                 </form>
                             </footer>
+                            <?php if ($attach->exist($r->id)) : ?>
+                                <div style="border-bottom: 1px solid #ddd; clear: both; margin-bottom: 10px;"></div>
+                                <img class="post-attachment" src="<?php echo $attach->get('url', $r->id); ?>">
+                            <?php endif; ?>
                         </div>
                     </li>
                 <?php endforeach; ?>

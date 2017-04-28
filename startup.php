@@ -15,6 +15,7 @@ use DDForum\Core\Reply;
 use DDForum\Core\Option;
 use DDForum\Core\Database;
 use DDForum\Core\Installer;
+use DDForum\Core\Attachment;
 use DDForum\Core\Config;
 use DDForum\Core\Notification;
 use DDForum\Core\Message;
@@ -78,4 +79,5 @@ if (!file_exists(DDFPATH.'ddf-config.php')) {
     $user     = new User();
     $notif    = new Notification();
     $message  = new Message();
+    $attach   = new Attachment();
 }
