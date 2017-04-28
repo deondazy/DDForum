@@ -97,7 +97,7 @@ $users   = $user->paginate('username', $limit, $offset);
                     <td class="actions">
                         <a class="action-edit" href="user.php?action=edit&amp;id=<?php echo $u->id; ?>"><span class="fa fa-pencil"></span></a>
 
-                        <a class="action-view" href="<?php echo Site::url(); ?>/users/<?php echo $u->id; ?>"><span class="fa fa-eye"></span></a>
+                        <a target="_blank" class="action-view" href="<?php echo Site::url(); ?>/user/<?php echo $u->username; ?>"><span class="fa fa-eye"></span></a>
 
                         <a class="action-delete" href="user.php?action=delete&amp;id=<?php echo $u->id; ?>"><span class="fa fa-remove"></span></a>
                     </td>

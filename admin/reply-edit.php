@@ -111,7 +111,7 @@ $replies = $reply->paginate($limit, $offset);
                     <td class="actions">
                         <a class="action-edit" href="reply.php?action=edit&amp;id=<?php echo $r->id; ?>&amp;forum=<?php echo $r->forum; ?>&amp;topic=<?php echo $r->topic; ?>"><span class="fa fa-pencil"></span></a>
 
-                        <a class="action-view" href="<?php echo $siteUrl; ?>topics/<?php echo $r->topic; ?>/#<?php echo $r->id; ?>"><span class="fa fa-eye"></span></a>
+                        <a target="_blank" class="action-view" href="<?php echo $siteUrl; ?>/topic/<?php echo $topic->get('slug', $r->topic); ?>/#post-<?php echo $r->id; ?>"><span class="fa fa-eye"></span></a>
 
                         <a class="action-delete" href="reply.php?action=delete&amp;id=<?php echo $r->id; ?>&amp;forum=<?php echo $r->forum; ?>&amp;topic=<?php echo $r->topic; ?>"><span class="fa fa-remove"></span></a>
                     </td>

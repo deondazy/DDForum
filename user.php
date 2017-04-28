@@ -67,7 +67,7 @@ include DDFPATH.'header.php';
                 <a class="avatar-link" href="<?php echo "{$siteUrl}/user/".$user->get('username', $profile->id); ?>">
                     <img class="avatar" src="<?php echo $user->get('avatar', $profile->id); ?>" height="45" width="45">
                 </a>
-                <a class="user-topic" id="<?php echo $t->id; ?>" href="<?php echo "{$siteUrl}/topic/{$t->slug}/{$t->id}"; ?>">
+                <a class="user-topic" id="<?php echo $t->id; ?>" href="<?php echo "{$siteUrl}/topic/{$t->slug}/"; ?>">
                     <?php echo $t->subject; ?>
                 </a>
                 <div class="user-topic-forum">
@@ -116,6 +116,12 @@ function fixKey($key)
             foreach ($p as $key => $val) {
                 if ($key == 'last_seen') {
                     $val = Util::time2str(Util::timestamp($val));
+                }
+                if ($key == 'country') {
+                    $val = ucfirst($val);
+                }
+                if ($key == 'facebook' || $key == 'twitter' || $key == 'website_url') {
+                    $val = '<a target="_blank" href="'.$val.'">'.$val.'</a>';
                 }
                 if ($key == 'register_date') {
                     $key = 'Registered';

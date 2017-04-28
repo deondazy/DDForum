@@ -17,9 +17,9 @@ $siteUrl = Site::url();
         <meta charset="UTF-8">
         <meta content="width=device-width, initial-scale=1" name="viewport">
         <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-        <link rel="stylesheet" href="<?php echo "{$siteUrl}/inc/css/bootstrap.css"; ?>">
+        <link rel="stylesheet" href="<?php echo "{$siteUrl}/assets/css/bootstrap/css/bootstrap.css"; ?>">
         <link rel="stylesheet" href="<?php echo "{$siteUrl}/admin/css/admin.css"; ?>">
-        <link rel="stylesheet" href="<?php echo "{$siteUrl}/inc/css/font-awesome.css"; ?>">
+        <link rel="stylesheet" href="<?php echo "{$siteUrl}/assets/css/font-awesome/css/font-awesome.css"; ?>">
         <script src="<?php echo "{$siteUrl}/inc/js/jquery.js"; ?>"></script>
         <script src="<?php echo "{$siteUrl}/ext/tinymce/js/tinymce/tinymce.min.js" ?>"></script>
         <script src="<?php echo "{$siteUrl}/inc/js/editor.js" ?>"></script>

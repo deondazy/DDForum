@@ -119,7 +119,7 @@ $topics = $Topic->paginate($limit, $offset);
           <td class="actions">
             <a class="action-edit" href="topic.php?action=edit&amp;id=<?php echo $topic->id; ?>"><span class="fa fa-pencil"></span></a>
 
-            <a class="action-view" href="<?php echo Site::url(); ?>topics/<?php echo $topic->id; ?>"><span class="fa fa-eye"></span></a>
+            <a target="_blank" class="action-view" href="<?php echo Site::url(); ?>/topic/<?php echo $topic->slug; ?>"><span class="fa fa-eye"></span></a>
 
             <a class="action-delete" href="topic.php?action=delete&amp;id=<?php echo $topic->id; ?>"><span class="fa fa-remove"></span></a>
           </td>

@@ -40,7 +40,7 @@ $topic->addView($topicId);
 
 $pageTitle = ($topic->isLocked($topicId)) ? '<i class="fa fa-lock"></i> '.$topic->get('subject', $topicId) : $topic->get('subject', $topicId);
 
-include DDFPATH.'header.php';
+$siteUrl = Site::url();
 
 if ('POST' == $_SERVER['REQUEST_METHOD']) {
     if (!empty($_POST['reply-message'])) {
@@ -82,16 +82,22 @@ if ('POST' == $_SERVER['REQUEST_METHOD']) {
                 );
             }
         } else {
-            Site::info('Unable to post reply, please try again', true);
+            $err = 'Unable to post reply, please try again';
         }
     } else {
-        Site::info('You tried to post an empty reply', true);
+        $err = 'You tried to post an empty reply';
     }
 }
+
+include DDFPATH.'header.php';
 ?>
 
 <div class="topic-view">
     <?php
+    if (isset($err)) {
+        Site::info($err, true);
+    }
+
     if (!$topic->exist($topicSlug)) :
         Site::info("Topic doesn't exist, maybe it was removed or moved", true);
     else : ?>

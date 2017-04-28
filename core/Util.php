@@ -17,9 +17,9 @@ class Util
 
     public static function formatDate($date)
     {
-      list($year, $month, $day) = explode('-', $date);
-      $ts = mktime(0, 0, 0, $month, $day, $year);
-      return $ts;
+        list($year, $month, $day) = explode('-', $date);
+        $ts = mktime(0, 0, 0, $month, $day, $year);
+        return $ts;
     }
 
     public static function getdate($timestamp)
@@ -130,29 +130,29 @@ class Util
         return $output;
     }
 
-  /**
-   * Redirect to a new URL.
-   *
-   * @param string $url
-   *   The url to redirect to
-   */
-  public static function redirect($url)
-  {
-      header('Location: '.$url, true, 302);
-      exit;
-  }
+    /**
+     * Redirect to a new URL.
+     *
+     * @param string $url
+     *   The url to redirect to
+     */
+    public static function redirect($url)
+    {
+        header('Location: ' . $url, true, 302);
+        exit();
+    }
 
-  /**
-   * Clean the input.
-   */
-  public static function escape($input)
-  {
-      $input = trim($input);
-      $input = stripslashes($input);
-      $input = htmlspecialchars($input);
+    /**
+     * Clean the input.
+     */
+    public static function escape($input)
+    {
+        $input = trim($input);
+        $input = stripslashes($input);
+        $input = htmlspecialchars($input);
 
-      return $input;
-  }
+        return $input;
+    }
 
     public static function selected($selected, $current = true, $show = true)
     {
@@ -179,28 +179,27 @@ class Util
         return $result;
     }
 
-  /**
-   * Make a string URL ready.
-   *
-   * @param string $string
-   *   The string to convert
-   *
-   * @return string
-   *   URL ready string
-   */
-  public static function slug($string)
-  {
-      $string = iconv('UTF-8', 'ASCII//TRANSLIT', $string);
-      $string = preg_replace("%[^-/+|\w ]%", '', $string);
-      $string = strtolower(trim($string));
-      $string = preg_replace("/[\/_|+ -]+/", '-', $string);
+    /**
+     * Make a string URL ready.
+     *
+     * @param string $string
+     *   The string to convert
+     *
+     * @return string
+     *   URL ready string
+     */
+    public static function slug($string)
+    {
+        $string = iconv('UTF-8', 'ASCII//TRANSLIT', $string);
+        $string = preg_replace("%[^-/+|\w ]%", '', $string);
+        $string = strtolower(trim($string));
+        $string = preg_replace("/[\/_|+ -]+/", '-', $string);
 
-      return $string;
-  }
+        return $string;
+    }
 
     public static function selectFromJson($json, $selected = '', $id = '', $name = '')
     {
-        $selected = isset($_POST[$name]) ? htmlspecialchars($_POST[$name]) : '';
         if (file_exists($json)) {
             $file = file_get_contents($json);
             $get_json = json_decode($file);
@@ -225,10 +224,34 @@ class Util
         }
     }
 
+    public static function selectFromJson2($json, array $attr)
+    {
+        if (file_exists($json)) {
+            $file = file_get_contents($json);
+            $get_json = json_decode($file);
+
+            foreach ($get_json as $arr) {
+                foreach ($arr as $key => $value) {
+                    $array[$key] = $value;
+                }
+            }
+
+            $output = '<select class="'.$attr['class'].'" id="'.$attr['id'].'" name="'.$attr['name'].'">';
+
+            for ($i = 0, $c = count($array); $i < $c; ++$i) {
+                $output .= '<option value="'.lcfirst($array[$i]).'" '.self::selected($attr['selected'], lcfirst($array[$i]), false).'>'.$array[$i].'</option>';
+            }
+
+            $output .= '</select>';
+
+            return $output;
+        } else {
+            return false;
+        }
+    }
+
     public static function selectDate($selected_day = '', $selected_month = '', $selected_year = '')
     {
-        $selected_day = isset($_POST['day']) ? htmlspecialchars($_POST['day']) : '';
-
         $day = '<select class="select-box" id="day" name="day">';
 
         for ($i = 1; $i <= 31; ++$i) {
@@ -239,8 +262,6 @@ class Util
             $day .= '<option value="'.$item.'" '.self::selected($selected_day, $item, false).'>'.$item.'</option>';
         }
         $day .= '</select>';
-
-        $selected_month = isset($_POST['month']) ? htmlspecialchars($_POST['month']) : '';
 
         $month = '<select class="select-box" id="month" name="month">';
 
@@ -255,8 +276,6 @@ class Util
         }
 
         $month .= '</select>';
-
-        $selected_year = isset($_POST['year']) ? htmlspecialchars($_POST['year']) : '';
 
         $year = '<select class="select-box" id="year" name="year">';
         $current_year = date('Y');
@@ -285,48 +304,45 @@ class Util
         }
     }
 
-  /**
-   * Auto Fill a form after submission.
-   *
-   * @param string $name
-   *   The name of the form field
-   * @param string $type
-   *   The input type text|textarea|checkbox|radio|select
-   * @param string $value
-   *   The selected value
-   */
+    /**
+     * Auto Fill a form after submission.
+     *
+     * @param string $name
+     *   The name of the form field
+     * @param string $type
+     *   The input type text|textarea|checkbox|radio|select
+     * @param string $value
+     *   The selected value
+     */
     public static function fill($name, $value = '', $type = 'text')
     {
-      if (isset($_POST[$name])) {
-          switch ($type) {
-        case 'text':
-          return ' value="'.htmlspecialchars($_POST[$name]).'" ';
-        break;
+        if (isset($_POST[$name])) {
+            switch ($type) {
+                case 'text':
+                return ' value="'.htmlspecialchars($_POST[$name]).'" ';
 
-        case 'textarea':
-          return htmlspecialchars($_POST[$name]);
-        break;
+                case 'textarea':
+                return htmlspecialchars($_POST[$name]);
 
-        case 'checkbox':
-          return ' checked ';
-        break;
+                case 'checkbox':
+                return ' checked ';
 
-        case 'radio':
-          if ($_POST[$name] == $value) {
-              return ' checked ';
-          }
-        break;
+                case 'radio':
+                    if ($_POST[$name] == $value) {
+                        return ' checked ';
+                    }
+                break;
 
-        case 'select':
-          if ($_POST[$name] == $value) {
-              return ' selected ';
-          }
-        break;
-      }
-      }
-
-      return null;
-  }
+                case 'select':
+                    if ($_POST[$name] == $value) {
+                        return ' selected ';
+                    }
+                break;
+            }
+        }
+        
+        return null;
+    }
 
     public static function parseMentions($input)
     {

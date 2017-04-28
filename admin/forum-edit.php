@@ -117,7 +117,7 @@ $forums = $forum->paginate($limit, $offset);
           <td class="actions">
             <a class="action-edit" href="forum.php?action=edit&amp;id=<?php echo $f->id; ?>"><span class="fa fa-pencil"></span></a>
 
-            <a class="action-view" href="<?php echo Site::url(); ?>/<?php echo $f->slug; ?>"><span class="fa fa-eye"></span></a>
+            <a target="_blank" class="action-view" href="<?php echo Site::url(); ?>/forum/<?php echo $f->slug; ?>"><span class="fa fa-eye"></span></a>
 
             <a class="action-delete" href="forum.php?action=delete&amp;id=<?php echo $f->id; ?>"><span class="fa fa-remove"></span></a>
           </td>

@@ -17,8 +17,6 @@ require_once DDFPATH.'startup.php';
 
 $title = "New topic - {$option->get('site_name')}";
 
-include DDFPATH.'header.php';
-
 if (!$user->isLogged()) {
     Util::redirect(Site::url().'/login/');
 }
@@ -47,24 +45,32 @@ if ('POST' == $_SERVER['REQUEST_METHOD']) {
 
                     Util::redirect("{$siteUrl}/topic/".Util::slug($_POST['topic-subject'])."/");
                 } else {
-                    Site::info('Unable to create topic, please try again', true);
+                    $err = 'Unable to create topic, please try again';
                 }
             } else {
-                Site::info('Select a Forum for your topic', true);
+                $err = 'Select a Forum for your topic';
             }
         } else {
-            Site::info('Your topic should have a body message', true);
+            $err = 'Your topic should have a body message';
         }
     } else {
-        Site::info('You should enter a title for your topic', true);
+        $err = 'You should enter a title for your topic';
     }
 }
 
+include DDFPATH.'header.php';
 ?>
 
 <h2 class="page-title">Create new Topic</h2>
 
 <form action="" method="post" id="stopic-form" class="action-form">
+
+    <?php
+    if (isset($err)) {
+        Site::info($err, true);
+    }
+    ?>
+
     <div class="form-groups">
         <div class="form-group">
             <label class="screen-reader-text" for="topic-subject">Topic subject</label>

@@ -266,6 +266,8 @@ RewriteRule ^topic/([a-z0-9-]+)/page=([0-9]+)/*$ ./topic.php?s=$1&page=$2 [L]
 # Replying to posts
 RewriteRule ^topic/([a-z0-9-]+)/([0-9]+)/replytopost=([0-9]+)/*$ ./topic.php?s=$1&id=$2&replytopost=$3 [L]
 RewriteRule ^topic/([a-z0-9-]+)/([0-9]+)/page=([0-9]+)/replytopost=([0-9]+)/*$ ./topic.php?s=$1&id=$2&page=$3&replytopost=$4 [L]
+
+RewriteRule ^edit-profile/$ ./edit-profile.php
 </IfModule>
 
 EOF;
