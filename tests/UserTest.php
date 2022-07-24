@@ -143,3 +143,90 @@ class UserTest extends \PHPUnit_Framework_TestCase
     }
 }
 
+
+{
+    "sync.gist": "6dea835c5b97535c800cb513aebabd2b",
+    "php.validate.executablePath": "/Applications/MAMP/bin/php/php7.4.21/bin/php",
+    "workbench.colorTheme": "Luvia Theme",
+    "workbench.iconTheme": "vscode-great-icons",
+    "editor.fontSize": 16,
+    "editor.fontFamily": "MonoLisa",
+    "editor.fontLigatures": true,
+    "workbench.startupEditor": "none",
+    "cSpell.userWords": [
+        "autoload",
+        "PRESALE"
+    ],
+    "git.enableSmartCommit": true,
+    "git.confirmSync": false,
+    "editor.inlineSuggest.enabled": true,
+    "editor.bracketPairColorization.enabled": true,
+    "explorer.confirmDelete": false,
+    "editor.detectIndentation": false,
+    "editor.wordWrap": "on",
+    "files.associations": {
+        "*.html": "html",
+        "*.css": "css",
+        "*.php": "php",
+        "*.js": "js"
+    },
+    "files.autoSave": "afterDelay",
+    "gitlens.hovers.currentLine.over": "line",
+    "github.copilot.enable": {
+        "*": true,
+        "yaml": false,
+        "plaintext": true,
+        "markdown": false
+    },
+    "git.autofetch": true,
+    "liveServer.settings.donotVerifyTags": true,
+    "explorer.confirmDragAndDrop": false,
+    "emmet.triggerExpansionOnTab": true,
+    "emmet.showSuggestionsAsSnippets": true,
+    "emmet.useInlineCompletions": true,
+    "npm.keybindingsChangedWarningShown": true,
+    "alignment.chars": {
+    
+        ":": {
+            "spaceBefore": 0,
+            "spaceAfter": 1
+        },
+        "::": {
+            "spaceBefore": 0,
+            "spaceAfter": 0
+        },
+        "=": {
+            "spaceBefore": 1,
+            "spaceAfter": 1
+        },
+        "===": {
+            "spaceBefore": 1,
+            "spaceAfter": 1
+        },
+        "==": {
+            "spaceBefore": 1,
+            "spaceAfter": 1
+        },
+        "=>": {
+            "spaceBefore": 1,
+            "spaceAfter": 1
+        },
+        "+=": {
+            "spaceBefore": 1,
+            "spaceAfter": 1
+        },
+        "-=": {
+            "spaceBefore": 1,
+            "spaceAfter": 1
+        },
+        "*=": {
+            "spaceBefore": 1,
+            "spaceAfter": 1
+        },
+        "/=": {
+            "spaceBefore": 1,
+            "spaceAfter": 1
+        }
+    }
+}
+
