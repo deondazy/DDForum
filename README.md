@@ -4,8 +4,9 @@ DDForum is a PHP based forum software application that's designed like a CMS mak
 
 ## Requirements
 
-- PHP 5.6
-- MySQL / MariaDB database
+- PHP 7.4
+- MariaDB 10.3+
+- MySQL 5.7+
 
 ## Contributing
 
