@@ -2,7 +2,6 @@
 composer.lock
 /ddf-config.php
 /nbproject
-/error.log
 inc/avatar/*
 !inc/avatar/ddf-avatar.png
 inc/images/*
@@ -10,3 +9,7 @@ inc/images/*
 .htaccess
 inc/attachment/
 inc/css/less/
+.DS_Store
+**/.DS_Store
+error.log
+**/error.log
