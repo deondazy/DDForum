@@ -277,12 +277,12 @@ class Database
     public function execute()
     {
         try {
-            if ($this->statement instanceof PDOStatement) {
-                return $this->statement->execute();
-            }
+            return $this->statement->execute();
         } catch (PDOException $e) {
             throw new DatabaseException("Execution of prepared statement failed: {$e->getMessage()} in {$e->getFile()} on line {$e->getLine()}");
         }
+
+        return false;
     }
 
     /**
@@ -452,7 +452,6 @@ class Database
      */
     public function beginTransaction()
     {
-        $this->connect($this->pdo);
         return $this->pdo->beginTransaction();
     }
 
@@ -463,7 +462,6 @@ class Database
      */
     public function endTransaction()
     {
-        $this->connect($this->pdo);
         return $this->pdo->commit();
     }
 
@@ -474,7 +472,6 @@ class Database
      */
     public function cancelTransaction()
     {
-        $this->connect($this->pdo);
         return $this->pdo->rollBack();
     }
 }

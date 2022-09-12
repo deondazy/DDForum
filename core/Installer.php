@@ -87,9 +87,11 @@ class Installer
 
             foreach ($queries as $query) {
                 Database::instance()->query($query);
-                Database::instance()->execute();
+                if (!Database::instance()->execute()) {
+                    return false;
+                }
             }
-
+            
             Database::instance()->endTransaction();
 
             return true;
@@ -97,11 +99,13 @@ class Installer
         } catch (\PDOException $e) {
             Database::instance()->cancelTransaction();
 
+            echo $e->getMessage();
+
             return false;
         }
     }
 
-    private static function getSqlQueries()
+    public static function getSqlQueries()
     {
         $schemaPath = DDFPATH .'admin/install/schema.sql';
 
