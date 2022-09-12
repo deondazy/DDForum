@@ -13,3 +13,4 @@ inc/css/less/
 **/.DS_Store
 error.log
 **/error.log
+test.php
