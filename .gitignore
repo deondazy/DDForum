@@ -1,7 +1,6 @@
 /node_modules
 composer.lock
 /ddf-config.php
-/.htaccess
 /nbproject
 /error.log
 inc/avatar/*
