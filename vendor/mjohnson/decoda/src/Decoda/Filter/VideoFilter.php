@@ -139,7 +139,11 @@ class VideoFilter extends AbstractFilter {
             'medium' => array(640, 360),
             'large' => array(853, 480),
             'player' => 'iframe',
+<<<<<<< HEAD
             'path' => '//youtube.com/embed/{id}'
+=======
+            'path' => '//youtube.com/embed/{id}?rel=0'
+>>>>>>> update
         ),
         'vimeo' => array(
             'small' => array(400, 225),
@@ -232,4 +236,8 @@ class VideoFilter extends AbstractFilter {
         return parent::parse($tag, $content);
     }
 
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> update

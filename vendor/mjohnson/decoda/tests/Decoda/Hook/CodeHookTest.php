@@ -8,6 +8,10 @@
 namespace Decoda\Hook;
 
 use Decoda\Decoda;
+<<<<<<< HEAD
+=======
+use Decoda\Filter\CodeFilter;
+>>>>>>> update
 use Decoda\Hook\CodeHook;
 use Decoda\Test\TestCase;
 
@@ -27,6 +31,7 @@ class CodeHookTest extends TestCase {
      * Test that beforeParse() encodes code data so that it wont be converted, then afterParse() decodes the data.
      */
     public function testConversion() {
+<<<<<<< HEAD
         $this->assertEquals('[code="php]VGVzdCBbYl1jb2RlWy9iXSE=[/code]', $this->object->beforeParse('[code="php]Test [b]code[/b]![/code]'));
         $this->assertEquals('<pre class="decoda-code php">Test [b]code[/b]!</pre>', $this->object->beforeParse('<pre class="decoda-code php">Test [b]code[/b]!</pre>'));
 
@@ -41,6 +46,36 @@ class CodeHookTest extends TestCase {
 
         // Test parsing dummy nested bbcode into code tag, it will not convert dummy code tag as it does not respect recursivity
         $this->assertEquals('[code]' . base64_encode('[code]bliblablou[/code]AB[code][code]foobar[/code]') . '[/code]', $this->object->beforeParse('[code][code]bliblablou[/code]AB[code][code]foobar[/code][/code]'));
+=======
+        $this->assertEquals('[code="php]$$CODE0$$[/code]', $this->object->beforeParse('[code="php]Test [b]code[/b]![/code]'));
+        $this->assertEquals('<pre class="decoda-code php">Test [b]code[/b]!</pre>', $this->object->beforeParse('<pre class="decoda-code php">Test [b]code[/b]!</pre>'));
+
+        // Test nested bbcode code tag
+        $this->assertEquals('[code]$$CODE0$$[/code]', $this->object->beforeParse('[code][color=#ff0000]bbcode color[/color][/code]'));
+
+        // Test nested bbcode surround by text
+        $this->assertEquals('[code="bbcode"]$$CODE0$$[/code]', $this->object->beforeParse('[code="bbcode"]example of code : [code]bliblablou[/code] some other code[/code]'));
+
+        // Test parsing multipe code tags separated by text
+        $this->assertEquals('[code]$$CODE0$$[/code]AB[code]$$CODE1$$[/code]', $this->object->beforeParse('[code]bliblablou[/code]AB[code]foobar[/code]'));
+
+        // Test parsing dummy nested bbcode into code tag, it will not convert dummy code tag as it does not respect recursivity
+        $this->assertEquals('[code]$$CODE0$$[/code]', $this->object->beforeParse('[code][code]bliblablou[/code]AB[code][code]foobar[/code][/code]'));
+    }
+
+    /**
+     * Test that code blocks are cached between events.
+     */
+    public function testBeforeAndAfter() {
+        $string = '[code="php"]Block 1[/code] Something [code]Block 2[/code] And something [code hl="1"]Block 3[/code].';
+
+        $this->assertEquals('[code="php"]$$CODE0$$[/code] Something [code]$$CODE1$$[/code] And something [code hl="1"]$$CODE2$$[/code].', $this->object->beforeParse($string));
+
+        $decoda = new Decoda($string);
+        $decoda->addFilter(new CodeFilter());
+
+        $this->assertEquals('<pre class="decoda-code lang-php"><code>Block 1</code></pre> Something <pre class="decoda-code"><code>Block 2</code></pre> And something <pre class="decoda-code" data-line="1"><code>Block 3</code></pre>.', $decoda->parse());
+>>>>>>> update
     }
 
 }

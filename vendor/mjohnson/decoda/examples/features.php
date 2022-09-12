@@ -67,7 +67,11 @@ echo $code->parse(); ?>
 [url]http://domain.com/[/url]';
 
 $code = new \Decoda\Decoda($string);
+<<<<<<< HEAD
 $code->addFilter(new \Decoda\Filter\EmailFilter())->addFilter(new \Decoda\Filter\UrlFilter())->setShorthand();
+=======
+$code->addFilter(new \Decoda\Filter\EmailFilter())->addFilter(new \Decoda\Filter\UrlFilter())->setShorthand(true);
+>>>>>>> update
 echo $code->parse(); ?>
 
 <h2>XHTML markup</h2>

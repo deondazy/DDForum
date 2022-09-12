@@ -1,4 +1,5 @@
 <?php
+<<<<<<< HEAD
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,12 +17,15 @@
  * and is licensed under the MIT license. For more information, see
  * <http://www.doctrine-project.org>.
  */
+=======
+>>>>>>> update
 
 namespace Doctrine\Instantiator\Exception;
 
 use InvalidArgumentException as BaseInvalidArgumentException;
 use ReflectionClass;
 
+<<<<<<< HEAD
 /**
  * Exception for invalid arguments provided to the instantiator
  *
@@ -42,12 +46,32 @@ class InvalidArgumentException extends BaseInvalidArgumentException implements E
 
         if (PHP_VERSION_ID >= 50400 && trait_exists($className)) {
             return new self(sprintf('The provided type "%s" is a trait, and can not be instantiated', $className));
+=======
+use function interface_exists;
+use function sprintf;
+use function trait_exists;
+
+/**
+ * Exception for invalid arguments provided to the instantiator
+ */
+class InvalidArgumentException extends BaseInvalidArgumentException implements ExceptionInterface
+{
+    public static function fromNonExistingClass(string $className): self
+    {
+        if (interface_exists($className)) {
+            return new self(sprintf('The provided type "%s" is an interface, and cannot be instantiated', $className));
+        }
+
+        if (trait_exists($className)) {
+            return new self(sprintf('The provided type "%s" is a trait, and cannot be instantiated', $className));
+>>>>>>> update
         }
 
         return new self(sprintf('The provided class "%s" does not exist', $className));
     }
 
     /**
+<<<<<<< HEAD
      * @param ReflectionClass $reflectionClass
      *
      * @return self
@@ -59,4 +83,25 @@ class InvalidArgumentException extends BaseInvalidArgumentException implements E
             $reflectionClass->getName()
         ));
     }
+=======
+     * @phpstan-param ReflectionClass<T> $reflectionClass
+     *
+     * @template T of object
+     */
+    public static function fromAbstractClass(ReflectionClass $reflectionClass): self
+    {
+        return new self(sprintf(
+            'The provided class "%s" is abstract, and cannot be instantiated',
+            $reflectionClass->getName()
+        ));
+    }
+
+    public static function fromEnum(string $className): self
+    {
+        return new self(sprintf(
+            'The provided class "%s" is an enum, and cannot be instantiated',
+            $className
+        ));
+    }
+>>>>>>> update
 }

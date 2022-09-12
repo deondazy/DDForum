@@ -8,7 +8,10 @@
 	convertWarningsToExceptions="true"
 	processIsolation="false"
 	stopOnFailure="false"
+<<<<<<< HEAD
 	syntaxCheck="true"
+=======
+>>>>>>> update
 	bootstrap="tests/bootstrap.php">
 
 	<testsuites>
@@ -16,4 +19,8 @@
 			<directory>./tests/</directory>
 		</testsuite>
 	</testsuites>
+<<<<<<< HEAD
 </phpunit>
+=======
+</phpunit>
+>>>>>>> update

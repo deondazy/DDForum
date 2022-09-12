@@ -1,1 +1,7 @@
+<<<<<<< HEAD
+=======
+/.github        export-ignore
+/.php_cs.dist   export-ignore
+
+>>>>>>> update
 *.php diff=php

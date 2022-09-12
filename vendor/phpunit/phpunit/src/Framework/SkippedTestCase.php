@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 <?php
+=======
+<?php declare(strict_types=1);
+>>>>>>> update
 /*
  * This file is part of PHPUnit.
  *
@@ -7,6 +11,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+<<<<<<< HEAD
 
 /**
  * A skipped test case
@@ -21,6 +26,16 @@ class PHPUnit_Framework_SkippedTestCase extends PHPUnit_Framework_TestCase
     protected $message = '';
 
     /**
+=======
+namespace PHPUnit\Framework;
+
+/**
+ * @internal This class is not covered by the backward compatibility promise for PHPUnit
+ */
+final class SkippedTestCase extends TestCase
+{
+    /**
+>>>>>>> update
      * @var bool
      */
     protected $backupGlobals = false;
@@ -36,6 +51,7 @@ class PHPUnit_Framework_SkippedTestCase extends PHPUnit_Framework_TestCase
     protected $runTestInSeparateProcess = false;
 
     /**
+<<<<<<< HEAD
      * @var bool
      */
     protected $useErrorHandler = false;
@@ -66,6 +82,20 @@ class PHPUnit_Framework_SkippedTestCase extends PHPUnit_Framework_TestCase
      * @return string
      */
     public function getMessage()
+=======
+     * @var string
+     */
+    private $message;
+
+    public function __construct(string $className, string $methodName, string $message = '')
+    {
+        parent::__construct($className . '::' . $methodName);
+
+        $this->message = $message;
+    }
+
+    public function getMessage(): string
+>>>>>>> update
     {
         return $this->message;
     }
@@ -73,10 +103,27 @@ class PHPUnit_Framework_SkippedTestCase extends PHPUnit_Framework_TestCase
     /**
      * Returns a string representation of the test case.
      *
+<<<<<<< HEAD
      * @return string
      */
     public function toString()
     {
         return $this->getName();
     }
+=======
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+     */
+    public function toString(): string
+    {
+        return $this->getName();
+    }
+
+    /**
+     * @throws Exception
+     */
+    protected function runTest(): void
+    {
+        $this->markTestSkipped($this->message);
+    }
+>>>>>>> update
 }

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 <?php
+=======
+<?php declare(strict_types=1);
+>>>>>>> update
 /*
  * This file is part of PHPUnit.
  *
@@ -7,6 +11,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+<<<<<<< HEAD
 
 /**
  * Wrapper for PHP warnings.
@@ -21,4 +26,13 @@
 class PHPUnit_Framework_Error_Warning extends PHPUnit_Framework_Error
 {
     public static $enabled = true;
+=======
+namespace PHPUnit\Framework\Error;
+
+/**
+ * @internal
+ */
+final class Warning extends Error
+{
+>>>>>>> update
 }

@@ -1,4 +1,5 @@
 <?php
+<<<<<<< HEAD
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,6 +17,8 @@
  * and is licensed under the MIT license. For more information, see
  * <http://www.doctrine-project.org>.
  */
+=======
+>>>>>>> update
 
 namespace Doctrine\Instantiator\Exception;
 
@@ -23,14 +26,22 @@ use Exception;
 use ReflectionClass;
 use UnexpectedValueException as BaseUnexpectedValueException;
 
+<<<<<<< HEAD
 /**
  * Exception for given parameters causing invalid/unexpected state on instantiation
  *
  * @author Marco Pivetta <ocramius@gmail.com>
+=======
+use function sprintf;
+
+/**
+ * Exception for given parameters causing invalid/unexpected state on instantiation
+>>>>>>> update
  */
 class UnexpectedValueException extends BaseUnexpectedValueException implements ExceptionInterface
 {
     /**
+<<<<<<< HEAD
      * @param ReflectionClass $reflectionClass
      * @param Exception       $exception
      *
@@ -38,6 +49,16 @@ class UnexpectedValueException extends BaseUnexpectedValueException implements E
      */
     public static function fromSerializationTriggeredException(ReflectionClass $reflectionClass, Exception $exception)
     {
+=======
+     * @phpstan-param ReflectionClass<T> $reflectionClass
+     *
+     * @template T of object
+     */
+    public static function fromSerializationTriggeredException(
+        ReflectionClass $reflectionClass,
+        Exception $exception
+    ): self {
+>>>>>>> update
         return new self(
             sprintf(
                 'An exception was raised while trying to instantiate an instance of "%s" via un-serialization',
@@ -49,6 +70,7 @@ class UnexpectedValueException extends BaseUnexpectedValueException implements E
     }
 
     /**
+<<<<<<< HEAD
      * @param ReflectionClass $reflectionClass
      * @param string          $errorString
      * @param int             $errorCode
@@ -64,6 +86,19 @@ class UnexpectedValueException extends BaseUnexpectedValueException implements E
         $errorFile,
         $errorLine
     ) {
+=======
+     * @phpstan-param ReflectionClass<T> $reflectionClass
+     *
+     * @template T of object
+     */
+    public static function fromUncleanUnSerialization(
+        ReflectionClass $reflectionClass,
+        string $errorString,
+        int $errorCode,
+        string $errorFile,
+        int $errorLine
+    ): self {
+>>>>>>> update
         return new self(
             sprintf(
                 'Could not produce an instance of "%s" via un-serialization, since an error was triggered '

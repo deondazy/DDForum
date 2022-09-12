@@ -15,6 +15,7 @@ use Decoda\Decoda;
 class BlockFilter extends AbstractFilter {
 
     /**
+<<<<<<< HEAD
      * Configuration.
      *
      * @type array
@@ -24,6 +25,8 @@ class BlockFilter extends AbstractFilter {
     );
 
     /**
+=======
+>>>>>>> update
      * Supported tags.
      *
      * @type array
@@ -131,4 +134,8 @@ class BlockFilter extends AbstractFilter {
         )
     );
 
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> update

@@ -2,6 +2,12 @@
 
 namespace DeepCopy\TypeFilter;
 
+<<<<<<< HEAD
+=======
+/**
+ * @final
+ */
+>>>>>>> update
 class ReplaceFilter implements TypeFilter
 {
     /**

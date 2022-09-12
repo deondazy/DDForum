@@ -10,11 +10,16 @@
     "authors": [
         {
             "name": "Sebastian Bergmann",
+<<<<<<< HEAD
             "email": "sb@sebastian-bergmann.de",
+=======
+            "email": "sebastian@phpunit.de",
+>>>>>>> update
             "role": "lead"
         }
     ],
     "support": {
+<<<<<<< HEAD
         "issues": "https://github.com/sebastianbergmann/php-timer/issues",
         "irc": "irc://irc.freenode.net/phpunit"
     },
@@ -23,11 +28,36 @@
     },
     "require-dev": {
         "phpunit/phpunit": "~4|~5"
+=======
+        "issues": "https://github.com/sebastianbergmann/php-timer/issues"
+    },
+    "prefer-stable": true,
+    "require": {
+        "php": ">=7.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.3"
+    },
+    "config": {
+        "platform": {
+            "php": "7.3.0"
+        },
+        "optimize-autoloader": true,
+        "sort-packages": true
+>>>>>>> update
     },
     "autoload": {
         "classmap": [
             "src/"
         ]
+<<<<<<< HEAD
+=======
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "5.0-dev"
+        }
+>>>>>>> update
     }
 }
 

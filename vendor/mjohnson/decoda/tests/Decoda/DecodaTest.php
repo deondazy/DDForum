@@ -12,6 +12,10 @@ use Decoda\Filter\DefaultFilter;
 use Decoda\Filter\EmailFilter;
 use Decoda\Filter\UrlFilter;
 use Decoda\Hook\CensorHook;
+<<<<<<< HEAD
+=======
+use Decoda\Storage\MemoryStorage;
+>>>>>>> update
 use Decoda\Test\TestCase;
 use Decoda\Test\TestEngine;
 use Decoda\Test\TestFilter;
@@ -157,6 +161,10 @@ class DecodaTest extends TestCase {
             'strict' => true,
             'newlines' => 5,
             'lineBreaks' => false,
+<<<<<<< HEAD
+=======
+            'standaloneTags' => true,
+>>>>>>> update
             'removeEmpty' => true
         ));
 
@@ -170,6 +178,10 @@ class DecodaTest extends TestCase {
         $this->assertEquals(true, $this->object->getConfig('strictMode'));
         $this->assertEquals(5, $this->object->getConfig('maxNewlines'));
         $this->assertEquals(false, $this->object->getConfig('lineBreaks'));
+<<<<<<< HEAD
+=======
+        $this->assertEquals(true, $this->object->getConfig('standaloneTags'));
+>>>>>>> update
         $this->assertEquals(true, $this->object->getConfig('removeEmpty'));
     }
 
@@ -338,7 +350,26 @@ class DecodaTest extends TestCase {
 
         // Now with spaces and mixed values
         $this->assertEquals('<attributes id="custom-html" wildcard="Something" alnum="abc">Content</attributes>', $this->object->reset('[attributes=Something "quotes" here alnum=abc 123]Content[/attributes]')->parse());
+<<<<<<< HEAD
         $this->assertEquals('<attributes id="custom-html" wildcard="Miles&quot;gearvOsh&quot;Johnson" alnum="abc-123">Content</attributes>', $this->object->reset('[attributes=Miles"gearvOsh"Johnson alnum=abc-123]Content[/attributes]')->parse());
+=======
+        $this->assertEquals('<attributes id="custom-html" wildcard="Miles" alnum="abc-123">Content</attributes>', $this->object->reset('[attributes=Miles"gearvOsh"Johnson alnum=abc-123]Content[/attributes]')->parse());
+    }
+
+    /**
+     * Test that setStandaloneTags() toggles standalone tag parsing.
+     */
+    public function testStandaloneTags() {
+        $this->object->addFilter(new DefaultFilter())->addFilter(new BlockFilter());
+
+        // Standalone tags are off by default.
+        $this->assertEquals("", $this->object->reset("[br]")->parse());
+        $this->assertEquals("<br>", $this->object->reset("[br /]")->parse());
+
+        // Turn on standalone tags
+        $this->object->setStandaloneTags(true);
+        $this->assertEquals("<br>", $this->object->reset("[br]")->parse());
+>>>>>>> update
     }
 
     /**
@@ -690,8 +721,15 @@ class DecodaTest extends TestCase {
      */
     public function testCapitalTags() {
         $this->object->addFilter(new DefaultFilter());
+<<<<<<< HEAD
 
         $this->assertEquals('<b>Bold</b> <i>Italics</i>', $this->object->reset('[B]Bold[/B] [i]Italics[/i]')->parse());
+=======
+        $this->object->addFilter(new UrlFilter());
+
+        $this->assertEquals('<b>Bold</b> <i>Italics</i>', $this->object->reset('[B]Bold[/B] [i]Italics[/i]')->parse());
+        $this->assertEquals('<a href="http://google.com">Google!</a>', $this->object->reset('[URL="http://google.com"]Google![/URL]')->parse());
+>>>>>>> update
     }
 
     /**
@@ -880,6 +918,12 @@ EXP;
         $this->assertEquals('Spoiler', $decoda->message('spoiler'));
     }
 
+<<<<<<< HEAD
+=======
+    /**
+     * Test that strip returns the same content after an immediate parse.
+     */
+>>>>>>> update
     public function testStripWorksAfterParse() {
         $this->object->addFilter(new DefaultFilter());
         $this->object->reset('[b]Something[/b]');
@@ -888,4 +932,48 @@ EXP;
         $this->assertEquals('Something', $this->object->strip());
     }
 
+<<<<<<< HEAD
+=======
+    /**
+     * Test that double bracket literal tags work.
+     */
+    public function testLiteralTagSupport() {
+        $this->object->defaults();
+
+        $this->assertEquals('[U]', $this->object->reset('[[U]]')->parse());
+        $this->assertEquals('<b>[u_]</b>', $this->object->reset('[b][[u_]][/b]')->parse());
+        $this->assertEquals('[b with="attributes"]', $this->object->reset('[[b with="attributes"]]')->parse());
+        $this->assertEquals('[i="attributes"]', $this->object->reset('[[i="attributes"]]')->parse());
+        $this->assertEquals('[br/]', $this->object->reset('[[br/]]')->parse());
+        $this->assertEquals('[br/][b]', $this->object->reset('[[br/]][[b]]')->parse());
+
+        $this->object->setBrackets('{', '}');
+
+        $this->assertEquals('{U}', $this->object->reset('{{U}}')->parse());
+        $this->assertEquals('<b>{u_}</b>', $this->object->reset('{b}{{u_}}{/b}')->parse());
+    }
+
+    /**
+     * Test that the storage is hit for subsequent parses.
+     */
+    public function testStorageCaching() {
+        $storage = new MemoryStorage();
+
+        $this->object->defaults();
+        $this->object->setStorage($storage);
+
+        $this->assertFalse($storage->has('cacheKey'));
+
+        $this->object->reset('[b]Foo[/b]', false, 'cacheKey')->parse();
+
+        $this->assertTrue($storage->has('cacheKey'));
+        $this->assertEquals($storage->get('cacheKey'), '<b>Foo</b>');
+
+        $this->object->reset('[b]Bar[/b]', false, 'cacheKey2')->parse();
+
+        $this->assertTrue($storage->has('cacheKey2'));
+        $this->assertEquals($storage->get('cacheKey2'), '<b>Bar</b>');
+    }
+
+>>>>>>> update
 }

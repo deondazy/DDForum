@@ -1,4 +1,5 @@
 <?php
+<<<<<<< HEAD
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -23,15 +24,35 @@ namespace Doctrine\Instantiator;
  * Instantiator provides utility methods to build objects without invoking their constructors
  *
  * @author Marco Pivetta <ocramius@gmail.com>
+=======
+
+namespace Doctrine\Instantiator;
+
+use Doctrine\Instantiator\Exception\ExceptionInterface;
+
+/**
+ * Instantiator provides utility methods to build objects without invoking their constructors
+>>>>>>> update
  */
 interface InstantiatorInterface
 {
     /**
      * @param string $className
+<<<<<<< HEAD
      *
      * @return object
      *
      * @throws \Doctrine\Instantiator\Exception\ExceptionInterface
+=======
+     * @phpstan-param class-string<T> $className
+     *
+     * @return object
+     * @phpstan-return T
+     *
+     * @throws ExceptionInterface
+     *
+     * @template T of object
+>>>>>>> update
      */
     public function instantiate($className);
 }

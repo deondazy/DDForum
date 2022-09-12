@@ -1,12 +1,19 @@
+<<<<<<< HEAD
 <?php
 /*
  * This file is part of the File_Iterator package.
+=======
+<?php declare(strict_types=1);
+/*
+ * This file is part of phpunit/php-file-iterator.
+>>>>>>> update
  *
  * (c) Sebastian Bergmann <sebastian@phpunit.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+<<<<<<< HEAD
 
 /**
  * Façade implementation that uses File_Iterator_Factory to create a
@@ -38,6 +45,36 @@ class File_Iterator_Facade
         );
 
         $files = array();
+=======
+namespace SebastianBergmann\FileIterator;
+
+use const DIRECTORY_SEPARATOR;
+use function array_unique;
+use function count;
+use function dirname;
+use function explode;
+use function is_file;
+use function is_string;
+use function realpath;
+use function sort;
+
+class Facade
+{
+    /**
+     * @param array|string $paths
+     * @param array|string $suffixes
+     * @param array|string $prefixes
+     */
+    public function getFilesAsArray($paths, $suffixes = '', $prefixes = '', array $exclude = [], bool $commonPath = false): array
+    {
+        if (is_string($paths)) {
+            $paths = [$paths];
+        }
+
+        $iterator = (new Factory)->getFileIterator($paths, $suffixes, $prefixes, $exclude);
+
+        $files = [];
+>>>>>>> update
 
         foreach ($iterator as $file) {
             $file = $file->getRealPath();
@@ -57,6 +94,7 @@ class File_Iterator_Facade
         sort($files);
 
         if ($commonPath) {
+<<<<<<< HEAD
             return array(
               'commonPath' => $this->getCommonPath($files),
               'files'      => $files
@@ -85,6 +123,30 @@ class File_Iterator_Facade
         }
 
         $_files = array();
+=======
+            return [
+                'commonPath' => $this->getCommonPath($files),
+                'files'      => $files,
+            ];
+        }
+
+        return $files;
+    }
+
+    protected function getCommonPath(array $files): string
+    {
+        $count = count($files);
+
+        if ($count === 0) {
+            return '';
+        }
+
+        if ($count === 1) {
+            return dirname($files[0]) . DIRECTORY_SEPARATOR;
+        }
+
+        $_files = [];
+>>>>>>> update
 
         foreach ($files as $file) {
             $_files[] = $_fileParts = explode(DIRECTORY_SEPARATOR, $file);
@@ -95,14 +157,24 @@ class File_Iterator_Facade
         }
 
         $common = '';
+<<<<<<< HEAD
         $done   = FALSE;
+=======
+        $done   = false;
+>>>>>>> update
         $j      = 0;
         $count--;
 
         while (!$done) {
             for ($i = 0; $i < $count; $i++) {
+<<<<<<< HEAD
                 if ($_files[$i][$j] != $_files[$i+1][$j]) {
                     $done = TRUE;
+=======
+                if ($_files[$i][$j] != $_files[$i + 1][$j]) {
+                    $done = true;
+
+>>>>>>> update
                     break;
                 }
             }

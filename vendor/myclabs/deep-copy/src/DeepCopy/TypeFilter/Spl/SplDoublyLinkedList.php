@@ -2,6 +2,7 @@
 
 namespace DeepCopy\TypeFilter\Spl;
 
+<<<<<<< HEAD
 use DeepCopy\DeepCopy;
 use DeepCopy\TypeFilter\TypeFilter;
 
@@ -34,4 +35,11 @@ class SplDoublyLinkedList implements TypeFilter
         return $newElement;
 
     }
+=======
+/**
+ * @deprecated Use {@see SplDoublyLinkedListFilter} instead.
+ */
+class SplDoublyLinkedList extends SplDoublyLinkedListFilter
+{
+>>>>>>> update
 }

@@ -12,11 +12,16 @@
     "authors": [
         {
             "name": "Sebastian Bergmann",
+<<<<<<< HEAD
             "email": "sb@sebastian-bergmann.de",
+=======
+            "email": "sebastian@phpunit.de",
+>>>>>>> update
             "role": "lead"
         }
     ],
     "support": {
+<<<<<<< HEAD
         "issues": "https://github.com/sebastianbergmann/php-code-coverage/issues",
         "irc": "irc://irc.freenode.net/phpunit"
     },
@@ -37,15 +42,60 @@
         "ext-dom": "*",
         "ext-xdebug": ">=2.4.0",
         "ext-xmlwriter": "*"
+=======
+        "issues": "https://github.com/sebastianbergmann/php-code-coverage/issues"
+    },
+    "config": {
+        "platform": {
+            "php": "7.3.0"
+        },
+        "optimize-autoloader": true,
+        "sort-packages": true
+    },
+    "prefer-stable": true,
+    "require": {
+        "php": ">=7.3",
+        "ext-dom": "*",
+        "ext-libxml": "*",
+        "ext-xmlwriter": "*",
+        "nikic/php-parser": "^4.14",
+        "phpunit/php-file-iterator": "^3.0.3",
+        "phpunit/php-text-template": "^2.0.2",
+        "sebastian/code-unit-reverse-lookup": "^2.0.2",
+        "sebastian/complexity": "^2.0",
+        "sebastian/environment": "^5.1.2",
+        "sebastian/lines-of-code": "^1.0.3",
+        "sebastian/version": "^3.0.1",
+        "theseer/tokenizer": "^1.2.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.3"
+    },
+    "suggest": {
+        "ext-pcov": "*",
+        "ext-xdebug": "*"
+>>>>>>> update
     },
     "autoload": {
         "classmap": [
             "src/"
         ]
     },
+<<<<<<< HEAD
     "extra": {
         "branch-alias": {
             "dev-master": "4.0.x-dev"
+=======
+    "autoload-dev": {
+        "files": [
+            "tests/TestCase.php",
+            "tests/_files/BankAccountTest.php"
+        ]
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "9.2-dev"
+>>>>>>> update
         }
     }
 }

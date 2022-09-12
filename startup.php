@@ -27,10 +27,27 @@ if (!defined('DDFPATH')) {
     exit();
 }
 
+<<<<<<< HEAD
 // Compare PHP versions against our required 5.6
 if (!version_compare(PHP_VERSION, '5.6', '>=')) {
     exit(
         'PHP 5.6 or higher is required to run DDForum, you currently have PHP '.PHP_VERSION
+=======
+if (!defined('DDF_VERSION')) {
+    define('DDF_VERSION', '1.0.0');
+}
+
+// Required PHP version
+define('DDF_PHP_VERSION', '7.4');
+
+// Define App Name
+define('DDF_APP_NAME', 'DDForum');
+
+// Compare PHP versions against our required 5.6
+if (!version_compare(PHP_VERSION, DDF_PHP_VERSION, '>=')) {
+    exit(
+        'PHP '.DDF_PHP_VERSION.' or higher is required to run '.DDF_APP_NAME.', you currently have PHP '.PHP_VERSION
+>>>>>>> update
     );
 }
 

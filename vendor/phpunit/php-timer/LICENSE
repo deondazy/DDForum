@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 PHP_Timer
 
 Copyright (c) 2010-2015, Sebastian Bergmann <sebastian@phpunit.de>.
+=======
+phpunit/php-timer
+
+Copyright (c) 2010-2020, Sebastian Bergmann <sebastian@phpunit.de>.
+>>>>>>> update
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

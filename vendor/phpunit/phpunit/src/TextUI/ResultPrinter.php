@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 <?php
+=======
+<?php declare(strict_types=1);
+>>>>>>> update
 /*
  * This file is part of PHPUnit.
  *
@@ -7,6 +11,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+<<<<<<< HEAD
 
 use SebastianBergmann\Environment\Console;
 
@@ -705,4 +710,19 @@ class PHPUnit_TextUI_ResultPrinter extends PHPUnit_Util_Printer implements PHPUn
             $first = false;
         }
     }
+=======
+namespace PHPUnit\TextUI;
+
+use PHPUnit\Framework\TestListener;
+use PHPUnit\Framework\TestResult;
+
+/**
+ * @no-named-arguments Parameter names are not covered by the backward compatibility promise for PHPUnit
+ */
+interface ResultPrinter extends TestListener
+{
+    public function printResult(TestResult $result): void;
+
+    public function write(string $buffer): void;
+>>>>>>> update
 }

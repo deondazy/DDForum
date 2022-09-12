@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Dashboard for {{full_path}}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<<<<<<< HEAD
   <link href="{{path_to_root}}css/bootstrap.min.css" rel="stylesheet">
   <link href="{{path_to_root}}css/nv.d3.min.css" rel="stylesheet">
   <link href="{{path_to_root}}css/style.css" rel="stylesheet">
@@ -20,11 +21,32 @@
       <ol class="breadcrumb">
 {{breadcrumbs}}
       </ol>
+=======
+  <link href="{{path_to_root}}_css/bootstrap.min.css" rel="stylesheet" type="text/css">
+  <link href="{{path_to_root}}_css/nv.d3.min.css" rel="stylesheet" type="text/css">
+  <link href="{{path_to_root}}_css/style.css" rel="stylesheet" type="text/css">
+  <link href="{{path_to_root}}_css/custom.css" rel="stylesheet" type="text/css">
+ </head>
+ <body>
+  <header>
+   <div class="container-fluid">
+    <div class="row">
+     <div class="col-md-12">
+      <nav aria-label="breadcrumb">
+       <ol class="breadcrumb">
+{{breadcrumbs}}
+       </ol>
+      </nav>
+>>>>>>> update
      </div>
     </div>
    </div>
   </header>
+<<<<<<< HEAD
   <div class="container">
+=======
+  <div class="container-fluid">
+>>>>>>> update
    <div class="row">
     <div class="col-md-12">
      <h2>Classes</h2>
@@ -138,11 +160,17 @@
     </p>
    </footer>
   </div>
+<<<<<<< HEAD
   <script src="{{path_to_root}}js/jquery.min.js" type="text/javascript"></script>
   <script src="{{path_to_root}}js/bootstrap.min.js" type="text/javascript"></script>
   <script src="{{path_to_root}}js/holder.min.js" type="text/javascript"></script>
   <script src="{{path_to_root}}js/d3.min.js" type="text/javascript"></script>
   <script src="{{path_to_root}}js/nv.d3.min.js" type="text/javascript"></script>
+=======
+  <script src="{{path_to_root}}_js/jquery.min.js" type="text/javascript"></script>
+  <script src="{{path_to_root}}_js/d3.min.js" type="text/javascript"></script>
+  <script src="{{path_to_root}}_js/nv.d3.min.js" type="text/javascript"></script>
+>>>>>>> update
   <script type="text/javascript">
 $(document).ready(function() {
   nv.addGraph(function() {
