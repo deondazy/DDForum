@@ -120,7 +120,7 @@ class Util
         $matches = preg_split('/((?<!\\\\)%[a-z]\\s*)/iu', $format, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
         $output = '';
         foreach ($matches as $match) {
-            if ($match{0} == '%') {
+            if ($match[0] == '%') {
                 $output .= strftime($match, $timestamp);
             } else {
                 $output .= date($match, $timestamp);
