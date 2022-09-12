@@ -1,0 +1,120 @@
+.topic-view {
+    overflow: hidden;
+    list-style: none;
+    position: relative;
+}
+
+.topic-listing {
+
+}
+
+.topic-listing .child {
+    background: #f7f7f7;
+    margin-left: 70px;
+}
+
+.topic-listing .child .topic-poster-image {
+    left: 10px;
+}
+
+.topic-listing .child .topic-body {
+    padding-left: 80px;
+    padding-right: 10px;
+}
+
+.topic-main {
+    padding: 0 15px;
+    max-width: 800px;
+    width: 100%;
+}
+
+.topic-poster-image {
+    padding-top: 11px;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.topic-poster-image img {
+    border-radius: 100%;
+}
+
+.topic-body {
+    border-top: 1px solid #ddd;
+    float: left;
+    width: 100%;
+    padding-left: 75px;
+    padding-top: 11px;
+}
+
+.topic-body footer {
+    padding-bottom: 15px;
+    font-size: 12px;
+}
+
+.topic-body footer a {
+    text-decoration: none;
+}
+
+.topic-meta {
+    margin-bottom: 15px;
+}
+
+.topic-footer {
+    background: #bbb;
+    padding: 7px 5px;
+}
+
+.topic-message p {
+    font-size: 1.1em;
+    line-height: 1.5;
+    margin-bottom: 15px;
+}
+
+.topic-message ul {
+    margin-bottom: 1.1em;
+    padding-left: 30px;
+}
+
+.topic-message hr {
+    border-bottom: 1px dotted #bbb;
+    margin-bottom: 1.1em;
+}
+
+.topic-action {
+    color: #bbb;
+    margin-left: 15px;
+    text-decoration: none;
+}
+
+.topic-date {
+    float: right;
+    font-size: 12px;
+    color: #bbb;
+    font-style: italic;
+}
+
+.topic-subject {
+    font-size: 1.7em;
+    font-weight: 600;
+    padding: 25px 15px;
+}
+
+.likes {
+    color: #bbb;
+}
+
+.like-button {
+    background: transparent;
+    border: none;
+    margin-left: 0;
+}
+
+.like-button:hover { color: #3a83dc }
+
+.like-button:focus { outline: none }
+
+.like-button:before {
+    content: "\f004";
+    font-family: FontAwesome;
+}

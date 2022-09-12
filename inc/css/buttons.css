@@ -1,0 +1,52 @@
+/******************************************************************************
+ * BUTTONS                                                                    *
+ ******************************************************************************/
+.primary-button {
+    background: #3a83dc;
+    border: none;
+    color: #fff;
+    height: 45px;
+    padding: 0 15px;
+}
+
+.secondary-button {
+    background: #eee;
+    padding: 7px 10px;
+    border: 1px solid #bbb;
+    display: block;
+    color: #666;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.secondary-button:hover { text-decoration: none; }
+
+.add-btn,
+.action-button {
+    background: #3a83dc;
+    border: none;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 8px 25px;
+}
+
+.add-btn {
+    background: #333;
+    margin: 10px;
+    text-decoration: none;
+}
+
+.add-btn:hover {
+    background: #3a83dc;
+    color: #fff;
+    text-decoration: none;
+}
+
+.action-btn {
+    background: #3a83dc;
+    margin: 1.5em 0;
+    padding: 8px 20px;
+}
+
+.action-btn:hover { opacity: .9; }

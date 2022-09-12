@@ -1,0 +1,13 @@
+/node_modules
+composer.lock
+/ddf-config.php
+/.htaccess
+/nbproject
+/error.log
+inc/avatar/*
+!inc/avatar/ddf-avatar.png
+inc/images/*
+!inc/images/profile-cover.jpg
+.htaccess
+inc/attachment/
+inc/css/less/

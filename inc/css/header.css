@@ -1,0 +1,15 @@
+/******************************************************************************
+ * HEADER                                                                     *
+ ******************************************************************************/
+.site-header {
+  background: #fff;
+  border-bottom: 5px solid #eee;
+}
+
+.site-title {
+  border-bottom: 5px solid #eee;
+  text-align: center;
+  font-size: 30px;
+  font-weight: 600;
+  padding: 25px 0;
+}
