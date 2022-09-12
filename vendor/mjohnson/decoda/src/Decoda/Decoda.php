@@ -9,6 +9,7 @@ namespace Decoda;
 
 use Decoda\Exception\MissingFilterException;
 use Decoda\Exception\MissingHookException;
+use Decoda\Exception\MissingItemException;
 use Decoda\Exception\MissingLocaleException;
 use \InvalidArgumentException;
 
@@ -70,6 +71,13 @@ class Decoda {
     protected $_blacklist = array();
 
     /**
+     * Unique cache key for this block.
+     *
+     * @type string
+     */
+    protected $_cacheKey = '';
+
+    /**
      * Configuration.
      *
      * @type array
@@ -86,7 +94,9 @@ class Decoda {
         'maxNewlines' => 3,
         'lineBreaks' => true,
         'removeEmpty' => false,
-        'configPath' => '../config/'
+        'standaloneTags' => false,
+        'configPath' => '../config/',
+        'cacheExpires' => '+1 week',
     );
 
     /**
@@ -146,6 +156,13 @@ class Decoda {
     protected $_paths = array();
 
     /**
+     * Caching engine.
+     *
+     * @type \Decoda\Storage
+     */
+    protected $_storage;
+
+    /**
      * The raw string before parsing.
      *
      * @type string
@@ -185,10 +202,11 @@ class Decoda {
      *
      * @param string $string
      * @param array $config
+     * @param string $cacheKey
      */
-    public function __construct($string = '', array $config = array()) {
+    public function __construct($string = '', array $config = array(), $cacheKey = '') {
         $this->setConfig($config);
-        $this->reset($string, true);
+        $this->reset($string, true, $cacheKey);
 
         if ($path = $this->getConfig('configPath')) {
             $this->addPath($path);
@@ -434,6 +452,15 @@ class Decoda {
     }
 
     /**
+     * Return the defined cache key.
+     *
+     * @return string
+     */
+    public function getCacheKey() {
+        return $this->_cacheKey;
+    }
+
+    /**
      * Return a specific configuration key value.
      *
      * @param string $key
@@ -563,6 +590,15 @@ class Decoda {
     }
 
     /**
+     * Return the current storage engine.
+     *
+     * @return \Decoda\Storage
+     */
+    public function getStorage() {
+        return $this->_storage;
+    }
+
+    /**
      * Return the current whitelist.
      *
      * @return array
@@ -636,22 +672,42 @@ class Decoda {
             return $this->_parsed;
         }
 
-        $this->_triggerHook('startup');
+        // Check the cache first
+        $isCached = false;
+        $cacheKey = $this->getCacheKey();
+        $storage = $this->getStorage();
 
-        $string = $this->_triggerHook('beforeParse', $this->_string);
-
-        if ($this->_isParseable($string)) {
-            $string = $this->_parse($this->_extractChunks($string));
-
-        } else {
-            $string = $this->_triggerHook('beforeContent', $string);
-            $string = $this->convertLineBreaks($string);
-            $string = $this->_triggerHook('afterContent', $string);
+        if ($cacheKey && $storage) {
+            try {
+                $this->_parsed = $storage->get($cacheKey);
+                $isCached = true;
+            } catch (MissingItemException $e) {}
         }
 
-        $string = $this->_triggerHook('afterParse', $string);
+        // Does not exist in the cache, parse it
+        if (!$isCached) {
+            $this->_triggerHook('startup');
 
-        $this->_parsed = $this->cleanNewlines($string);
+            $string = $this->_triggerHook('beforeParse', $this->_string);
+
+            if ($this->_isParseable($string)) {
+                $string = $this->_parse($this->_extractChunks($string));
+
+            } else {
+                $string = $this->_triggerHook('beforeContent', $string);
+                $string = $this->convertLineBreaks($string);
+                $string = $this->_triggerHook('afterContent', $string);
+            }
+
+            $string = $this->_triggerHook('afterParse', $string);
+
+            $this->_parsed = $this->cleanNewlines($string);
+
+            // Cache the value
+            if ($cacheKey && $storage) {
+                $storage->set($cacheKey, $this->_parsed, strtotime($this->getConfig('cacheExpires')));
+            }
+        }
 
         if ($echo) {
             echo $this->_parsed;
@@ -699,9 +755,10 @@ class Decoda {
      *
      * @param string $string
      * @param bool $flush
+     * @param string $cacheKey
      * @return \Decoda\Decoda
      */
-    public function reset($string, $flush = false) {
+    public function reset($string, $flush = false, $cacheKey = '') {
         $this->_errors = array();
         $this->_nodes = array();
         $this->_blacklist = array();
@@ -709,6 +766,7 @@ class Decoda {
         $this->_parsed = '';
         $this->_stripped = '';
         $this->_string = $this->escapeHtml($string);
+        $this->_cacheKey = $cacheKey;
 
         if ($flush) {
             $this->resetFilters();
@@ -743,6 +801,22 @@ class Decoda {
         $this->_hooks = array();
 
         $this->addHook(new \Decoda\Hook\EmptyHook());
+
+        return $this;
+    }
+
+    /**
+     * Set the cache expiration time.
+     *
+     * @param string $expires
+     * @return $this
+     */
+    public function setCacheExpiration($expires) {
+        if (!is_string($expires)) {
+            throw new InvalidArgumentException('Cache expiration must be a string in `strtotime()` format');
+        }
+
+        $this->_config['cacheExpires'] = (string) $expires;
 
         return $this;
     }
@@ -791,11 +865,17 @@ class Decoda {
                 case 'maxNewlines':
                     $this->setMaxNewlines($value);
                 break;
+                case 'standaloneTags':
+                    $this->setStandaloneTags($value);
+                break;
                 case 'lineBreaks':
                     $this->setLineBreaks($value);
                 break;
                 case 'removeEmpty':
                     $this->setRemoveEmptyTags($value);
+                break;
+                case 'cacheExpires':
+                    $this->setCacheExpiration($value);
                 break;
 
                 // Doesn't need a setter as it's only used in the constructor
@@ -852,6 +932,19 @@ class Decoda {
     }
 
     /**
+     * Toggle whether standalone tags (self-closing tags without the 
+     * trailing slash) are allowed.
+     *
+     * @param bool $status
+     * @return \Decoda\Decoda
+     */
+    public function setStandaloneTags($status) {
+        $this->_config['standaloneTags'] = (bool) $status;
+
+        return $this;
+    }
+
+    /**
      * Set the locale.
      *
      * @param string $locale
@@ -895,6 +988,18 @@ class Decoda {
      */
     public function setShorthand($status) {
         $this->_config['shorthandLinks'] = (bool) $status;
+
+        return $this;
+    }
+
+    /**
+     * Sets the storage engine.
+     *
+     * @param \Decoda\Storage $storage
+     * @return \Decoda\Decoda
+     */
+    public function setStorage(Storage $storage) {
+        $this->_storage = $storage;
 
         return $this;
     }
@@ -1038,6 +1143,11 @@ class Decoda {
             $type = self::TAG_SELF_CLOSE;
         }
 
+        // Check if is a standalone self closing tag
+        if($type === self::TAG_OPEN && $source['autoClose'] && $this->getConfig('standaloneTags')) {
+            $type = self::TAG_SELF_CLOSE;
+        }
+
         // Find attributes
         if (!$disabled) {
             $found = array();
@@ -1050,9 +1160,10 @@ class Decoda {
                 }
             }
 
-            // Find attributes that aren't surrounded by quotes
+            // If not strict mode, find BOTH attributes that are or aren't surrounded by quotes
+            // for example, both [size="10"] or [size=10] are considered valid
             if (!$this->getConfig('strictMode')) {
-                preg_match_all('/([a-z_\-]+)=([^\s' . $ce . ']+)/i', $string, $matches, PREG_SET_ORDER);
+                preg_match_all('/([a-z_\-]+)="?([^\s"' . $ce . ']+)/i', $string, $matches, PREG_SET_ORDER);
 
                 if ($matches) {
                     foreach ($matches as $match) {
@@ -1067,7 +1178,7 @@ class Decoda {
                 foreach ($found as $key => $value) {
                     $value = trim(trim($value), '"');
 
-                    if ($key === $tag) {
+                    if ($key === $tag || strtolower($key) === $tag) {
                         $key = 'default';
                     }
 
@@ -1153,7 +1264,7 @@ class Decoda {
                 case self::TAG_NONE:
                     // Disregard deeply nested text nodes if persist is disabled
                     if ($disallowed && !$parent['persistContent']) {
-                        continue;
+                        break;
                     }
 
                     if (!$parent['onlyTags']) {
@@ -1209,7 +1320,7 @@ class Decoda {
 
                         if ($last['tag'] === $tag) {
                             array_pop($disallowed);
-                            continue;
+                            break;
                         }
                     }
 
@@ -1290,6 +1401,10 @@ class Decoda {
 
         while ($strPos < $strLength) {
             $tag = array();
+            $possibleLiteral = false;
+            $isLiteral = false;
+
+            // Find opening tag
             $openPos = mb_strpos($string, $openBracket, $strPos);
 
             if ($openPos === false) {
@@ -1304,16 +1419,30 @@ class Decoda {
                 if ($nextOpenPos === false) {
                     $nextOpenPos = $strLength;
                 }
+
+                $possibleLiteral = ($openPos + 1 === $nextOpenPos);
             }
 
+            // Find closing tag
             $closePos = mb_strpos($string, $closeBracket, $strPos);
 
             if ($closePos === false) {
                 $closePos = $strLength + 1;
             }
 
+            if ($possibleLiteral) {
+                $isLiteral = (isset($string[$closePos + 1]) && $string[$closePos + 1] === $closeBracket);
+            }
+
+            // Literal tag found, do not parse
+            if ($isLiteral) {
+                $newPos = $closePos + 2;
+
+                $tag['text'] = mb_substr($string, $openPos + 1, ($closePos - $openPos));
+                $tag['type'] = self::TAG_NONE;
+
             // Possible tag found, lets look
-            if ($openPos === $strPos) {
+            } else if ($openPos === $strPos) {
 
                 // Child open tag before closing tag
                 if ($nextOpenPos < $closePos) {
