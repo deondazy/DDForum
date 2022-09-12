@@ -6,9 +6,9 @@ inc/avatar/*
 !inc/avatar/ddf-avatar.png
 inc/images/*
 !inc/images/profile-cover.jpg
-.htaccess
 inc/attachment/
 inc/css/less/
+uploads/*
 .DS_Store
 **/.DS_Store
 error.log
