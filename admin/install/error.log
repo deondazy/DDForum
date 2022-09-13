@@ -1,3 +1,5 @@
 [13-Sep-2022 13:41:44 Africa/Lagos] PHP Parse error:  syntax error, unexpected '<<' (T_SL), expecting end of file in /Users/deondazy/Sites/ddforum.dev/vendor/autoload.php on line 5
 [13-Sep-2022 13:42:25 Africa/Lagos] PHP Parse error:  syntax error, unexpected '<<' (T_SL), expecting function (T_FUNCTION) or const (T_CONST) in /Users/deondazy/Sites/ddforum.dev/vendor/composer/autoload_real.php on line 16
 [13-Sep-2022 13:42:26 Africa/Lagos] PHP Parse error:  syntax error, unexpected '<<' (T_SL), expecting function (T_FUNCTION) or const (T_CONST) in /Users/deondazy/Sites/ddforum.dev/vendor/composer/autoload_real.php on line 16
+[13-Sep-2022 13:43:37 Africa/Lagos] PHP Parse error:  syntax error, unexpected '<<' (T_SL), expecting function (T_FUNCTION) or const (T_CONST) in /Users/deondazy/Sites/ddforum.dev/vendor/composer/autoload_real.php on line 16
+[13-Sep-2022 13:43:38 Africa/Lagos] PHP Parse error:  syntax error, unexpected '<<' (T_SL), expecting function (T_FUNCTION) or const (T_CONST) in /Users/deondazy/Sites/ddforum.dev/vendor/composer/autoload_real.php on line 16
