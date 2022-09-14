@@ -9,28 +9,18 @@
             "email": "sebastian@phpunit.de"
         }
     ],
-<<<<<<< HEAD
-    "require": {
-        "php": ">=5.6.0"
-=======
     "prefer-stable": true,
     "require": {
         "php": ">=7.3"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.0"
->>>>>>> update
     },
     "autoload": {
         "classmap": [
             "src/"
         ]
     },
-<<<<<<< HEAD
-    "extra": {
-        "branch-alias": {
-            "dev-master": "1.0.x-dev"
-=======
     "config": {
         "platform": {
             "php": "7.3.0"
@@ -41,7 +31,6 @@
     "extra": {
         "branch-alias": {
             "dev-master": "3.0-dev"
->>>>>>> update
         }
     }
 }

@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-<?php
-=======
 <?php declare(strict_types=1);
->>>>>>> update
 /*
  * This file is part of the Recursion Context package.
  *
@@ -11,11 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-<<<<<<< HEAD
-
-namespace SebastianBergmann\RecursionContext;
-
-=======
 namespace SebastianBergmann\RecursionContext;
 
 use const PHP_INT_MAX;
@@ -29,7 +20,6 @@ use function random_int;
 use function spl_object_hash;
 use SplObjectStorage;
 
->>>>>>> update
 /**
  * A context containing previously processed arrays and objects
  * when recursively processing a value.
@@ -42,23 +32,11 @@ final class Context
     private $arrays;
 
     /**
-<<<<<<< HEAD
-     * @var \SplObjectStorage
-=======
      * @var SplObjectStorage
->>>>>>> update
      */
     private $objects;
 
     /**
-<<<<<<< HEAD
-     * Initialises the context
-     */
-    public function __construct()
-    {
-        $this->arrays  = array();
-        $this->objects = new \SplObjectStorage;
-=======
      * Initialises the context.
      */
     public function __construct()
@@ -78,19 +56,11 @@ final class Context
                 array_pop($array);
             }
         }
->>>>>>> update
     }
 
     /**
      * Adds a value to the context.
      *
-<<<<<<< HEAD
-     * @param  array|object             $value The value to add.
-     * @return int|string               The ID of the stored value, either as
-     *                                        a string or integer.
-     * @throws InvalidArgumentException Thrown if $value is not an array or
-     *                                        object
-=======
      * @param array|object $value the value to add
      *
      * @throws InvalidArgumentException Thrown if $value is not an array or object
@@ -100,7 +70,6 @@ final class Context
      * @psalm-template T
      * @psalm-param T $value
      * @param-out T $value
->>>>>>> update
      */
     public function add(&$value)
     {
@@ -108,11 +77,7 @@ final class Context
             return $this->addArray($value);
         }
 
-<<<<<<< HEAD
-        else if (is_object($value)) {
-=======
         if (is_object($value)) {
->>>>>>> update
             return $this->addObject($value);
         }
 
@@ -124,14 +89,6 @@ final class Context
     /**
      * Checks if the given value exists within the context.
      *
-<<<<<<< HEAD
-     * @param  array|object             $value The value to check.
-     * @return int|string|false         The string or integer ID of the stored
-     *                                        value if it has already been seen, or
-     *                                        false if the value is not stored.
-     * @throws InvalidArgumentException Thrown if $value is not an array or
-     *                                        object
-=======
      * @param array|object $value the value to check
      *
      * @throws InvalidArgumentException Thrown if $value is not an array or object
@@ -141,7 +98,6 @@ final class Context
      * @psalm-template T
      * @psalm-param T $value
      * @param-out T $value
->>>>>>> update
      */
     public function contains(&$value)
     {
@@ -149,11 +105,7 @@ final class Context
             return $this->containsArray($value);
         }
 
-<<<<<<< HEAD
-        else if (is_object($value)) {
-=======
         if (is_object($value)) {
->>>>>>> update
             return $this->containsObject($value);
         }
 
@@ -163,10 +115,6 @@ final class Context
     }
 
     /**
-<<<<<<< HEAD
-     * @param  array    $array
-=======
->>>>>>> update
      * @return bool|int
      */
     private function addArray(array &$array)
@@ -177,18 +125,6 @@ final class Context
             return $key;
         }
 
-<<<<<<< HEAD
-        $this->arrays[] = &$array;
-
-        return count($this->arrays) - 1;
-    }
-
-    /**
-     * @param  object $object
-     * @return string
-     */
-    private function addObject($object)
-=======
         $key            = count($this->arrays);
         $this->arrays[] = &$array;
 
@@ -216,7 +152,6 @@ final class Context
      * @param object $object
      */
     private function addObject($object): string
->>>>>>> update
     {
         if (!$this->objects->contains($object)) {
             $this->objects->attach($object);
@@ -226,34 +161,6 @@ final class Context
     }
 
     /**
-<<<<<<< HEAD
-     * @param  array     $array
-     * @return int|false
-     */
-    private function containsArray(array &$array)
-    {
-        $keys = array_keys($this->arrays, $array, true);
-        $hash = '_Key_' . microtime(true);
-
-        foreach ($keys as $key) {
-            $this->arrays[$key][$hash] = $hash;
-
-            if (isset($array[$hash]) && $array[$hash] === $hash) {
-                unset($this->arrays[$key][$hash]);
-
-                return $key;
-            }
-
-            unset($this->arrays[$key][$hash]);
-        }
-
-        return false;
-    }
-
-    /**
-     * @param  object       $value
-     * @return string|false
-=======
      * @return false|int
      */
     private function containsArray(array &$array)
@@ -267,7 +174,6 @@ final class Context
      * @param object $value
      *
      * @return false|string
->>>>>>> update
      */
     private function containsObject($value)
     {

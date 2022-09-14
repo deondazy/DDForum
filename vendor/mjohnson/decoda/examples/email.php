@@ -39,10 +39,6 @@ echo $code->parse(); ?>
 [email]email@domain.com[/email]
 [email="email@domain.com"]Send me an email![/email]';
 
-<<<<<<< HEAD
-$code->setShorthand();
-=======
 $code->setShorthand(true);
->>>>>>> update
 $code->reset($string);
 echo $code->parse(); ?>

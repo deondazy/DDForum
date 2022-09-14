@@ -1,20 +1,13 @@
 language: php
 
 php:
-<<<<<<< HEAD
-  - 5.3
-=======
->>>>>>> update
   - 5.4
   - 5.5
   - 5.6
   - 7.0
-<<<<<<< HEAD
-=======
   - 7.1
   - 7.2
   - 7.3
->>>>>>> update
   - hhvm
   - hhvm-nightly
 
@@ -22,13 +15,6 @@ matrix:
   allow_failures:
     - php: hhvm
     - php: hhvm-nightly
-<<<<<<< HEAD
-
-before_script:
-  - composer selfupdate
-  - composer install
-
-=======
     - php: 7.3
 
 install:
@@ -38,6 +24,5 @@ install:
 script:
   - php ./vendor/bin/phpunit
 
->>>>>>> update
 notifications:
   email: false

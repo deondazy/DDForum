@@ -1,36 +1,12 @@
-<<<<<<< HEAD
-<?php
-/*
- * This file is part of the php-code-coverage package.
-=======
 <?php declare(strict_types=1);
 /*
  * This file is part of phpunit/php-code-coverage.
->>>>>>> update
  *
  * (c) Sebastian Bergmann <sebastian@phpunit.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-<<<<<<< HEAD
-
-namespace SebastianBergmann\CodeCoverage\Node;
-
-use SebastianBergmann\CodeCoverage\CodeCoverage;
-
-class Builder
-{
-    /**
-     * @param CodeCoverage $coverage
-     *
-     * @return Directory
-     */
-    public function build(CodeCoverage $coverage)
-    {
-        $files      = $coverage->getData();
-        $commonPath = $this->reducePaths($files);
-=======
 namespace SebastianBergmann\CodeCoverage\Node;
 
 use const DIRECTORY_SEPARATOR;
@@ -67,7 +43,6 @@ final class Builder
     {
         $data       = clone $coverage->getData(); // clone because path munging is destructive to the original data
         $commonPath = $this->reducePaths($data);
->>>>>>> update
         $root       = new Directory(
             $commonPath,
             null
@@ -75,39 +50,13 @@ final class Builder
 
         $this->addItems(
             $root,
-<<<<<<< HEAD
-            $this->buildDirectoryStructure($files),
-            $coverage->getTests(),
-            $coverage->getCacheTokens()
-=======
             $this->buildDirectoryStructure($data),
             $coverage->getTests()
->>>>>>> update
         );
 
         return $root;
     }
 
-<<<<<<< HEAD
-    /**
-     * @param Directory $root
-     * @param array     $items
-     * @param array     $tests
-     * @param bool      $cacheTokens
-     */
-    private function addItems(Directory $root, array $items, array $tests, $cacheTokens)
-    {
-        foreach ($items as $key => $value) {
-            if (substr($key, -2) == '/f') {
-                $key = substr($key, 0, -2);
-
-                if (file_exists($root->getPath() . DIRECTORY_SEPARATOR . $key)) {
-                    $root->addFile($key, $value, $tests, $cacheTokens);
-                }
-            } else {
-                $child = $root->addDirectory($key);
-                $this->addItems($child, $value, $tests, $cacheTokens);
-=======
     private function addItems(Directory $root, array $items, array $tests): void
     {
         foreach ($items as $key => $value) {
@@ -136,7 +85,6 @@ final class Builder
                 $child = $root->addDirectory($key);
 
                 $this->addItems($child, $value, $tests);
->>>>>>> update
             }
         }
     }
@@ -180,19 +128,6 @@ final class Builder
      *         )
      * )
      * </code>
-<<<<<<< HEAD
-     *
-     * @param array $files
-     *
-     * @return array
-     */
-    private function buildDirectoryStructure($files)
-    {
-        $result = [];
-
-        foreach ($files as $path => $file) {
-            $path    = explode('/', $path);
-=======
      */
     private function buildDirectoryStructure(ProcessedCodeCoverageData $data): array
     {
@@ -200,35 +135,23 @@ final class Builder
 
         foreach ($data->coveredFiles() as $originalPath) {
             $path    = explode(DIRECTORY_SEPARATOR, $originalPath);
->>>>>>> update
             $pointer = &$result;
             $max     = count($path);
 
             for ($i = 0; $i < $max; $i++) {
-<<<<<<< HEAD
-                if ($i == ($max - 1)) {
-                    $type = '/f';
-                } else {
-                    $type = '';
-=======
                 $type = '';
 
                 if ($i === ($max - 1)) {
                     $type = '/f';
->>>>>>> update
                 }
 
                 $pointer = &$pointer[$path[$i] . $type];
             }
 
-<<<<<<< HEAD
-            $pointer = $file;
-=======
             $pointer = [
                 'lineCoverage'     => $data->lineCoverage()[$originalPath] ?? [],
                 'functionCoverage' => $data->functionCoverage()[$originalPath] ?? [],
             ];
->>>>>>> update
         }
 
         return $result;
@@ -270,40 +193,19 @@ final class Builder
      *         )
      * )
      * </code>
-<<<<<<< HEAD
-     *
-     * @param array $files
-     *
-     * @return string
-     */
-    private function reducePaths(&$files)
-    {
-        if (empty($files)) {
-=======
      */
     private function reducePaths(ProcessedCodeCoverageData $coverage): string
     {
         if (empty($coverage->coveredFiles())) {
->>>>>>> update
             return '.';
         }
 
         $commonPath = '';
-<<<<<<< HEAD
-        $paths      = array_keys($files);
-
-        if (count($files) == 1) {
-            $commonPath                 = dirname($paths[0]) . '/';
-            $files[basename($paths[0])] = $files[$paths[0]];
-
-            unset($files[$paths[0]]);
-=======
         $paths      = $coverage->coveredFiles();
 
         if (count($paths) === 1) {
             $commonPath = dirname($paths[0]) . DIRECTORY_SEPARATOR;
             $coverage->renameFile($paths[0], basename($paths[0]));
->>>>>>> update
 
             return $commonPath;
         }
@@ -314,11 +216,7 @@ final class Builder
             // strip phar:// prefixes
             if (strpos($paths[$i], 'phar://') === 0) {
                 $paths[$i] = substr($paths[$i], 7);
-<<<<<<< HEAD
-                $paths[$i] = strtr($paths[$i], '/', DIRECTORY_SEPARATOR);
-=======
                 $paths[$i] = str_replace('/', DIRECTORY_SEPARATOR, $paths[$i]);
->>>>>>> update
             }
             $paths[$i] = explode(DIRECTORY_SEPARATOR, $paths[$i]);
 
@@ -333,16 +231,10 @@ final class Builder
         while (!$done) {
             for ($i = 0; $i < $max - 1; $i++) {
                 if (!isset($paths[$i][0]) ||
-<<<<<<< HEAD
-                    !isset($paths[$i+1][0]) ||
-                    $paths[$i][0] != $paths[$i+1][0]) {
-                    $done = true;
-=======
                     !isset($paths[$i + 1][0]) ||
                     $paths[$i][0] !== $paths[$i + 1][0]) {
                     $done = true;
 
->>>>>>> update
                     break;
                 }
             }
@@ -350,11 +242,7 @@ final class Builder
             if (!$done) {
                 $commonPath .= $paths[0][0];
 
-<<<<<<< HEAD
-                if ($paths[0][0] != DIRECTORY_SEPARATOR) {
-=======
                 if ($paths[0][0] !== DIRECTORY_SEPARATOR) {
->>>>>>> update
                     $commonPath .= DIRECTORY_SEPARATOR;
                 }
 
@@ -364,18 +252,6 @@ final class Builder
             }
         }
 
-<<<<<<< HEAD
-        $original = array_keys($files);
-        $max      = count($original);
-
-        for ($i = 0; $i < $max; $i++) {
-            $files[implode('/', $paths[$i])] = $files[$original[$i]];
-            unset($files[$original[$i]]);
-        }
-
-        ksort($files);
-
-=======
         $original = $coverage->coveredFiles();
         $max      = count($original);
 
@@ -383,7 +259,6 @@ final class Builder
             $coverage->renameFile($original[$i], implode(DIRECTORY_SEPARATOR, $paths[$i]));
         }
 
->>>>>>> update
         return substr($commonPath, 0, -1);
     }
 }

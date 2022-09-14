@@ -2,15 +2,10 @@
 
 namespace DeepCopy\Filter;
 
-<<<<<<< HEAD
-/**
- * Replace the value of a property
-=======
 use DeepCopy\Reflection\ReflectionHelper;
 
 /**
  * @final
->>>>>>> update
  */
 class ReplaceFilter implements Filter
 {
@@ -28,20 +23,13 @@ class ReplaceFilter implements Filter
     }
 
     /**
-<<<<<<< HEAD
-=======
      * Replaces the object property by the result of the callback called with the object property.
      *
->>>>>>> update
      * {@inheritdoc}
      */
     public function apply($object, $property, $objectCopier)
     {
-<<<<<<< HEAD
-        $reflectionProperty = new \ReflectionProperty($object, $property);
-=======
         $reflectionProperty = ReflectionHelper::getProperty($object, $property);
->>>>>>> update
         $reflectionProperty->setAccessible(true);
 
         $value = call_user_func($this->callback, $reflectionProperty->getValue($object));

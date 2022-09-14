@@ -16,15 +16,11 @@
         "ext-mbstring": "*"
     },
     "require-dev": {
-<<<<<<< HEAD
-        "phpunit/phpunit": "~4.8"
-=======
         "phpunit/phpunit": "~4.8|^7.5"
     },
     "suggest": {
         "ext-redis": "Cache data using Redis",
         "ext-memcached": "Cache data using Memcache"
->>>>>>> update
     },
     "support": {
         "source": "https://github.com/milesj/decoda"

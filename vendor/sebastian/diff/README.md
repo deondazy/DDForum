@@ -1,31 +1,12 @@
-<<<<<<< HEAD
-# Diff
-=======
 # sebastian/diff
 
 [![CI Status](https://github.com/sebastianbergmann/diff/workflows/CI/badge.svg)](https://github.com/sebastianbergmann/diff/actions)
 [![Type Coverage](https://shepherd.dev/github/sebastianbergmann/diff/coverage.svg)](https://shepherd.dev/github/sebastianbergmann/diff)
->>>>>>> update
 
 Diff implementation for PHP, factored out of PHPUnit into a stand-alone component.
 
 ## Installation
 
-<<<<<<< HEAD
-To add this package as a local, per-project dependency to your project, simply add a dependency on `sebastian/diff` to your project's `composer.json` file. Here is a minimal example of a `composer.json` file that just defines a dependency on Diff:
-
-    {
-        "require": {
-            "sebastian/diff": "*"
-        }
-    }
-
-### Usage
-
-The `Differ` class can be used to generate a textual representation of the difference between two strings:
-
-```php
-=======
 You can add this library as a local, per-project dependency to your project using [Composer](https://getcomposer.org/):
 
 ```
@@ -46,7 +27,6 @@ The `Differ` class can be used to generate a textual representation of the diffe
 
 ```php
 <?php
->>>>>>> update
 use SebastianBergmann\Diff\Differ;
 
 $differ = new Differ;
@@ -54,14 +34,6 @@ print $differ->diff('foo', 'bar');
 ```
 
 The code above yields the output below:
-<<<<<<< HEAD
-
-    --- Original
-    +++ New
-    @@ @@
-    -foo
-    +bar
-=======
 ```diff
 --- Original
 +++ New
@@ -139,7 +111,6 @@ print $differ->diff('foo', 'bar');
 You can pass any output builder to the `Differ` class as longs as it implements the `DiffOutputBuilderInterface`.
 
 #### Parsing diff
->>>>>>> update
 
 The `Parser` class can be used to parse a unified diff into an object graph:
 
@@ -224,20 +195,8 @@ The code above yields the output below:
                                                 [type:SebastianBergmann\Diff\Line:private] => 3
                                                 [content:SebastianBergmann\Diff\Line:private] =>         $b = new Money(2, new Currency('EUR'));
                                             )
-<<<<<<< HEAD
-
-                                    )
-
-                            )
-
-                    )
-
-            )
-
-=======
                                     )
                             )
                     )
             )
->>>>>>> update
     )

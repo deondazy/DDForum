@@ -1,91 +1,12 @@
-<<<<<<< HEAD
-<?php
-/*
- * This file is part of the php-code-coverage package.
-=======
 <?php declare(strict_types=1);
 /*
  * This file is part of phpunit/php-code-coverage.
->>>>>>> update
  *
  * (c) Sebastian Bergmann <sebastian@phpunit.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-<<<<<<< HEAD
-
-namespace SebastianBergmann\CodeCoverage\Report\Html;
-
-use SebastianBergmann\CodeCoverage\Node\File as FileNode;
-use SebastianBergmann\CodeCoverage\Util;
-
-/**
- * Renders a file node.
- */
-class File extends Renderer
-{
-    /**
-     * @var int
-     */
-    private $htmlspecialcharsFlags;
-
-    /**
-     * Constructor.
-     *
-     * @param string $templatePath
-     * @param string $generator
-     * @param string $date
-     * @param int    $lowUpperBound
-     * @param int    $highLowerBound
-     */
-    public function __construct($templatePath, $generator, $date, $lowUpperBound, $highLowerBound)
-    {
-        parent::__construct(
-            $templatePath,
-            $generator,
-            $date,
-            $lowUpperBound,
-            $highLowerBound
-        );
-
-        $this->htmlspecialcharsFlags = ENT_COMPAT;
-
-        $this->htmlspecialcharsFlags = $this->htmlspecialcharsFlags | ENT_HTML401 | ENT_SUBSTITUTE;
-    }
-
-    /**
-     * @param FileNode $node
-     * @param string   $file
-     */
-    public function render(FileNode $node, $file)
-    {
-        $template = new \Text_Template($this->templatePath . 'file.html', '{{', '}}');
-
-        $template->setVar(
-            [
-                'items' => $this->renderItems($node),
-                'lines' => $this->renderSource($node)
-            ]
-        );
-
-        $this->setCommonTemplateVariables($template, $node);
-
-        $template->renderTo($file);
-    }
-
-    /**
-     * @param FileNode $node
-     *
-     * @return string
-     */
-    protected function renderItems(FileNode $node)
-    {
-        $template = new \Text_Template($this->templatePath . 'file_item.html', '{{', '}}');
-
-        $methodItemTemplate = new \Text_Template(
-            $this->templatePath . 'method_item.html',
-=======
 namespace SebastianBergmann\CodeCoverage\Report\Html;
 
 use const ENT_COMPAT;
@@ -248,7 +169,6 @@ final class File extends Renderer
         $methodTemplateName = $this->templatePath . ($this->hasBranchCoverage ? 'method_item_branch.html' : 'method_item.html');
         $methodItemTemplate = new Template(
             $methodTemplateName,
->>>>>>> update
             '{{',
             '}}'
         );
@@ -256,22 +176,6 @@ final class File extends Renderer
         $items = $this->renderItemTemplate(
             $template,
             [
-<<<<<<< HEAD
-                'name'                         => 'Total',
-                'numClasses'                   => $node->getNumClassesAndTraits(),
-                'numTestedClasses'             => $node->getNumTestedClassesAndTraits(),
-                'numMethods'                   => $node->getNumMethods(),
-                'numTestedMethods'             => $node->getNumTestedMethods(),
-                'linesExecutedPercent'         => $node->getLineExecutedPercent(false),
-                'linesExecutedPercentAsString' => $node->getLineExecutedPercent(),
-                'numExecutedLines'             => $node->getNumExecutedLines(),
-                'numExecutableLines'           => $node->getNumExecutableLines(),
-                'testedMethodsPercent'         => $node->getTestedMethodsPercent(false),
-                'testedMethodsPercentAsString' => $node->getTestedMethodsPercent(),
-                'testedClassesPercent'         => $node->getTestedClassesAndTraitsPercent(false),
-                'testedClassesPercentAsString' => $node->getTestedClassesAndTraitsPercent(),
-                'crap'                         => '<abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr>'
-=======
                 'name'                            => 'Total',
                 'numClasses'                      => $node->numberOfClassesAndTraits(),
                 'numTestedClasses'                => $node->numberOfTestedClassesAndTraits(),
@@ -294,35 +198,22 @@ final class File extends Renderer
                 'testedClassesPercent'            => $node->percentageOfTestedClassesAndTraits()->asFloat(),
                 'testedClassesPercentAsString'    => $node->percentageOfTestedClassesAndTraits()->asString(),
                 'crap'                            => '<abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr>',
->>>>>>> update
             ]
         );
 
         $items .= $this->renderFunctionItems(
-<<<<<<< HEAD
-            $node->getFunctions(),
-=======
             $node->functions(),
->>>>>>> update
             $methodItemTemplate
         );
 
         $items .= $this->renderTraitOrClassItems(
-<<<<<<< HEAD
-            $node->getTraits(),
-=======
             $node->traits(),
->>>>>>> update
             $template,
             $methodItemTemplate
         );
 
         $items .= $this->renderTraitOrClassItems(
-<<<<<<< HEAD
-            $node->getClasses(),
-=======
             $node->classes(),
->>>>>>> update
             $template,
             $methodItemTemplate
         );
@@ -330,74 +221,6 @@ final class File extends Renderer
         return $items;
     }
 
-<<<<<<< HEAD
-    /**
-     * @param array          $items
-     * @param \Text_Template $template
-     * @param \Text_Template $methodItemTemplate
-     *
-     * @return string
-     */
-    protected function renderTraitOrClassItems(array $items, \Text_Template $template, \Text_Template $methodItemTemplate)
-    {
-        if (empty($items)) {
-            return '';
-        }
-
-        $buffer = '';
-
-        foreach ($items as $name => $item) {
-            $numMethods       = count($item['methods']);
-            $numTestedMethods = 0;
-
-            foreach ($item['methods'] as $method) {
-                if ($method['executedLines'] == $method['executableLines']) {
-                    $numTestedMethods++;
-                }
-            }
-
-            $buffer .= $this->renderItemTemplate(
-                $template,
-                [
-                    'name'                         => $name,
-                    'numClasses'                   => 1,
-                    'numTestedClasses'             => $numTestedMethods == $numMethods ? 1 : 0,
-                    'numMethods'                   => $numMethods,
-                    'numTestedMethods'             => $numTestedMethods,
-                    'linesExecutedPercent'         => Util::percent(
-                        $item['executedLines'],
-                        $item['executableLines'],
-                        false
-                    ),
-                    'linesExecutedPercentAsString' => Util::percent(
-                        $item['executedLines'],
-                        $item['executableLines'],
-                        true
-                    ),
-                    'numExecutedLines'             => $item['executedLines'],
-                    'numExecutableLines'           => $item['executableLines'],
-                    'testedMethodsPercent'         => Util::percent(
-                        $numTestedMethods,
-                        $numMethods,
-                        false
-                    ),
-                    'testedMethodsPercentAsString' => Util::percent(
-                        $numTestedMethods,
-                        $numMethods,
-                        true
-                    ),
-                    'testedClassesPercent'         => Util::percent(
-                        $numTestedMethods == $numMethods ? 1 : 0,
-                        1,
-                        false
-                    ),
-                    'testedClassesPercentAsString' => Util::percent(
-                        $numTestedMethods == $numMethods ? 1 : 0,
-                        1,
-                        true
-                    ),
-                    'crap'                         => $item['crap']
-=======
     private function renderTraitOrClassItems(array $items, Template $template, Template $methodItemTemplate): string
     {
         $buffer = '';
@@ -487,7 +310,6 @@ final class File extends Renderer
                     'testedClassesPercent'         => $testedClassesPercentage->asFloat(),
                     'testedClassesPercentAsString' => $testedClassesPercentage->asString(),
                     'crap'                         => $item['crap'],
->>>>>>> update
                 ]
             );
 
@@ -503,17 +325,7 @@ final class File extends Renderer
         return $buffer;
     }
 
-<<<<<<< HEAD
-    /**
-     * @param array          $functions
-     * @param \Text_Template $template
-     *
-     * @return string
-     */
-    protected function renderFunctionItems(array $functions, \Text_Template $template)
-=======
     private function renderFunctionItems(array $functions, Template $template): string
->>>>>>> update
     {
         if (empty($functions)) {
             return '';
@@ -531,16 +343,6 @@ final class File extends Renderer
         return $buffer;
     }
 
-<<<<<<< HEAD
-    /**
-     * @param \Text_Template $template
-     *
-     * @return string
-     */
-    protected function renderFunctionOrMethodItem(\Text_Template $template, array $item, $indent = '')
-    {
-        $numTestedItems = $item['executedLines'] == $item['executableLines'] ? 1 : 0;
-=======
     private function renderFunctionOrMethodItem(Template $template, array $item, string $indent = ''): string
     {
         $numMethods       = 0;
@@ -573,45 +375,10 @@ final class File extends Renderer
             $numTestedMethods,
             1
         );
->>>>>>> update
 
         return $this->renderItemTemplate(
             $template,
             [
-<<<<<<< HEAD
-                'name'                         => sprintf(
-                    '%s<a href="#%d"><abbr title="%s">%s</abbr></a>',
-                    $indent,
-                    $item['startLine'],
-                    htmlspecialchars($item['signature']),
-                    isset($item['functionName']) ? $item['functionName'] : $item['methodName']
-                ),
-                'numMethods'                   => 1,
-                'numTestedMethods'             => $numTestedItems,
-                'linesExecutedPercent'         => Util::percent(
-                    $item['executedLines'],
-                    $item['executableLines'],
-                    false
-                ),
-                'linesExecutedPercentAsString' => Util::percent(
-                    $item['executedLines'],
-                    $item['executableLines'],
-                    true
-                ),
-                'numExecutedLines'             => $item['executedLines'],
-                'numExecutableLines'           => $item['executableLines'],
-                'testedMethodsPercent'         => Util::percent(
-                    $numTestedItems,
-                    1,
-                    false
-                ),
-                'testedMethodsPercentAsString' => Util::percent(
-                    $numTestedItems,
-                    1,
-                    true
-                ),
-                'crap'                         => $item['crap']
-=======
                 'name' => sprintf(
                     '%s<a href="#%d"><abbr title="%s">%s</abbr></a>',
                     $indent,
@@ -636,23 +403,10 @@ final class File extends Renderer
                 'testedMethodsPercent'            => $testedMethodsPercentage->asFloat(),
                 'testedMethodsPercentAsString'    => $testedMethodsPercentage->asString(),
                 'crap'                            => $item['crap'],
->>>>>>> update
             ]
         );
     }
 
-<<<<<<< HEAD
-    /**
-     * @param FileNode $node
-     *
-     * @return string
-     */
-    protected function renderSource(FileNode $node)
-    {
-        $coverageData = $node->getCoverageData();
-        $testData     = $node->getTestData();
-        $codeLines    = $this->loadFile($node->getPath());
-=======
     private function renderSourceWithLineCoverage(FileNode $node): string
     {
         $linesTemplate      = new Template($this->templatePath . 'lines.html.dist', '{{', '}}');
@@ -661,7 +415,6 @@ final class File extends Renderer
         $coverageData = $node->lineCoverageData();
         $testData     = $node->testData();
         $codeLines    = $this->loadFile($node->pathAsString());
->>>>>>> update
         $lines        = '';
         $i            = 1;
 
@@ -671,18 +424,6 @@ final class File extends Renderer
             $popoverTitle   = '';
 
             if (array_key_exists($i, $coverageData)) {
-<<<<<<< HEAD
-                $numTests = count($coverageData[$i]);
-
-                if ($coverageData[$i] === null) {
-                    $trClass = ' class="warning"';
-                } elseif ($numTests == 0) {
-                    $trClass = ' class="danger"';
-                } else {
-                    $lineCss        = 'covered-by-large-tests';
-                    $popoverContent = '<ul>';
-
-=======
                 $numTests = ($coverageData[$i] ? count($coverageData[$i]) : 0);
 
                 if ($coverageData[$i] === null) {
@@ -690,87 +431,12 @@ final class File extends Renderer
                 } elseif ($numTests === 0) {
                     $trClass = 'danger';
                 } else {
->>>>>>> update
                     if ($numTests > 1) {
                         $popoverTitle = $numTests . ' tests cover line ' . $i;
                     } else {
                         $popoverTitle = '1 test covers line ' . $i;
                     }
 
-<<<<<<< HEAD
-                    foreach ($coverageData[$i] as $test) {
-                        if ($lineCss == 'covered-by-large-tests' && $testData[$test]['size'] == 'medium') {
-                            $lineCss = 'covered-by-medium-tests';
-                        } elseif ($testData[$test]['size'] == 'small') {
-                            $lineCss = 'covered-by-small-tests';
-                        }
-
-                        switch ($testData[$test]['status']) {
-                            case 0:
-                                switch ($testData[$test]['size']) {
-                                    case 'small':
-                                        $testCSS = ' class="covered-by-small-tests"';
-                                        break;
-
-                                    case 'medium':
-                                        $testCSS = ' class="covered-by-medium-tests"';
-                                        break;
-
-                                    default:
-                                        $testCSS = ' class="covered-by-large-tests"';
-                                        break;
-                                }
-                                break;
-
-                            case 1:
-                            case 2:
-                                $testCSS = ' class="warning"';
-                                break;
-
-                            case 3:
-                                $testCSS = ' class="danger"';
-                                break;
-
-                            case 4:
-                                $testCSS = ' class="danger"';
-                                break;
-
-                            default:
-                                $testCSS = '';
-                        }
-
-                        $popoverContent .= sprintf(
-                            '<li%s>%s</li>',
-                            $testCSS,
-                            htmlspecialchars($test)
-                        );
-                    }
-
-                    $popoverContent .= '</ul>';
-                    $trClass         = ' class="' . $lineCss . ' popin"';
-                }
-            }
-
-            if (!empty($popoverTitle)) {
-                $popover = sprintf(
-                    ' data-title="%s" data-content="%s" data-placement="bottom" data-html="true"',
-                    $popoverTitle,
-                    htmlspecialchars($popoverContent)
-                );
-            } else {
-                $popover = '';
-            }
-
-            $lines .= sprintf(
-                '     <tr%s%s><td><div align="right"><a name="%d"></a><a href="#%d">%d</a></div></td><td class="codeLine">%s</td></tr>' . "\n",
-                $trClass,
-                $popover,
-                $i,
-                $i,
-                $i,
-                $line
-            );
-=======
                     $lineCss        = 'covered-by-large-tests';
                     $popoverContent = '<ul>';
 
@@ -800,23 +466,10 @@ final class File extends Renderer
             }
 
             $lines .= $this->renderLine($singleLineTemplate, $i, $line, $trClass, $popover);
->>>>>>> update
 
             $i++;
         }
 
-<<<<<<< HEAD
-        return $lines;
-    }
-
-    /**
-     * @param string $file
-     *
-     * @return array
-     */
-    protected function loadFile($file)
-    {
-=======
         $linesTemplate->setVar(['lines' => $lines]);
 
         return $linesTemplate->render();
@@ -1227,17 +880,12 @@ final class File extends Renderer
             return self::$formattedSourceCache[$file];
         }
 
->>>>>>> update
         $buffer              = file_get_contents($file);
         $tokens              = token_get_all($buffer);
         $result              = [''];
         $i                   = 0;
         $stringFlag          = false;
-<<<<<<< HEAD
-        $fileEndsWithNewLine = substr($buffer, -1) == "\n";
-=======
         $fileEndsWithNewLine = substr($buffer, -1) === "\n";
->>>>>>> update
 
         unset($buffer);
 
@@ -1246,42 +894,26 @@ final class File extends Renderer
                 if ($token === '"' && $tokens[$j - 1] !== '\\') {
                     $result[$i] .= sprintf(
                         '<span class="string">%s</span>',
-<<<<<<< HEAD
-                        htmlspecialchars($token)
-=======
                         htmlspecialchars($token, $this->htmlSpecialCharsFlags)
->>>>>>> update
                     );
 
                     $stringFlag = !$stringFlag;
                 } else {
                     $result[$i] .= sprintf(
                         '<span class="keyword">%s</span>',
-<<<<<<< HEAD
-                        htmlspecialchars($token)
-=======
                         htmlspecialchars($token, $this->htmlSpecialCharsFlags)
->>>>>>> update
                     );
                 }
 
                 continue;
             }
 
-<<<<<<< HEAD
-            list($token, $value) = $token;
-=======
             [$token, $value] = $token;
->>>>>>> update
 
             $value = str_replace(
                 ["\t", ' '],
                 ['&nbsp;&nbsp;&nbsp;&nbsp;', '&nbsp;'],
-<<<<<<< HEAD
-                htmlspecialchars($value, $this->htmlspecialcharsFlags)
-=======
                 htmlspecialchars($value, $this->htmlSpecialCharsFlags)
->>>>>>> update
             );
 
             if ($value === "\n") {
@@ -1296,79 +928,6 @@ final class File extends Renderer
                         if ($stringFlag) {
                             $colour = 'string';
                         } else {
-<<<<<<< HEAD
-                            switch ($token) {
-                                case T_INLINE_HTML:
-                                    $colour = 'html';
-                                    break;
-
-                                case T_COMMENT:
-                                case T_DOC_COMMENT:
-                                    $colour = 'comment';
-                                    break;
-
-                                case T_ABSTRACT:
-                                case T_ARRAY:
-                                case T_AS:
-                                case T_BREAK:
-                                case T_CALLABLE:
-                                case T_CASE:
-                                case T_CATCH:
-                                case T_CLASS:
-                                case T_CLONE:
-                                case T_CONTINUE:
-                                case T_DEFAULT:
-                                case T_ECHO:
-                                case T_ELSE:
-                                case T_ELSEIF:
-                                case T_EMPTY:
-                                case T_ENDDECLARE:
-                                case T_ENDFOR:
-                                case T_ENDFOREACH:
-                                case T_ENDIF:
-                                case T_ENDSWITCH:
-                                case T_ENDWHILE:
-                                case T_EXIT:
-                                case T_EXTENDS:
-                                case T_FINAL:
-                                case T_FINALLY:
-                                case T_FOREACH:
-                                case T_FUNCTION:
-                                case T_GLOBAL:
-                                case T_IF:
-                                case T_IMPLEMENTS:
-                                case T_INCLUDE:
-                                case T_INCLUDE_ONCE:
-                                case T_INSTANCEOF:
-                                case T_INSTEADOF:
-                                case T_INTERFACE:
-                                case T_ISSET:
-                                case T_LOGICAL_AND:
-                                case T_LOGICAL_OR:
-                                case T_LOGICAL_XOR:
-                                case T_NAMESPACE:
-                                case T_NEW:
-                                case T_PRIVATE:
-                                case T_PROTECTED:
-                                case T_PUBLIC:
-                                case T_REQUIRE:
-                                case T_REQUIRE_ONCE:
-                                case T_RETURN:
-                                case T_STATIC:
-                                case T_THROW:
-                                case T_TRAIT:
-                                case T_TRY:
-                                case T_UNSET:
-                                case T_USE:
-                                case T_VAR:
-                                case T_WHILE:
-                                case T_YIELD:
-                                    $colour = 'keyword';
-                                    break;
-
-                                default:
-                                    $colour = 'default';
-=======
                             $colour = 'default';
 
                             if ($this->isInlineHtml($token)) {
@@ -1377,7 +936,6 @@ final class File extends Renderer
                                 $colour = 'comment';
                             } elseif ($this->isKeyword($token)) {
                                 $colour = 'keyword';
->>>>>>> update
                             }
                         }
 
@@ -1396,13 +954,6 @@ final class File extends Renderer
         }
 
         if ($fileEndsWithNewLine) {
-<<<<<<< HEAD
-            unset($result[count($result)-1]);
-        }
-
-        return $result;
-    }
-=======
             unset($result[count($result) - 1]);
         }
 
@@ -1595,5 +1146,4 @@ final class File extends Renderer
 
         return self::$keywordTokens;
     }
->>>>>>> update
 }

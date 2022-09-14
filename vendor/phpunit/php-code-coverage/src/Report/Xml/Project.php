@@ -1,53 +1,12 @@
-<<<<<<< HEAD
-<?php
-/*
- * This file is part of the php-code-coverage package.
-=======
 <?php declare(strict_types=1);
 /*
  * This file is part of phpunit/php-code-coverage.
->>>>>>> update
  *
  * (c) Sebastian Bergmann <sebastian@phpunit.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-<<<<<<< HEAD
-
-namespace SebastianBergmann\CodeCoverage\Report\Xml;
-
-class Project extends Node
-{
-    public function __construct($name)
-    {
-        $this->init();
-        $this->setProjectName($name);
-    }
-
-    private function init()
-    {
-        $dom = new \DOMDocument;
-        $dom->loadXML('<?xml version="1.0" ?><phpunit xmlns="http://schema.phpunit.de/coverage/1.0"><project/></phpunit>');
-
-        $this->setContextNode(
-            $dom->getElementsByTagNameNS(
-                'http://schema.phpunit.de/coverage/1.0',
-                'project'
-            )->item(0)
-        );
-    }
-
-    private function setProjectName($name)
-    {
-        $this->getContextNode()->setAttribute('name', $name);
-    }
-
-    public function getTests()
-    {
-        $testsNode = $this->getContextNode()->getElementsByTagNameNS(
-            'http://schema.phpunit.de/coverage/1.0',
-=======
 namespace SebastianBergmann\CodeCoverage\Report\Xml;
 
 use DOMDocument;
@@ -91,20 +50,13 @@ final class Project extends Node
     {
         $testsNode = $this->contextNode()->getElementsByTagNameNS(
             'https://schema.phpunit.de/coverage/1.0',
->>>>>>> update
             'tests'
         )->item(0);
 
         if (!$testsNode) {
-<<<<<<< HEAD
-            $testsNode = $this->getContextNode()->appendChild(
-                $this->getDom()->createElementNS(
-                    'http://schema.phpunit.de/coverage/1.0',
-=======
             $testsNode = $this->contextNode()->appendChild(
                 $this->dom()->createElementNS(
                     'https://schema.phpunit.de/coverage/1.0',
->>>>>>> update
                     'tests'
                 )
             );
@@ -113,11 +65,6 @@ final class Project extends Node
         return new Tests($testsNode);
     }
 
-<<<<<<< HEAD
-    public function asDom()
-    {
-        return $this->getDom();
-=======
     public function asDom(): DOMDocument
     {
         return $this->dom();
@@ -139,6 +86,5 @@ final class Project extends Node
     private function setProjectSourceDirectory(string $name): void
     {
         $this->contextNode()->setAttribute('source', $name);
->>>>>>> update
     }
 }

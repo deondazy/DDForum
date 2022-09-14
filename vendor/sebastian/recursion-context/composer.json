@@ -17,13 +17,6 @@
             "email": "aharvey@php.net"
         }
     ],
-<<<<<<< HEAD
-    "require": {
-        "php": ">=5.3.3"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "~4.4"
-=======
     "prefer-stable": true,
     "config": {
         "platform": {
@@ -37,7 +30,6 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^9.3"
->>>>>>> update
     },
     "autoload": {
         "classmap": [
@@ -46,11 +38,7 @@
     },
     "extra": {
         "branch-alias": {
-<<<<<<< HEAD
-            "dev-master": "1.0.x-dev"
-=======
             "dev-master": "4.0-dev"
->>>>>>> update
         }
     }
 }

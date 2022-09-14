@@ -1,9 +1,5 @@
 #!/usr/bin/env php
-<<<<<<< HEAD
-<?php
-=======
 <?php declare(strict_types=1);
->>>>>>> update
 /*
  * This file is part of resource-operations.
  *
@@ -13,26 +9,17 @@
  * file that was distributed with this source code.
  */
 
-<<<<<<< HEAD
-$functions         = require __DIR__ . '/arginfo.php';
-=======
 $functions         = require __DIR__ . '/FunctionSignatureMap.php';
->>>>>>> update
 $resourceFunctions = [];
 
 foreach ($functions as $function => $arguments) {
     foreach ($arguments as $argument) {
-<<<<<<< HEAD
-        if ($argument == 'resource') {
-            $resourceFunctions[] = $function;
-=======
         if (strpos($argument, '?') === 0) {
             $argument = substr($argument, 1);
         }
 
         if ($argument === 'resource') {
             $resourceFunctions[] = explode('\'', $function)[0];
->>>>>>> update
         }
     }
 }
@@ -41,11 +28,7 @@ $resourceFunctions = array_unique($resourceFunctions);
 sort($resourceFunctions);
 
 $buffer = <<<EOT
-<<<<<<< HEAD
-<?php
-=======
 <?php declare(strict_types=1);
->>>>>>> update
 /*
  * This file is part of resource-operations.
  *
@@ -54,25 +37,14 @@ $buffer = <<<EOT
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-<<<<<<< HEAD
-
-namespace SebastianBergmann\ResourceOperations;
-
-class ResourceOperations
-=======
 namespace SebastianBergmann\ResourceOperations;
 
 final class ResourceOperations
->>>>>>> update
 {
     /**
      * @return string[]
      */
-<<<<<<< HEAD
-    public static function getFunctions()
-=======
     public static function getFunctions(): array
->>>>>>> update
     {
         return [
 

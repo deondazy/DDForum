@@ -1,27 +1,12 @@
-<<<<<<< HEAD
-<?php
-/*
- * This file is part of the php-code-coverage package.
-=======
 <?php declare(strict_types=1);
 /*
  * This file is part of phpunit/php-code-coverage.
->>>>>>> update
  *
  * (c) Sebastian Bergmann <sebastian@phpunit.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-<<<<<<< HEAD
-
-namespace SebastianBergmann\CodeCoverage\Driver;
-
-/**
- * Interface for code coverage drivers.
- */
-interface Driver
-=======
 namespace SebastianBergmann\CodeCoverage\Driver;
 
 use function sprintf;
@@ -36,52 +21,26 @@ use SebastianBergmann\CodeCoverage\RawCodeCoverageData;
  * @internal This class is not covered by the backward compatibility promise for phpunit/php-code-coverage
  */
 abstract class Driver
->>>>>>> update
 {
     /**
      * @var int
      *
      * @see http://xdebug.org/docs/code_coverage
      */
-<<<<<<< HEAD
-    const LINE_EXECUTED = 1;
-=======
     public const LINE_NOT_EXECUTABLE = -2;
->>>>>>> update
 
     /**
      * @var int
      *
      * @see http://xdebug.org/docs/code_coverage
      */
-<<<<<<< HEAD
-    const LINE_NOT_EXECUTED = -1;
-=======
     public const LINE_NOT_EXECUTED = -1;
->>>>>>> update
 
     /**
      * @var int
      *
      * @see http://xdebug.org/docs/code_coverage
      */
-<<<<<<< HEAD
-    const LINE_NOT_EXECUTABLE = -2;
-
-    /**
-     * Start collection of code coverage information.
-     *
-     * @param bool $determineUnusedAndDead
-     */
-    public function start($determineUnusedAndDead = true);
-
-    /**
-     * Stop collection of code coverage information.
-     *
-     * @return array
-     */
-    public function stop();
-=======
     public const LINE_EXECUTED = 1;
 
     /**
@@ -205,5 +164,4 @@ abstract class Driver
     abstract public function start(): void;
 
     abstract public function stop(): RawCodeCoverageData;
->>>>>>> update
 }

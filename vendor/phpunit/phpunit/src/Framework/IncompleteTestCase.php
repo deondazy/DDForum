@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-<?php
-=======
 <?php declare(strict_types=1);
->>>>>>> update
 /*
  * This file is part of PHPUnit.
  *
@@ -11,22 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-<<<<<<< HEAD
-
-/**
- * An incomplete test case
- *
- * @since Class available since Release 4.3.0
- */
-class PHPUnit_Framework_IncompleteTestCase extends PHPUnit_Framework_TestCase
-{
-    /**
-     * @var string
-     */
-    protected $message = '';
-
-    /**
-=======
 namespace PHPUnit\Framework;
 
 /**
@@ -35,7 +15,6 @@ namespace PHPUnit\Framework;
 final class IncompleteTestCase extends TestCase
 {
     /**
->>>>>>> update
      * @var bool
      */
     protected $backupGlobals = false;
@@ -51,40 +30,6 @@ final class IncompleteTestCase extends TestCase
     protected $runTestInSeparateProcess = false;
 
     /**
-<<<<<<< HEAD
-     * @var bool
-     */
-    protected $useErrorHandler = false;
-
-    /**
-     * @var bool
-     */
-    protected $useOutputBuffering = false;
-
-    /**
-     * @param string $className
-     * @param string $methodName
-     * @param string $message
-     */
-    public function __construct($className, $methodName, $message = '')
-    {
-        $this->message = $message;
-        parent::__construct($className . '::' . $methodName);
-    }
-
-    /**
-     * @throws PHPUnit_Framework_Exception
-     */
-    protected function runTest()
-    {
-        $this->markTestIncomplete($this->message);
-    }
-
-    /**
-     * @return string
-     */
-    public function getMessage()
-=======
      * @var string
      */
     private $message;
@@ -97,7 +42,6 @@ final class IncompleteTestCase extends TestCase
     }
 
     public function getMessage(): string
->>>>>>> update
     {
         return $this->message;
     }
@@ -105,14 +49,6 @@ final class IncompleteTestCase extends TestCase
     /**
      * Returns a string representation of the test case.
      *
-<<<<<<< HEAD
-     * @return string
-     */
-    public function toString()
-    {
-        return $this->getName();
-    }
-=======
      * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
      */
     public function toString(): string
@@ -127,5 +63,4 @@ final class IncompleteTestCase extends TestCase
     {
         $this->markTestIncomplete($this->message);
     }
->>>>>>> update
 }

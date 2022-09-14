@@ -1,18 +1,3 @@
-<<<<<<< HEAD
-# Recursion Context
-
-...
-
-## Installation
-
-To add Recursion Context as a local, per-project dependency to your project, simply add a dependency on `sebastian/recursion-context` to your project's `composer.json` file. Here is a minimal example of a `composer.json` file that just defines a dependency on Recursion Context 1.0:
-
-    {
-        "require": {
-            "sebastian/recursion-context": "~1.0"
-        }
-    }
-=======
 # sebastian/recursion-context
 
 [![CI Status](https://github.com/sebastianbergmann/recursion-context/workflows/CI/badge.svg)](https://github.com/sebastianbergmann/recursion-context/actions)
@@ -31,4 +16,3 @@ If you only need this library during development, for instance to run your proje
 ```
 composer require --dev sebastian/recursion-context
 ```
->>>>>>> update

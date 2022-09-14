@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-<?php
-=======
 <?php declare(strict_types=1);
->>>>>>> update
 /*
  * This file is part of PHPUnit.
  *
@@ -11,16 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-<<<<<<< HEAD
-
-/**
- * @since Class available since Release 4.0.0
- */
-class PHPUnit_Runner_Filter_Factory
-{
-    /**
-     * @var array
-=======
 namespace PHPUnit\Runner\Filter;
 
 use function assert;
@@ -39,20 +25,10 @@ final class Factory
 {
     /**
      * @psalm-var array<int,array{0: \ReflectionClass, 1: array|string}>
->>>>>>> update
      */
     private $filters = [];
 
     /**
-<<<<<<< HEAD
-     * @param ReflectionClass $filter
-     * @param mixed           $args
-     */
-    public function addFilter(ReflectionClass $filter, $args)
-    {
-        if (!$filter->isSubclassOf('RecursiveFilterIterator')) {
-            throw new InvalidArgumentException(
-=======
      * @param array|string $args
      *
      * @throws Exception
@@ -61,7 +37,6 @@ final class Factory
     {
         if (!$filter->isSubclassOf(RecursiveFilterIterator::class)) {
             throw new Exception(
->>>>>>> update
                 sprintf(
                     'Class "%s" does not extend RecursiveFilterIterator',
                     $filter->name
@@ -72,18 +47,6 @@ final class Factory
         $this->filters[] = [$filter, $args];
     }
 
-<<<<<<< HEAD
-    /**
-     * @return FilterIterator
-     */
-    public function factory(Iterator $iterator, PHPUnit_Framework_TestSuite $suite)
-    {
-        foreach ($this->filters as $filter) {
-            list($class, $args) = $filter;
-            $iterator           = $class->newInstance($iterator, $args, $suite);
-        }
-
-=======
     public function factory(Iterator $iterator, TestSuite $suite): FilterIterator
     {
         foreach ($this->filters as $filter) {
@@ -93,7 +56,6 @@ final class Factory
 
         assert($iterator instanceof FilterIterator);
 
->>>>>>> update
         return $iterator;
     }
 }

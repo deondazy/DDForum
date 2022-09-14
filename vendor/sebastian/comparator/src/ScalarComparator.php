@@ -1,23 +1,12 @@
-<<<<<<< HEAD
-<?php
-/*
- * This file is part of the Comparator package.
-=======
 <?php declare(strict_types=1);
 /*
  * This file is part of sebastian/comparator.
->>>>>>> update
  *
  * (c) Sebastian Bergmann <sebastian@phpunit.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-<<<<<<< HEAD
-
-namespace SebastianBergmann\Comparator;
-
-=======
 namespace SebastianBergmann\Comparator;
 
 use function is_object;
@@ -27,7 +16,6 @@ use function method_exists;
 use function sprintf;
 use function strtolower;
 
->>>>>>> update
 /**
  * Compares scalar or NULL values for equality.
  */
@@ -36,17 +24,11 @@ class ScalarComparator extends Comparator
     /**
      * Returns whether the comparator can compare two values.
      *
-<<<<<<< HEAD
-     * @param  mixed $expected The first value to compare
-     * @param  mixed $actual   The second value to compare
-     * @return bool
-=======
      * @param mixed $expected The first value to compare
      * @param mixed $actual   The second value to compare
      *
      * @return bool
      *
->>>>>>> update
      * @since  Method available since Release 3.6.0
      */
     public function accepts($expected, $actual)
@@ -61,21 +43,6 @@ class ScalarComparator extends Comparator
     /**
      * Asserts that two values are equal.
      *
-<<<<<<< HEAD
-     * @param  mixed             $expected     The first value to compare
-     * @param  mixed             $actual       The second value to compare
-     * @param  float             $delta        The allowed numerical distance between two values to
-     *                                         consider them equal
-     * @param  bool              $canonicalize If set to TRUE, arrays are sorted before
-     *                                         comparison
-     * @param  bool              $ignoreCase   If set to TRUE, upper- and lowercasing is
-     *                                         ignored when comparing string values
-     * @throws ComparisonFailure Thrown when the comparison
-     *                                        fails. Contains information about the
-     *                                        specific errors that lead to the failure.
-     */
-    public function assertEquals($expected, $actual, $delta = 0.0, $canonicalize = false, $ignoreCase = false)
-=======
      * @param mixed $expected     First value to compare
      * @param mixed $actual       Second value to compare
      * @param float $delta        Allowed numerical distance between two values to consider them equal
@@ -85,7 +52,6 @@ class ScalarComparator extends Comparator
      * @throws ComparisonFailure
      */
     public function assertEquals($expected, $actual, $delta = 0.0, $canonicalize = false, $ignoreCase = false)/*: void*/
->>>>>>> update
     {
         $expectedToCompare = $expected;
         $actualToCompare   = $actual;
@@ -102,20 +68,6 @@ class ScalarComparator extends Comparator
             }
         }
 
-<<<<<<< HEAD
-        if ($expectedToCompare != $actualToCompare) {
-            if (is_string($expected) && is_string($actual)) {
-                throw new ComparisonFailure(
-                    $expected,
-                    $actual,
-                    $this->exporter->export($expected),
-                    $this->exporter->export($actual),
-                    false,
-                    'Failed asserting that two strings are equal.'
-                );
-            }
-
-=======
         if ($expectedToCompare !== $actualToCompare && is_string($expected) && is_string($actual)) {
             throw new ComparisonFailure(
                 $expected,
@@ -128,7 +80,6 @@ class ScalarComparator extends Comparator
         }
 
         if ($expectedToCompare != $actualToCompare) {
->>>>>>> update
             throw new ComparisonFailure(
                 $expected,
                 $actual,

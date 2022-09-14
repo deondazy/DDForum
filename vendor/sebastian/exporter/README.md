@@ -1,12 +1,3 @@
-<<<<<<< HEAD
-Exporter
-========
-
-[![Build Status](https://secure.travis-ci.org/sebastianbergmann/exporter.png?branch=master)](https://travis-ci.org/sebastianbergmann/exporter)
-
-This component provides the functionality to export PHP variables for visualization.
-
-=======
 # sebastian/exporter
 
 [![CI Status](https://github.com/sebastianbergmann/exporter/workflows/CI/badge.svg)](https://github.com/sebastianbergmann/exporter/actions)
@@ -28,7 +19,6 @@ If you only need this library during development, for instance to run your proje
 composer require --dev sebastian/exporter
 ```
 
->>>>>>> update
 ## Usage
 
 Exporting:
@@ -46,10 +36,6 @@ Exception Object &0000000078de0f0d000000002003a261 (
     'code' => 0
     'file' => '/home/sebastianbergmann/test.php'
     'line' => 34
-<<<<<<< HEAD
-    'trace' => Array &0 ()
-=======
->>>>>>> update
     'previous' => null
 )
 */
@@ -186,16 +172,3 @@ space
 LONG_STRING
 );
 ```
-<<<<<<< HEAD
-
-## Installation
-
-To add Exporter as a local, per-project dependency to your project, simply add a dependency on `sebastian/exporter` to your project's `composer.json` file. Here is a minimal example of a `composer.json` file that just defines a dependency on Exporter 1.0:
-
-    {
-        "require": {
-            "sebastian/exporter": "1.0.*"
-        }
-    }
-=======
->>>>>>> update

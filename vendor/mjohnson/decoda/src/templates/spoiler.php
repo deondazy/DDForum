@@ -4,10 +4,6 @@ $filter = $this->getFilter();
 $show = $filter->message('spoiler') . ' (' . $filter->message('show') . ')';
 $hide = $filter->message('spoiler') . ' (' . $filter->message('hide') . ')'; ?>
 
-<<<<<<< HEAD
-<div class="decoda-spoiler">
-    <button class="decoda-spoiler-button" type="button" onclick="<?php echo str_replace('{id}', $counter, $spoilerToggle); ?>"><?php echo $show; ?></button>
-=======
 <script type="text/javascript">
   if (typeof decodaToggleSpoiler !== 'function') {
     function decodaToggleSpoiler(button, id) {
@@ -34,13 +30,8 @@ $hide = $filter->message('spoiler') . ' (' . $filter->message('hide') . ')'; ?>
     >
         <?php echo $show; ?>
     </button>
->>>>>>> update
 
     <div class="decoda-spoiler-content" id="spoiler-content-<?php echo $counter; ?>" style="display: none">
         <?php echo $content; ?>
     </div>
-<<<<<<< HEAD
 </div>
-=======
-</div>
->>>>>>> update

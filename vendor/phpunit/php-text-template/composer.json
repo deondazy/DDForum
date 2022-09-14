@@ -17,10 +17,6 @@
     "support": {
         "issues": "https://github.com/sebastianbergmann/php-text-template/issues"
     },
-<<<<<<< HEAD
-    "require": {
-        "php": ">=5.3.3"
-=======
     "config": {
         "platform": {
             "php": "7.3.0"
@@ -33,17 +29,11 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^9.3"
->>>>>>> update
     },
     "autoload": {
         "classmap": [
             "src/"
         ]
-<<<<<<< HEAD
-    }
-}
-
-=======
     },
     "extra": {
         "branch-alias": {
@@ -51,4 +41,3 @@
         }
     }
 }
->>>>>>> update

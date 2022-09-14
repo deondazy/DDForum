@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-<?php
-=======
 <?php declare(strict_types=1);
->>>>>>> update
 /*
  * This file is part of PHPUnit.
  *
@@ -11,35 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-<<<<<<< HEAD
-
-/**
- * Utility class for textual type (and value) representation.
- *
- * @since Class available since Release 3.0.0
- */
-class PHPUnit_Util_Type
-{
-    public static function isType($type)
-    {
-        return in_array(
-            $type,
-            [
-                'numeric',
-                'integer',
-                'int',
-                'float',
-                'string',
-                'boolean',
-                'bool',
-                'null',
-                'array',
-                'object',
-                'resource',
-                'scalar'
-            ]
-        );
-=======
 namespace PHPUnit\Util;
 
 use Throwable;
@@ -81,6 +48,5 @@ final class Type
         }
 
         return $clone instanceof $object;
->>>>>>> update
     }
 }

@@ -6,11 +6,7 @@ body {
  max-width: none;
 }
 
-<<<<<<< HEAD
-.glyphicon {
-=======
 .octicon {
->>>>>>> update
  margin-right:.25em;
 }
 
@@ -52,11 +48,7 @@ body {
  background-color: #f2dede;
 }
 
-<<<<<<< HEAD
-.table tbody td.warning, li.warning, span.warning {
-=======
 .table tbody tr.warning, .table tbody td.warning, li.warning, span.warning {
->>>>>>> update
  background-color: #fcf8e3;
 }
 
@@ -72,13 +64,8 @@ td.small {
 }
 
 td.codeLine {
-<<<<<<< HEAD
- font-family: monospace;
- white-space: pre;
-=======
  font-family: "Source Code Pro", "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
  white-space: pre-wrap;
->>>>>>> update
 }
 
 td span.comment {
@@ -109,14 +96,6 @@ span.success, span.warning, span.danger {
  text-align: center;
 }
 
-<<<<<<< HEAD
-#classCoverageDistribution, #classComplexity {
- height: 200px;
- width: 475px;
-}
-
-=======
->>>>>>> update
 #toplink {
  position: fixed;
  left: 5px;
@@ -136,11 +115,8 @@ svg text {
  overflow-x:hidden;
  overflow-y:scroll;
 }
-<<<<<<< HEAD
-=======
 
 table + .structure-heading {
  border-top: 1px solid lightgrey;
  padding-top: 0.5em;
 }
->>>>>>> update

@@ -1,23 +1,12 @@
-<<<<<<< HEAD
-<?php
-/*
- * This file is part of the Comparator package.
-=======
 <?php declare(strict_types=1);
 /*
  * This file is part of sebastian/comparator.
->>>>>>> update
  *
  * (c) Sebastian Bergmann <sebastian@phpunit.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-<<<<<<< HEAD
-
-namespace SebastianBergmann\Comparator;
-
-=======
 namespace SebastianBergmann\Comparator;
 
 use function abs;
@@ -28,7 +17,6 @@ use function is_numeric;
 use function is_string;
 use function sprintf;
 
->>>>>>> update
 /**
  * Compares numerical values for equality.
  */
@@ -37,14 +25,9 @@ class NumericComparator extends ScalarComparator
     /**
      * Returns whether the comparator can compare two values.
      *
-<<<<<<< HEAD
-     * @param  mixed $expected The first value to compare
-     * @param  mixed $actual   The second value to compare
-=======
      * @param mixed $expected The first value to compare
      * @param mixed $actual   The second value to compare
      *
->>>>>>> update
      * @return bool
      */
     public function accepts($expected, $actual)
@@ -52,39 +35,13 @@ class NumericComparator extends ScalarComparator
         // all numerical values, but not if one of them is a double
         // or both of them are strings
         return is_numeric($expected) && is_numeric($actual) &&
-<<<<<<< HEAD
-               !(is_double($expected) || is_double($actual)) &&
-=======
                !(is_float($expected) || is_float($actual)) &&
->>>>>>> update
                !(is_string($expected) && is_string($actual));
     }
 
     /**
      * Asserts that two values are equal.
      *
-<<<<<<< HEAD
-     * @param  mixed             $expected     The first value to compare
-     * @param  mixed             $actual       The second value to compare
-     * @param  float             $delta        The allowed numerical distance between two values to
-     *                                         consider them equal
-     * @param  bool              $canonicalize If set to TRUE, arrays are sorted before
-     *                                         comparison
-     * @param  bool              $ignoreCase   If set to TRUE, upper- and lowercasing is
-     *                                         ignored when comparing string values
-     * @throws ComparisonFailure Thrown when the comparison
-     *                                        fails. Contains information about the
-     *                                        specific errors that lead to the failure.
-     */
-    public function assertEquals($expected, $actual, $delta = 0.0, $canonicalize = false, $ignoreCase = false)
-    {
-        if (is_infinite($actual) && is_infinite($expected)) {
-            return;
-        }
-
-        if ((is_infinite($actual) xor is_infinite($expected)) ||
-            (is_nan($actual) or is_nan($expected)) ||
-=======
      * @param mixed $expected     First value to compare
      * @param mixed $actual       Second value to compare
      * @param float $delta        Allowed numerical distance between two values to consider them equal
@@ -101,7 +58,6 @@ class NumericComparator extends ScalarComparator
 
         if (($this->isInfinite($actual) xor $this->isInfinite($expected)) ||
             ($this->isNan($actual) || $this->isNan($expected)) ||
->>>>>>> update
             abs($actual - $expected) > $delta) {
             throw new ComparisonFailure(
                 $expected,
@@ -117,8 +73,6 @@ class NumericComparator extends ScalarComparator
             );
         }
     }
-<<<<<<< HEAD
-=======
 
     private function isInfinite($value): bool
     {
@@ -129,5 +83,4 @@ class NumericComparator extends ScalarComparator
     {
         return is_float($value) && is_nan($value);
     }
->>>>>>> update
 }

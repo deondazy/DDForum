@@ -1,30 +1,15 @@
-<<<<<<< HEAD
-<?php
-/*
- * This file is part of the Diff package.
-=======
 <?php declare(strict_types=1);
 /*
  * This file is part of sebastian/diff.
->>>>>>> update
  *
  * (c) Sebastian Bergmann <sebastian@phpunit.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-<<<<<<< HEAD
-
-namespace SebastianBergmann\Diff;
-
-/**
- */
-class Chunk
-=======
 namespace SebastianBergmann\Diff;
 
 final class Chunk
->>>>>>> update
 {
     /**
      * @var int
@@ -40,42 +25,13 @@ final class Chunk
      * @var int
      */
     private $end;
-<<<<<<< HEAD
-=======
 
->>>>>>> update
     /**
      * @var int
      */
     private $endRange;
 
     /**
-<<<<<<< HEAD
-     * @var array
-     */
-    private $lines;
-
-    /**
-     * @param int   $start
-     * @param int   $startRange
-     * @param int   $end
-     * @param int   $endRange
-     * @param array $lines
-     */
-    public function __construct($start = 0, $startRange = 1, $end = 0, $endRange = 1, array $lines = array())
-    {
-        $this->start      = (int) $start;
-        $this->startRange = (int) $startRange;
-        $this->end        = (int) $end;
-        $this->endRange   = (int) $endRange;
-        $this->lines      = $lines;
-    }
-
-    /**
-     * @return int
-     */
-    public function getStart()
-=======
      * @var Line[]
      */
     private $lines;
@@ -90,68 +46,34 @@ final class Chunk
     }
 
     public function getStart(): int
->>>>>>> update
     {
         return $this->start;
     }
 
-<<<<<<< HEAD
-    /**
-     * @return int
-     */
-    public function getStartRange()
-=======
     public function getStartRange(): int
->>>>>>> update
     {
         return $this->startRange;
     }
 
-<<<<<<< HEAD
-    /**
-     * @return int
-     */
-    public function getEnd()
-=======
     public function getEnd(): int
->>>>>>> update
     {
         return $this->end;
     }
 
-<<<<<<< HEAD
-    /**
-     * @return int
-     */
-    public function getEndRange()
-=======
     public function getEndRange(): int
->>>>>>> update
     {
         return $this->endRange;
     }
 
     /**
-<<<<<<< HEAD
-     * @return array
-     */
-    public function getLines()
-=======
      * @return Line[]
      */
     public function getLines(): array
->>>>>>> update
     {
         return $this->lines;
     }
 
     /**
-<<<<<<< HEAD
-     * @param array $lines
-     */
-    public function setLines(array $lines)
-    {
-=======
      * @param Line[] $lines
      */
     public function setLines(array $lines): void
@@ -162,7 +84,6 @@ final class Chunk
             }
         }
 
->>>>>>> update
         $this->lines = $lines;
     }
 }

@@ -1,23 +1,12 @@
-<<<<<<< HEAD
-<?php
-/*
- * This file is part of Object Enumerator.
-=======
 <?php declare(strict_types=1);
 /*
  * This file is part of sebastian/object-enumerator.
->>>>>>> update
  *
  * (c) Sebastian Bergmann <sebastian@phpunit.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-<<<<<<< HEAD
-
-namespace SebastianBergmann\ObjectEnumerator;
-
-=======
 namespace SebastianBergmann\ObjectEnumerator;
 
 use function array_merge;
@@ -25,7 +14,6 @@ use function func_get_args;
 use function is_array;
 use function is_object;
 use SebastianBergmann\ObjectReflector\ObjectReflector;
->>>>>>> update
 use SebastianBergmann\RecursionContext\Context;
 
 /**
@@ -64,18 +52,11 @@ class Enumerator
             return $objects;
         }
 
-<<<<<<< HEAD
-        $processed->add($variable);
-
-        if (is_array($variable)) {
-            foreach ($variable as $element) {
-=======
         $array = $variable;
         $processed->add($variable);
 
         if (is_array($variable)) {
             foreach ($array as $element) {
->>>>>>> update
                 if (!is_array($element) && !is_object($element)) {
                     continue;
                 }
@@ -87,20 +68,10 @@ class Enumerator
             }
         } else {
             $objects[] = $variable;
-<<<<<<< HEAD
-            $reflector = new \ReflectionObject($variable);
-
-            foreach ($reflector->getProperties() as $attribute) {
-                $attribute->setAccessible(true);
-
-                $value = $attribute->getValue($variable);
-
-=======
 
             $reflector = new ObjectReflector;
 
             foreach ($reflector->getAttributes($variable) as $value) {
->>>>>>> update
                 if (!is_array($value) && !is_object($value)) {
                     continue;
                 }

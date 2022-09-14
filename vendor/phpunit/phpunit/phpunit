@@ -1,9 +1,5 @@
 #!/usr/bin/env php
-<<<<<<< HEAD
-<?php
-=======
 <?php declare(strict_types=1);
->>>>>>> update
 /*
  * This file is part of PHPUnit.
  *
@@ -13,12 +9,6 @@
  * file that was distributed with this source code.
  */
 
-<<<<<<< HEAD
-if (version_compare('5.6.0', PHP_VERSION, '>')) {
-    fwrite(
-        STDERR,
-        'This version of PHPUnit requires PHP 5.6; using the latest version of PHP is highly recommended.' . PHP_EOL
-=======
 if (!version_compare(PHP_VERSION, PHP_VERSION, '=')) {
     fwrite(
         STDERR,
@@ -59,7 +49,6 @@ foreach (['dom', 'json', 'libxml', 'mbstring', 'tokenizer', 'xml', 'xmlwriter'] 
             'PHPUnit requires the "%s" extension.' . PHP_EOL,
             $extension
         )
->>>>>>> update
     );
 
     die(1);
@@ -69,23 +58,6 @@ if (!ini_get('date.timezone')) {
     ini_set('date.timezone', 'UTC');
 }
 
-<<<<<<< HEAD
-foreach (array(__DIR__ . '/../../autoload.php', __DIR__ . '/../vendor/autoload.php', __DIR__ . '/vendor/autoload.php') as $file) {
-    if (file_exists($file)) {
-        define('PHPUNIT_COMPOSER_INSTALL', $file);
-
-        break;
-    }
-}
-
-unset($file);
-
-if (!defined('PHPUNIT_COMPOSER_INSTALL')) {
-    fwrite(STDERR,
-        'You need to set up the project dependencies using the following commands:' . PHP_EOL .
-        'wget http://getcomposer.org/composer.phar' . PHP_EOL .
-        'php composer.phar install' . PHP_EOL
-=======
 if (isset($GLOBALS['_composer_autoload_path'])) {
     define('PHPUNIT_COMPOSER_INSTALL', $GLOBALS['_composer_autoload_path']);
 
@@ -108,17 +80,11 @@ if (!defined('PHPUNIT_COMPOSER_INSTALL')) {
         'You need to set up the project dependencies using Composer:' . PHP_EOL . PHP_EOL .
         '    composer install' . PHP_EOL . PHP_EOL .
         'You can learn all about Composer on https://getcomposer.org/.' . PHP_EOL
->>>>>>> update
     );
 
     die(1);
 }
 
-<<<<<<< HEAD
-require PHPUNIT_COMPOSER_INSTALL;
-
-PHPUnit_TextUI_Command::main();
-=======
 $options = getopt('', array('prepend:'));
 
 if (isset($options['prepend'])) {
@@ -130,4 +96,3 @@ unset($options);
 require PHPUNIT_COMPOSER_INSTALL;
 
 PHPUnit\TextUI\Command::main();
->>>>>>> update

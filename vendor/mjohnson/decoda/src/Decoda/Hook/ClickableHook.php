@@ -20,36 +20,6 @@ class ClickableHook extends AbstractHook {
      * @param string $content
      * @return string
      */
-<<<<<<< HEAD
-    public function afterParse($content) {
-        $parser = $this->getParser();
-
-        // Janky way of detecting if a link is wrapped in an anchor tag
-        // We have to check the values before the link and validate them
-        // If quotes or a closing carrot exist, do not wrap
-        // <br> is acceptable since \n are completely removed
-        if ($parser->hasFilter('Url')) {
-            $protocols = $parser->getFilter('Url')->getConfig('protocols');
-            $chars = preg_quote('-_=+|\;:&?/[]%,.!@#$*(){}"\'', '/');
-
-            $pattern = implode('', array(
-                '(' . implode('|', $protocols) . ')s?:\/\/', // protocol
-                '([\w\.\+]+:[\w\.\+]+@)?', // login
-                '([\w\.]{5,255}+)', // domain, tld
-                '(:[0-9]{0,6}+)?', // port
-                '([a-z0-9' . $chars . ']+)?', // query
-                '(#[a-z0-9' . $chars . ']+)?' // fragment
-            ));
-
-            $content = preg_replace_callback('/("|\'|>|<br>|<br\/>)?(' . $pattern . ')/is', array($this, '_urlCallback'), $content);
-        }
-
-        // Based on schema: http://en.wikipedia.org/wiki/Email_address
-        if ($parser->hasFilter('Email')) {
-            $pattern = '/("|\'|>|:|<br>|<br\/>)?(([-a-z0-9\.\+!]{1,64}+)@([-a-z0-9]+\.[a-z\.]+))/is';
-
-            $content = preg_replace_callback($pattern, array($this, '_emailCallback'), $content);
-=======
     public function beforeParse($content) {
         $parser = $this->getParser();
 
@@ -101,7 +71,6 @@ class ClickableHook extends AbstractHook {
         // We restore the tags we ommited
         foreach ($ignoredStrings as $key => $val) {
             $content = str_replace($key, $val, $content);
->>>>>>> update
         }
 
         return $content;
@@ -114,19 +83,6 @@ class ClickableHook extends AbstractHook {
      * @return string
      */
     protected function _emailCallback($matches) {
-<<<<<<< HEAD
-        if ($matches[1] === '<br>' || $matches[1] === '<br/>') {
-            $matches[0] = $matches[2];
-
-        } else if ($matches[1] !== '') {
-            return $matches[0];
-        }
-
-        return $matches[1] . $this->getParser()->getFilter('Email')->parse(array(
-            'tag' => 'email',
-            'attributes' => array()
-        ), trim($matches[0]));
-=======
         // is like http://user:pass@domain.com ? Then we do not touch it.
         if ($matches[1]) {
             return $matches[0];
@@ -136,7 +92,6 @@ class ClickableHook extends AbstractHook {
             'tag' => 'email',
             'attributes' => array()
         ), trim($matches[2]));
->>>>>>> update
     }
 
     /**
@@ -146,22 +101,6 @@ class ClickableHook extends AbstractHook {
      * @return string
      */
     protected function _urlCallback($matches) {
-<<<<<<< HEAD
-        if ($matches[1] === '<br>' || $matches[1] === '<br/>') {
-            $matches[0] = $matches[2];
-
-        } else if ($matches[1] !== '') {
-            return $matches[0];
-        }
-
-        return $matches[1] . $this->getParser()->getFilter('Url')->parse(array(
-            'tag' => 'url',
-            'attributes' => array()
-        ), trim($matches[0]));
-    }
-
-}
-=======
         return $this->getParser()->getFilter('Url')->parse(array(
             'tag' => 'url',
             'attributes' => array()
@@ -169,4 +108,3 @@ class ClickableHook extends AbstractHook {
     }
 
 }
->>>>>>> update

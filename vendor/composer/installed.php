@@ -3,7 +3,7 @@
         'name' => 'ddforum/ddforum',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '114fe4d9655c32b09920ec66194b3bb7f3d09cc8',
+        'reference' => '00190ca814f7d2b974e38b72c91fc4aea211291d',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'ddforum/ddforum' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '114fe4d9655c32b09920ec66194b3bb7f3d09cc8',
+            'reference' => '00190ca814f7d2b974e38b72c91fc4aea211291d',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

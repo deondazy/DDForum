@@ -29,15 +29,9 @@ class EmoticonHookTest extends TestCase {
 
         $hook = new EmoticonHook();
         $hook->addLoader(new DataLoader(array(
-<<<<<<< HEAD
-            'test/tag/open'   => array('['),
-            'test/tag/close'  => array(']'),
-            'test/tag/within' => array('[o]_[o]'),
-=======
             'test/tag/within' => array('[o]_[o]'),
             'test/tag/open'   => array('['),
             'test/tag/close'  => array(']'),
->>>>>>> update
             'test/unicode'    => array("\342\230\272"),
         )));
 
@@ -60,30 +54,6 @@ class EmoticonHookTest extends TestCase {
      */
     public function getSmileyDetectionData() {
         return array(
-<<<<<<< HEAD
-            array(':/ at the beginning', '<img src="/images/hm.png" alt=""> at the beginning'),
-            array('Smiley at the end :O', 'Smiley at the end <img src="/images/gah.png" alt="">'),
-            array('Smiley in the middle :P of a string', 'Smiley in the middle <img src="/images/tongue.png" alt=""> of a string'),
-            array(':):):)', ':):):)'),
-            array('At the :)start of the word', 'At the :)start of the word'),
-            array('At the mid:)dle of the word', 'At the mid:)dle of the word'),
-            array('At the end:) of the word', 'At the end:) of the word'),
-            array('http://', 'http://'),
-            array("With a :/\n linefeed", 'With a <img src="/images/hm.png" alt=""><br> linefeed'),
-            array("With a :/\r carriage return", 'With a <img src="/images/hm.png" alt=""><br> carriage return'),
-            array("With a :/\t tab", 'With a <img src="/images/hm.png" alt="">' . "\t" . ' tab'),
-            array(':/ :/', '<img src="/images/hm.png" alt=""> <img src="/images/hm.png" alt="">'),
-            array(':/ :/', '<img src="/images/hm.png" alt=""> <img src="/images/hm.png" alt="">'),
-            array(':/ :/ :/', '<img src="/images/hm.png" alt=""> <img src="/images/hm.png" alt=""> <img src="/images/hm.png" alt="">'),
-            array('[ b ] :/[ / b ]', '<b> <img src="/images/hm.png" alt=""></b>'),
-            array('[ b ]:/ [ / b ]', '<b><img src="/images/hm.png" alt=""> </b>'),
-            array('[ b ]:/[ / b ]', '<b><img src="/images/hm.png" alt=""></b>'),
-            array('[ b ][[ / b ]', '<b><img src="/images/test/tag/open.png" alt=""></b>'),
-            array('[ b ]][ / b ]', '<b><img src="/images/test/tag/close.png" alt=""></b>'),
-            array('[ b ][o]_[o][ / b ]', '<b><img src="/images/test/tag/within.png" alt=""></b>'),
-            array(':/[ b ]:/[ / b ]:/', '<img src="/images/hm.png" alt=""><b><img src="/images/hm.png" alt=""></b><img src="/images/hm.png" alt="">'),
-            array('[ b ]:/[ b ]:/[ / b ]:/[ / b ]', '<b><img src="/images/hm.png" alt=""><b><img src="/images/hm.png" alt=""></b><img src="/images/hm.png" alt=""></b>'),
-=======
             array(':/ at the beginning', '<img class="decoda-emoticon" src="/images/hm.png" alt=""> at the beginning'),
             array('Smiley at the end :O', 'Smiley at the end <img class="decoda-emoticon" src="/images/gah.png" alt="">'),
             array('Smiley in the middle :P of a string', 'Smiley in the middle <img class="decoda-emoticon" src="/images/tongue.png" alt=""> of a string'),
@@ -111,7 +81,6 @@ class EmoticonHookTest extends TestCase {
             array(':/[ b ]:/[ / b ]:/', '<img class="decoda-emoticon" src="/images/hm.png" alt=""><b><img class="decoda-emoticon" src="/images/hm.png" alt=""></b><img class="decoda-emoticon" src="/images/hm.png" alt="">'),
             array('[ b ]:/[ b ]:/[ / b ]:/[ / b ]', '<b><img class="decoda-emoticon" src="/images/hm.png" alt=""><b><img class="decoda-emoticon" src="/images/hm.png" alt=""></b><img class="decoda-emoticon" src="/images/hm.png" alt=""></b>'),
             array('Testing custom emoticon ☺ (unicode)', 'Testing custom emoticon <img class="decoda-emoticon" src="/images/test/unicode.png" alt=""> (unicode)'),
->>>>>>> update
         );
     }
 
@@ -142,8 +111,4 @@ class EmoticonHookTest extends TestCase {
 
         return $data;
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> update

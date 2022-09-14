@@ -2,13 +2,6 @@
 
 All notable changes to `sebastianbergmann/object-enumerator` are documented in this file using the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
-<<<<<<< HEAD
-## 1.0.0 - 2016-MM-DD
-
-### Added
-* Initial release
-
-=======
 ## [4.0.4] - 2020-10-26
 
 ### Fixed
@@ -93,4 +86,3 @@ All notable changes to `sebastianbergmann/object-enumerator` are documented in t
 [2.0.1]: https://github.com/sebastianbergmann/object-enumerator/compare/2.0.0...2.0.1
 [2.0.0]: https://github.com/sebastianbergmann/object-enumerator/compare/1.0...2.0.0
 
->>>>>>> update

@@ -2,15 +2,12 @@
 
 namespace DeepCopy\Reflection;
 
-<<<<<<< HEAD
-=======
 use DeepCopy\Exception\PropertyException;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionObject;
 use ReflectionProperty;
 
->>>>>>> update
 class ReflectionHelper
 {
     /**
@@ -21,18 +18,11 @@ class ReflectionHelper
      * @author muratyaman@gmail.com
      * @see http://php.net/manual/en/reflectionclass.getproperties.php
      *
-<<<<<<< HEAD
-     * @param \ReflectionClass $ref
-     * @return \ReflectionProperty[]
-     */
-    public static function getProperties(\ReflectionClass $ref)
-=======
      * @param ReflectionClass $ref
      *
      * @return ReflectionProperty[]
      */
     public static function getProperties(ReflectionClass $ref)
->>>>>>> update
     {
         $props = $ref->getProperties();
         $propsArr = array();
@@ -53,8 +43,6 @@ class ReflectionHelper
 
         return $propsArr;
     }
-<<<<<<< HEAD
-=======
 
     /**
      * Retrieves property by name from object and all its ancestors.
@@ -87,5 +75,4 @@ class ReflectionHelper
             )
         );
     }
->>>>>>> update
 }

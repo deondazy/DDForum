@@ -13,10 +13,6 @@
     "support": {
         "issues": "https://github.com/sebastianbergmann/version/issues"
     },
-<<<<<<< HEAD
-    "require": {
-        "php": ">=5.6"
-=======
     "config": {
         "platform": {
             "php": "7.3.0"
@@ -27,7 +23,6 @@
     "prefer-stable": true,
     "require": {
         "php": ">=7.3"
->>>>>>> update
     },
     "autoload": {
         "classmap": [
@@ -36,11 +31,7 @@
     },
     "extra": {
         "branch-alias": {
-<<<<<<< HEAD
-            "dev-master": "2.0.x-dev"
-=======
             "dev-master": "3.0-dev"
->>>>>>> update
         }
     }
 }

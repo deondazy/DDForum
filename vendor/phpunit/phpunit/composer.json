@@ -19,45 +19,6 @@
     "support": {
         "issues": "https://github.com/sebastianbergmann/phpunit/issues"
     },
-<<<<<<< HEAD
-    "require": {
-        "php": "^5.6 || ^7.0",
-        "phpunit/php-file-iterator": "~1.4",
-        "phpunit/php-text-template": "~1.2",
-        "phpunit/php-code-coverage": "^4.0.1",
-        "phpunit/php-timer": "^1.0.6",
-        "phpunit/phpunit-mock-objects": "^3.2",
-        "phpspec/prophecy": "^1.3.1",
-        "symfony/yaml": "~2.1|~3.0",
-        "sebastian/comparator": "~1.1",
-        "sebastian/diff": "~1.2",
-        "sebastian/environment": "^1.3 || ^2.0",
-        "sebastian/exporter": "~1.2",
-        "sebastian/global-state": "~1.0",
-        "sebastian/object-enumerator": "~1.0",
-        "sebastian/resource-operations": "~1.0",
-        "sebastian/version": "~1.0|~2.0",
-        "myclabs/deep-copy": "~1.3",
-        "ext-dom": "*",
-        "ext-json": "*",
-        "ext-mbstring": "*",
-        "ext-xml": "*",
-        "ext-libxml": "*"
-    },
-    "require-dev": {
-        "ext-PDO": "*"
-    },
-    "conflict": {
-        "phpdocumentor/reflection-docblock": "3.0.2"
-    },
-    "config": {
-        "platform": {
-            "php": "5.6.0"
-        }
-    },
-    "suggest": {
-        "phpunit/php-invoker": "~1.1",
-=======
     "prefer-stable": true,
     "require": {
         "php": ">=7.3",
@@ -97,7 +58,6 @@
     },
     "suggest": {
         "ext-soap": "*",
->>>>>>> update
         "ext-xdebug": "*"
     },
     "bin": [
@@ -106,12 +66,9 @@
     "autoload": {
         "classmap": [
             "src/"
-<<<<<<< HEAD
-=======
         ],
         "files": [
             "src/Framework/Assert/Functions.php"
->>>>>>> update
         ]
     },
     "autoload-dev": {
@@ -119,23 +76,14 @@
             "tests/"
         ],
         "files": [
-<<<<<<< HEAD
-            "src/Framework/Assert/Functions.php",
-            "tests/_files/CoveredFunction.php"
-=======
             "tests/_files/CoverageNamespacedFunctionTest.php",
             "tests/_files/CoveredFunction.php",
             "tests/_files/NamespaceCoveredFunction.php"
->>>>>>> update
         ]
     },
     "extra": {
         "branch-alias": {
-<<<<<<< HEAD
-            "dev-master": "5.6.x-dev"
-=======
             "dev-master": "9.5-dev"
->>>>>>> update
         }
     }
 }

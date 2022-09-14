@@ -8,12 +8,8 @@ namespace DeepCopy\Filter;
 interface Filter
 {
     /**
-<<<<<<< HEAD
-     * Apply the filter to the object.
-=======
      * Applies the filter to the object.
      *
->>>>>>> update
      * @param object   $object
      * @param string   $property
      * @param callable $objectCopier
