@@ -3,7 +3,7 @@
  * DDForum Installation Script
  *
  * We're installing DDForum, using the config.sample.php file
- * to create the ddf-config.php then setup the databse tables
+ * to create the ddf-config.php then setup the database tables
  * from the config file provided details
  */
 
