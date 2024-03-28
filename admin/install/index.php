@@ -131,8 +131,9 @@ switch ($step) {
         }
 
         try {
-            $pdo = new \PDO("mysql:host={$dbhost};dbname={$dbname}", $dbuser, $dbpass);
-            Database::instance()->connect($pdo);
+            $dsn = "mysql:host={$dbhost};dbname={$dbname}";
+
+            Database::instance()->connect($dsn, $dbuser, $dbpass);
 
             createConfigHeader('Config. file');
             Installer::step('config');
