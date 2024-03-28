@@ -127,20 +127,20 @@ class Database
     {
         // Are we already connected?
         if ($this->isConnected()) {
-            return;
+            return $this->pdo;
         }
-        if ($dsn instanceof PDO) {
-            $this->pdo = $dsn;
-        } else {
-            $options = $this->options;
-            try {
-                $this->pdo = new PDO($dsn, $username, $password, $options);
-            } catch (PDOException $e) {
-                throw new DatabaseException($e->getMessage());
-            }
+        
+        $options = $this->options;
+
+        try {
+            $this->pdo = new PDO($dsn, $username, $password, $options);
+        } catch (PDOException $e) {
+            throw new DatabaseException($e->getMessage());
         }
+
         // Prefix Database tables
         $this->prefixTables();
+        
         return $this->pdo;
     }
 
