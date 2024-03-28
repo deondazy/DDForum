@@ -1,28 +1,15 @@
 /node_modules
-composer.lock
+/vendor
 /ddf-config.php
-<<<<<<< HEAD
-/.htaccess
 /nbproject
 /error.log
-=======
-/nbproject
->>>>>>> update
 inc/avatar/*
 !inc/avatar/ddf-avatar.png
 inc/images/*
 !inc/images/profile-cover.jpg
-<<<<<<< HEAD
 .htaccess
 inc/attachment/
 inc/css/less/
-=======
-inc/attachment/
-inc/css/less/
-uploads/*
-.DS_Store
-**/.DS_Store
-error.log
-**/error.log
-test.php
->>>>>>> update
+/.fleet
+/.idea
+/.vscode
